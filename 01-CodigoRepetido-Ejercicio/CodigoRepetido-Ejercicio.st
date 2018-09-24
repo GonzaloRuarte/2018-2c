@@ -71,6 +71,15 @@ setUp
 	paulMcCartney := 'Paul McCartney'.
 	johnLennon := 'John Lennon'.! !
 
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:29:57'!
+setUpJohn
+
+	johnLennon := 'John Lennon'.! !
+
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:30:14'!
+setUpPaul
+	paulMcCartney := 'Paul McCartney'.! !
+
 !CustomerBookTest methodsFor: 'testing' stamp: 'apenas 9/20/2018 21:29:23'!
 should: aClosureToTry failWithError: error do: aClosure
 
@@ -94,19 +103,19 @@ should: operationWithCustomerBlock lastLessThan: aTimeInMilliseconds
 	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (aTimeInMilliseconds * millisecond)
 	! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:40:39'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:30:35'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
-	
+	self setUpJohn.
 	
 	self should: [ customerBook addCustomerNamed: 'John Lennon'] lastLessThan: 50
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:42:51'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:30:48'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	
+	self setUpPaul.
 	customerBook addCustomerNamed: paulMcCartney.
 	 
 	self should: [customerBook removeCustomerNamed: paulMcCartney] lastLessThan: 100
@@ -114,10 +123,10 @@ test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:40:56'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:30:58'!
 test03CanNotAddACustomerWithEmptyName 
 
-	
+
 
 
 	self should: [ customerBook addCustomerNamed: ''] 
@@ -127,10 +136,10 @@ test03CanNotAddACustomerWithEmptyName
 			self assert: customerBook isEmpty ]
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:42:59'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:31:22'!
 test04CanNotRemoveAnInvalidCustomer
 	
-
+	self setUpJohn.
 	customerBook addCustomerNamed: johnLennon.
 	
 	self should: [customerBook removeCustomerNamed: 'Paul McCartney'] 
@@ -139,10 +148,10 @@ test04CanNotRemoveAnInvalidCustomer
 			self assert: customerBook numberOfCustomers = 1.
 			self assert: (customerBook includesCustomerNamed: johnLennon) ]! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:43:05'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:31:32'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
-
+	self setUpPaul.
 	self addAndSuspend: paulMcCartney To: customerBook.
 	
 	self verifyNoActiveCustomersOf:customerBook withAmountOfSuspendedCustomers:1.
@@ -152,11 +161,11 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:43:10'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:31:40'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 
-	
+	self setUpPaul.
 	self addAndSuspend: paulMcCartney To: customerBook.
 	
 	customerBook removeCustomerNamed: paulMcCartney.
@@ -168,19 +177,19 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:43:14'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:31:53'!
 test07CanNotSuspendAnInvalidCustomer
 	
-
+	self setUpJohn.
 	customerBook addCustomerNamed: johnLennon.
 		
 		
 	self canTheCustomer:'Paul McCartney'  beSuspendedIn: customerBook afterAdding: johnLennon.! !
 
-!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/21/2018 22:43:19'!
+!CustomerBookTest methodsFor: 'testing' stamp: 'GR 9/24/2018 00:32:03'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
-
+	self setUpJohn.
 	self addAndSuspend: johnLennon To: customerBook.
 	
 	self canTheCustomer:johnLennon  beSuspendedIn: customerBook afterAdding: johnLennon.
