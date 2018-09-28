@@ -514,14 +514,14 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no está definido aquí para enteros negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:29:06'!
+!Entero class methodsFor: 'instance creation' stamp: 'GR 9/28/2018 16:56:46'!
 with: aValue 
 	
 	|distinciónDeEntero|
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	distinciónDeEntero:=Entero subclasses detect:[:subclass | subclass isFor: aValue].
+	distinciónDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
 	
 	^distinciónDeEntero new initalizeWith: aValue! !
 
@@ -731,10 +731,10 @@ multiplyTheFraction: aMultiplier
 	
 	^(self * aMultiplier numerator) / (aMultiplier denominator)! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:55'!
+!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:30'!
 multiplyTheInteger: aMultiplier 
 	
-	^self class with: value * aMultiplier integerValue! !
+	^Entero with: value * aMultiplier integerValue! !
 
 !MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:51:45'!
 substractTheFraction: aSubtrahend 
@@ -864,10 +864,10 @@ multiplyTheFraction: aMultiplier
 	
 	^(self * aMultiplier numerator) / (aMultiplier denominator)! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:58'!
+!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:02'!
 multiplyTheInteger: aMultiplier 
 	
-	^self class with: value * aMultiplier integerValue! !
+	^Entero with: value * aMultiplier integerValue! !
 
 !Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:51:47'!
 substractTheFraction: aSubtrahend 
@@ -1146,29 +1146,6 @@ substractTheInteger: aSubtrahend
 	newNumerator := (denominator * aSubtrahend) - (numerator).
 	
 	^newNumerator / denominator 
-! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'ap 9/25/2018 00:23:46'!
-sumarEntero: anAdder
-	
-	|newNumerator |
-	
-	newNumerator := (numerator) + (denominator * anAdder).
-	
-	^newNumerator / denominator 
-
-
-
-	! !
-
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'ap 9/25/2018 00:07:57'!
-sumarFraccion: anAdder
-
-	|newNumerator newDenominator |
-	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
-	newDenominator := denominator * anAdder denominator.
-	
-	^newNumerator / newDenominator 
 ! !
 
 
