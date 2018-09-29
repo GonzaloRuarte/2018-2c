@@ -489,11 +489,6 @@ isZero
 	
 	self subclassResponsibility ! !
 
-!Entero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:31:44'!
-nonZeroCheck
-
-	self subclassResponsibility! !
-
 !Entero methodsFor: 'testing' stamp: 'GR 9/28/2018 01:02:40'!
 shouldNotBeOne
 
@@ -503,6 +498,11 @@ shouldNotBeOne
 shouldNotBeZero
 
 	self subclassResponsibility ! !
+
+!Entero methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+shouldNotDivideIfZero
+
+	self subclassResponsibility! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -625,11 +625,6 @@ isZero
 
 	^true! !
 
-!Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:16:27'!
-nonZeroCheck
-
-	self error: Entero canNotDivideByZeroErrorDescription! !
-
 !Cero methodsFor: 'testing' stamp: 'GR 9/28/2018 01:02:54'!
 shouldNotBeOne! !
 
@@ -637,6 +632,11 @@ shouldNotBeOne! !
 shouldNotBeZero
 
 	self error: 'una fraccion no puede ser cero' ! !
+
+!Cero methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+shouldNotDivideIfZero
+
+	self error: Entero canNotDivideByZeroErrorDescription! !
 
 
 !Cero methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:43:35'!
@@ -766,14 +766,14 @@ isZero
 
 	^false! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:09:38'!
-nonZeroCheck! !
-
 !MayoresAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:01'!
 shouldNotBeOne! !
 
 !MayoresAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:30'!
 shouldNotBeZero! !
+
+!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+shouldNotDivideIfZero! !
 
 
 !MayoresAUno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:40'!
@@ -899,14 +899,14 @@ isZero
 
 	^false! !
 
-!Negativos methodsFor: 'testing' stamp: 'ap 9/28/2018 00:53:54'!
-nonZeroCheck! !
-
 !Negativos methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:09'!
 shouldNotBeOne! !
 
 !Negativos methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:34'!
 shouldNotBeZero! !
+
+!Negativos methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+shouldNotDivideIfZero! !
 
 
 !Negativos methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:23'!
@@ -1028,9 +1028,6 @@ isZero
 
 	^false! !
 
-!Uno methodsFor: 'testing' stamp: 'ap 9/28/2018 00:53:01'!
-nonZeroCheck! !
-
 !Uno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:19'!
 shouldNotBeOne
 	
@@ -1038,6 +1035,9 @@ shouldNotBeOne
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:44'!
 shouldNotBeZero! !
+
+!Uno methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+shouldNotDivideIfZero! !
 
 
 !Uno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:10'!
@@ -1212,12 +1212,12 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'ap 9/28/2018 00:52:49'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'GR 9/29/2018 18:18:48'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 	
-	aDivisor nonZeroCheck.
+	aDivisor shouldNotDivideIfZero.
 	aDividend isZero ifTrue: [ ^aDividend ].
 	
 	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
