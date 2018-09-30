@@ -512,18 +512,18 @@ Entero class
 
 !Entero class methodsFor: 'instance creation' stamp: 'NR 9/23/2018 22:17:16'!
 negativeFibonacciErrorDescription
-	^ ' Fibonacci no está definido aquí para enteros negativos'! !
+	^ ' Fibonacci no est?definido aqu?para enteros negativos'! !
 
 !Entero class methodsFor: 'instance creation' stamp: 'GR 9/28/2018 16:56:46'!
 with: aValue 
 	
-	|distinciónDeEntero|
+	|distinci?DeEntero|
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	distinciónDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
+	distinci?DeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
 	
-	^distinciónDeEntero new initalizeWith: aValue! !
+	^distinci?DeEntero new initalizeWith: aValue! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
