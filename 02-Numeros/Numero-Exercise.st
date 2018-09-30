@@ -399,13 +399,13 @@ addTheInteger: anAdder
 	
 	self subclassResponsibility ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:42:19'!
-divideTheFraction: aDivisor 
+!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:03'!
+divideTheFraction: aDividend
 	
 	self subclassResponsibility ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:44:05'!
-divideTheInteger: aDivisor 
+!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:07'!
+divideTheInteger: aDividend 
 	
 	self subclassResponsibility ! !
 
@@ -432,13 +432,13 @@ multiplyTheInteger: aMultiplier
 	self subclassResponsibility 
 	! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:52:59'!
-substractTheFraction: aSubtrahend 
+!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:01'!
+substractTheFraction: aMinuend
 	
 	self subclassResponsibility ! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:53:55'!
-substractTheInteger: aSubtrahend 
+!Entero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:10'!
+substractTheInteger: aMinuend
 	
 	self subclassResponsibility ! !
 
@@ -512,18 +512,18 @@ Entero class
 
 !Entero class methodsFor: 'instance creation' stamp: 'NR 9/23/2018 22:17:16'!
 negativeFibonacciErrorDescription
-	^ ' Fibonacci no está definido aquí para enteros negativos'! !
+	^ ' Fibonacci no esta definido aqui para enteros negativos'! !
 
 !Entero class methodsFor: 'instance creation' stamp: 'GR 9/28/2018 16:56:46'!
 with: aValue 
 	
-	|distinciónDeEntero|
+	|distincionDeEntero|
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	distinciónDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
+	distincionDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
 	
-	^distinciónDeEntero new initalizeWith: aValue! !
+	^distincionDeEntero new initalizeWith: aValue! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
@@ -568,13 +568,13 @@ addTheInteger: anAdder
 	
 	^anAdder! !
 
-!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:43:42'!
-divideTheFraction: aDivisor 
+!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:39'!
+divideTheFraction: aDividend 
 	
 	self error: Entero canNotDivideByZeroErrorDescription! !
 
-!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:44:47'!
-divideTheInteger: aDivisor 
+!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:36'!
+divideTheInteger: aDividend 
 	
 	self error: Entero canNotDivideByZeroErrorDescription! !
 
@@ -599,15 +599,15 @@ multiplyTheInteger: aMultiplier
 	
 	^self! !
 
-!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:51:41'!
-substractTheFraction: aSubtrahend 
+!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:18'!
+substractTheFraction: aMinuend
 	
-	^aSubtrahend ! !
+	^aMinuend! !
 
-!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:54:07'!
-substractTheInteger: aSubtrahend 
+!Cero methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:23'!
+substractTheInteger: aMinuend
 	
-	^aSubtrahend ! !
+	^aMinuend! !
 
 
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:42'!
@@ -702,15 +702,15 @@ addTheInteger: anAdder
 	
 	^Entero with: value + anAdder integerValue! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:42:05'!
-divideTheFraction: aDivisor 
+!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:48'!
+divideTheFraction: aDividend 
 	
-	^ (aDivisor numerator) / (self * aDivisor denominator)! !
+	^ (aDividend numerator) / (self * aDividend denominator)! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:44:09'!
-divideTheInteger: aDivisor 
+!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:54'!
+divideTheInteger: aDividend 
 	
-	^Fraccion with: aDivisor over: self! !
+	^Fraccion with: aDividend over: self! !
 
 !MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:09:27'!
 fibonacci
@@ -736,19 +736,19 @@ multiplyTheInteger: aMultiplier
 	
 	^Entero with: value * aMultiplier integerValue! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:51:45'!
-substractTheFraction: aSubtrahend 
+!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:31'!
+substractTheFraction: aMinuend
 	
 	| newNumerator |
 	
-	newNumerator := (aSubtrahend numerator) - (self * aSubtrahend denominator).
+	newNumerator := (aMinuend numerator) - (self * aMinuend denominator).
 	
-	^newNumerator / aSubtrahend denominator! !
+	^newNumerator / aMinuend denominator! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:54:10'!
-substractTheInteger: aSubtrahend 
+!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:35'!
+substractTheInteger: aMinuend 
 	
-	^Entero with: aSubtrahend integerValue - value.! !
+	^Entero with: aMinuend integerValue - value.! !
 
 
 !MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:33'!
@@ -839,15 +839,15 @@ addTheInteger: anAdder
 	
 	^Entero with: value + anAdder integerValue! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:42:38'!
-divideTheFraction: aDivisor 
+!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:05'!
+divideTheFraction: aDividend 
 	
-	^ (aDivisor numerator) / (self * aDivisor denominator)! !
+	^ (aDividend numerator) / (self * aDividend denominator)! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:44:11'!
-divideTheInteger: aDivisor 
+!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:09'!
+divideTheInteger: aDividend 
 	
-	^Fraccion with: aDivisor over: self! !
+	^Fraccion with: aDividend over: self! !
 
 !Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:12:44'!
 fibonacci
@@ -869,19 +869,19 @@ multiplyTheInteger: aMultiplier
 	
 	^Entero with: value * aMultiplier integerValue! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:51:47'!
-substractTheFraction: aSubtrahend 
+!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:41'!
+substractTheFraction: aMinuend 
 	
 	| newNumerator |
 	
-	newNumerator := (aSubtrahend numerator) - (self * aSubtrahend denominator).
+	newNumerator := (aMinuend numerator) - (self * aMinuend denominator).
 	
-	^newNumerator / aSubtrahend denominator! !
+	^newNumerator / aMinuend denominator! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:54:13'!
-substractTheInteger: aSubtrahend 
+!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:48'!
+substractTheInteger: aMinuend
 	
-	^Entero with: aSubtrahend integerValue - value.! !
+	^Entero with: aMinuend integerValue - value.! !
 
 
 !Negativos methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:05'!
@@ -971,15 +971,15 @@ addTheInteger: anAdder
 	
 	^Entero with: value + anAdder integerValue! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:43:00'!
-divideTheFraction: aDivisor 
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:19'!
+divideTheFraction: aDividend 
 	
-	^ aDivisor! !
+	^ aDividend! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:44:29'!
-divideTheInteger: aDivisor 
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:23'!
+divideTheInteger: aDividend 
 	
-	^aDivisor! !
+	^aDividend! !
 
 !Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:24:17'!
 fibonacci
@@ -1002,15 +1002,15 @@ multiplyTheInteger: aMultiplier
 	
 	^aMultiplier! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:52:36'!
-substractTheFraction: aSubtrahend 
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:59'!
+substractTheFraction: aMinuend 
 	
-	^aSubtrahend numerator - aSubtrahend denominator / aSubtrahend denominator! !
+	^aMinuend numerator - aMinuend denominator / aMinuend denominator! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:54:29'!
-substractTheInteger: aSubtrahend 
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:59:36'!
+substractTheInteger: aMinuend 
 	
-	^Entero with: aSubtrahend integerValue - value.! !
+	^Entero with: aMinuend integerValue - value.! !
 
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:39'!
@@ -1105,15 +1105,15 @@ addTheInteger: anAdder
 	
 	^newNumerator / denominator! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/25/2018 11:25:41'!
-divideTheFraction: aDivisor 
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:14'!
+divideTheFraction: aDividend 
 	
-	^(denominator * aDivisor numerator) / (numerator * aDivisor denominator)! !
+	^(denominator * aDividend numerator) / (numerator * aDividend denominator)! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/25/2018 11:25:57'!
-divideTheInteger: aDivisor 
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:19'!
+divideTheInteger: aDividend 
 	
-	^ (denominator * aDivisor) / (numerator)! !
+	^ (denominator * aDividend) / (numerator)! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/25/2018 11:08:10'!
 multiplyTheFraction: aMultiplier 
@@ -1127,23 +1127,23 @@ multiplyTheInteger: aMultiplier
 	^(numerator * aMultiplier) / denominator
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/25/2018 11:32:55'!
-substractTheFraction: aSubtrahend 
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:59:45'!
+substractTheFraction: aMinuend 
 	
 	| newNumerator newDenominator |
 	
-	newNumerator := (denominator * aSubtrahend numerator) - (numerator * aSubtrahend denominator).
-	newDenominator := denominator * aSubtrahend denominator.
+	newNumerator := (denominator * aMinuend numerator) - (numerator * aMinuend denominator).
+	newDenominator := denominator * aMinuend denominator.
 	
 	^newNumerator / newDenominator 
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/25/2018 11:49:03'!
-substractTheInteger: aSubtrahend 
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:59:49'!
+substractTheInteger: aMinuend 
 	
 	| newNumerator |
 	
-	newNumerator := (denominator * aSubtrahend) - (numerator).
+	newNumerator := (denominator * aMinuend) - (numerator).
 	
 	^newNumerator / denominator 
 ! !
