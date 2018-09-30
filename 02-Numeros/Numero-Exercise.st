@@ -625,7 +625,6 @@ hash
 	^0 hash! !
 
 
-
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:42'!
 isNegative
 
@@ -1069,7 +1068,6 @@ substractTheInteger: aMinuend
 hash
 
 	^1 hash! !
-
 
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:39'!
