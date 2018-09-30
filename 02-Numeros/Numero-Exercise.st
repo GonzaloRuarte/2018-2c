@@ -512,18 +512,18 @@ Entero class
 
 !Entero class methodsFor: 'instance creation' stamp: 'NR 9/23/2018 22:17:16'!
 negativeFibonacciErrorDescription
-	^ ' Fibonacci no est?definido aqu?para enteros negativos'! !
+	^ ' Fibonacci no está definido aquí para enteros negativos'! !
 
 !Entero class methodsFor: 'instance creation' stamp: 'GR 9/28/2018 16:56:46'!
 with: aValue 
 	
-	|distinci?DeEntero|
+	|distinciónDeEntero|
 	"Esta verificacion esta puesta por si se equivocan y quieren crear un Entero pasando otra cosa que un Integer - Hernan"
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
-	distinci?DeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
+	distinciónDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
 	
-	^distinci?DeEntero new initalizeWith: aValue! !
+	^distinciónDeEntero new initalizeWith: aValue! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
@@ -650,7 +650,7 @@ initalizeWith: aValue
 Cero class
 	instanceVariableNames: ''!
 
-!Cero class methodsFor: 'as yet unclassified' stamp: 'ap 9/27/2018 23:27:53'!
+!Cero class methodsFor: 'instance creation' stamp: 'ap 9/27/2018 23:27:53'!
 isFor: aValue
 
 	^0=aValue! !
@@ -787,7 +787,7 @@ initalizeWith: aValue
 MayoresAUno class
 	instanceVariableNames: ''!
 
-!MayoresAUno class methodsFor: 'as yet unclassified' stamp: 'GR 9/27/2018 23:14:50'!
+!MayoresAUno class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:50'!
 isFor: aValue
 
 	^1<aValue! !
@@ -920,7 +920,7 @@ initalizeWith: aValue
 Negativos class
 	instanceVariableNames: ''!
 
-!Negativos class methodsFor: 'as yet unclassified' stamp: 'GR 9/27/2018 23:14:59'!
+!Negativos class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:59'!
 isFor: aValue
 
 	^0>aValue! !
@@ -1051,7 +1051,7 @@ initalizeWith: aValue
 Uno class
 	instanceVariableNames: ''!
 
-!Uno class methodsFor: 'as yet unclassified' stamp: 'ap 9/27/2018 23:28:35'!
+!Uno class methodsFor: 'instance creation' stamp: 'ap 9/27/2018 23:28:35'!
 isFor: aValue
 
 	^1=aValue! !
