@@ -514,7 +514,7 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no esta definido aqui para enteros negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'GR 9/28/2018 16:56:46'!
+!Entero class methodsFor: 'instance creation' stamp: 'GR 9/30/2018 18:33:21'!
 with: aValue 
 	
 	|distincionDeEntero|
@@ -522,6 +522,10 @@ with: aValue
 	aValue isInteger ifFalse: [  self error: 'aValue debe ser anInteger' ].
 	
 	distincionDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
+	
+	distincionDeEntero = Uno ifTrue: [^Uno new].
+	
+	distincionDeEntero = Cero ifTrue: [^Cero new].
 	
 	^distincionDeEntero new initalizeWith: aValue! !
 
@@ -621,9 +625,6 @@ hash
 	^0 hash! !
 
 
-!Cero methodsFor: 'initialization' stamp: 'GR 9/30/2018 17:41:34'!
-initalizeWith: aValue ! !
-
 
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:42'!
 isNegative
@@ -670,39 +671,39 @@ isFor: aValue
 	^0=aValue! !
 
 
-!classDefinition: #MayoresAUno category: #'Numero-Exercise'!
-Entero subclass: #MayoresAUno
+!classDefinition: #MayorAUno category: #'Numero-Exercise'!
+Entero subclass: #MayorAUno
 	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:02:25'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:02:25'!
 * aMultiplier 
 	
 	^aMultiplier multiplyTheInteger: self.! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:48:42'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:48:42'!
 + anAdder 
 	
 	^anAdder addTheInteger: self! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:09:54'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:09:54'!
 - aSubtrahend
 
 ^ aSubtrahend substractTheInteger: self.! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:24:52'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:24:52'!
 / aDivisor 
 	
 	^aDivisor divideTheInteger: self! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:01'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:01'!
 // aDivisor 
 	
 	^Entero with: value // aDivisor integerValue.! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:32:20'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:32:20'!
 addTheFraction: anAdder 
 	
 	| newNumerator |
@@ -711,22 +712,22 @@ addTheFraction: anAdder
 	
 	^newNumerator / anAdder denominator ! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:37:41'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:37:41'!
 addTheInteger: anAdder 
 	
 	^Entero with: value + anAdder integerValue! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:48'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:48'!
 divideTheFraction: aDividend 
 	
 	^ (aDividend numerator) / (self * aDividend denominator)! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:54'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:00:54'!
 divideTheInteger: aDividend 
 	
 	^Fraccion with: aDividend over: self! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:09:27'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:09:27'!
 fibonacci
 
 	| one two |
@@ -735,22 +736,22 @@ fibonacci
 	two := Entero with: 2.
 	^ (self - one) fibonacci + (self - two) fibonacci! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:22:43'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:22:43'!
 greatestCommonDivisorWith: anEntero 
 	
 	^Entero with: (value gcd: anEntero integerValue)! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:09'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:09'!
 multiplyTheFraction: aMultiplier 
 	
 	^(self * aMultiplier numerator) / (aMultiplier denominator)! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:30'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:30'!
 multiplyTheInteger: aMultiplier 
 	
 	^Entero with: value * aMultiplier integerValue! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:31'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:31'!
 substractTheFraction: aMinuend
 	
 	| newNumerator |
@@ -759,103 +760,103 @@ substractTheFraction: aMinuend
 	
 	^newNumerator / aMinuend denominator! !
 
-!MayoresAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:35'!
+!MayorAUno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:35'!
 substractTheInteger: aMinuend 
 	
 	^Entero with: aMinuend integerValue - value.! !
 
 
-!MayoresAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:34'!
+!MayorAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:34'!
 = anObject
 
 	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
 
-!MayoresAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:58'!
+!MayorAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:58'!
 hash
 
 	^value hash! !
 
 
-!MayoresAUno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:40'!
+!MayorAUno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:40'!
 initalizeWith: aValue 
 	
 	value:=aValue! !
 
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:33'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:33'!
 isNegative
 
 	^false! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:05'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:05'!
 isOne
 
 	^false! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:10'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:10'!
 isZero
 
 	^false! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:01'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:01'!
 shouldNotBeOne! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:30'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:30'!
 shouldNotBeZero! !
 
-!MayoresAUno methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+!MayorAUno methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
 shouldNotDivideIfZero! !
 
 
-!MayoresAUno methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:48'!
+!MayorAUno methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:48'!
 integerValue
 	^value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'MayoresAUno class' category: #'Numero-Exercise'!
-MayoresAUno class
+!classDefinition: 'MayorAUno class' category: #'Numero-Exercise'!
+MayorAUno class
 	instanceVariableNames: ''!
 
-!MayoresAUno class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:50'!
+!MayorAUno class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:50'!
 isFor: aValue
 
 	^1<aValue! !
 
 
-!classDefinition: #Negativos category: #'Numero-Exercise'!
-Entero subclass: #Negativos
+!classDefinition: #Negativo category: #'Numero-Exercise'!
+Entero subclass: #Negativo
 	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:02:30'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:02:30'!
 * aMultiplier 
 	
 	^aMultiplier multiplyTheInteger: self.! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:48:48'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:48:48'!
 + anAdder 
 	
 	^anAdder addTheInteger: self! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:10:01'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:10:01'!
 - aSubtrahend
 
 ^ aSubtrahend substractTheInteger: self.! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:25:31'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:25:31'!
 / aDivisor 
 	
 	^aDivisor divideTheInteger: self! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:40'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:40'!
 // aDivisor 
 	
 	^Entero with: value // aDivisor integerValue.! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:32:22'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:32:22'!
 addTheFraction: anAdder 
 	
 	| newNumerator |
@@ -864,42 +865,42 @@ addTheFraction: anAdder
 	
 	^newNumerator / anAdder denominator ! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:37:37'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:37:37'!
 addTheInteger: anAdder 
 	
 	^Entero with: value + anAdder integerValue! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:05'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:05'!
 divideTheFraction: aDividend 
 	
 	^ (aDividend numerator) / (self * aDividend denominator)! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:09'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:09'!
 divideTheInteger: aDividend 
 	
 	^Fraccion with: aDividend over: self! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:12:44'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/27/2018 23:12:44'!
 fibonacci
 
 	self error: Entero negativeFibonacciErrorDescription! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:54'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:23:54'!
 greatestCommonDivisorWith: anEntero 
 	
 	^Entero with: (value gcd: anEntero integerValue)! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:13'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:49:13'!
 multiplyTheFraction: aMultiplier 
 	
 	^(self * aMultiplier numerator) / (aMultiplier denominator)! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:02'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 16:34:02'!
 multiplyTheInteger: aMultiplier 
 	
 	^Entero with: value * aMultiplier integerValue! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:41'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:41'!
 substractTheFraction: aMinuend 
 	
 	| newNumerator |
@@ -908,65 +909,65 @@ substractTheFraction: aMinuend
 	
 	^newNumerator / aMinuend denominator! !
 
-!Negativos methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:48'!
+!Negativo methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:58:48'!
 substractTheInteger: aMinuend
 	
 	^Entero with: aMinuend integerValue - value.! !
 
 
-!Negativos methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:45'!
+!Negativo methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:45'!
 = anObject
 
 	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
 
-!Negativos methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:56'!
+!Negativo methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:56'!
 hash
 
 	^value hash! !
 
 
-!Negativos methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:23'!
+!Negativo methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:23'!
 initalizeWith: aValue 
 	
 	value:=aValue! !
 
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:05'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:05'!
 isNegative
 
 	^true! !
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:25'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:25'!
 isOne
 
 	^false! !
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:29'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:29'!
 isZero
 
 	^false! !
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:09'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:09'!
 shouldNotBeOne! !
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:34'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/28/2018 01:01:34'!
 shouldNotBeZero! !
 
-!Negativos methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
+!Negativo methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
 shouldNotDivideIfZero! !
 
 
-!Negativos methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:21'!
+!Negativo methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:21'!
 integerValue
 	^value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'Negativos class' category: #'Numero-Exercise'!
-Negativos class
+!classDefinition: 'Negativo class' category: #'Numero-Exercise'!
+Negativo class
 	instanceVariableNames: ''!
 
-!Negativos class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:59'!
+!Negativo class methodsFor: 'instance creation' stamp: 'GR 9/27/2018 23:14:59'!
 isFor: aValue
 
 	^0>aValue! !
@@ -1069,9 +1070,6 @@ hash
 
 	^1 hash! !
 
-
-!Uno methodsFor: 'initialization' stamp: 'GR 9/30/2018 17:41:25'!
-initalizeWith: aValue ! !
 
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:39'!
