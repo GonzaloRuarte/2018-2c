@@ -514,7 +514,7 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no esta definido aqui para enteros negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'GR 9/30/2018 18:33:21'!
+!Entero class methodsFor: 'instance creation' stamp: 'ap 9/30/2018 19:14:57'!
 with: aValue 
 	
 	|distincionDeEntero|
@@ -523,9 +523,7 @@ with: aValue
 	
 	distincionDeEntero:=self subclasses detect:[:subclass | subclass isFor: aValue].
 	
-	distincionDeEntero = Uno ifTrue: [^Uno new].
-	
-	distincionDeEntero = Cero ifTrue: [^Cero new].
+	distincionDeEntero = Uno ifTrue: [^Uno new] ifFalse:[distincionDeEntero = Cero ifTrue: [^Cero new]].
 	
 	^distincionDeEntero new initalizeWith: aValue! !
 
@@ -614,17 +612,6 @@ substractTheInteger: aMinuend
 	^aMinuend! !
 
 
-!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:14'!
-= anObject
-
-	^(anObject isKindOf: self class) and: [ 0 = anObject integerValue ]! !
-
-!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:53:05'!
-hash
-
-	^0 hash! !
-
-
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:42'!
 isNegative
 
@@ -652,6 +639,23 @@ shouldNotBeZero
 shouldNotDivideIfZero
 
 	self error: Entero canNotDivideByZeroErrorDescription! !
+
+
+!Cero methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:43:35'!
+initalizeWith: aValue 
+	
+	value:=0! !
+
+
+!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:14'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ 0 = anObject integerValue ]! !
+
+!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:53:05'!
+hash
+
+	^0 hash! !
 
 
 !Cero methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:39'!
@@ -1059,17 +1063,6 @@ substractTheInteger: aMinuend
 	^Entero with: aMinuend integerValue - 1.! !
 
 
-!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:54'!
-= anObject
-
-	^(anObject isKindOf: self class) and: [ 1 = anObject integerValue ]! !
-
-!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:51'!
-hash
-
-	^1 hash! !
-
-
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:39'!
 isNegative
 
@@ -1095,6 +1088,23 @@ shouldNotBeZero! !
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/29/2018 18:18:55'!
 shouldNotDivideIfZero! !
+
+
+!Uno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:10'!
+initalizeWith: aValue 
+	
+	value:=1! !
+
+
+!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:54'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ 1 = anObject integerValue ]! !
+
+!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:51'!
+hash
+
+	^1 hash! !
 
 
 !Uno methodsFor: 'value' stamp: 'GR 9/30/2018 17:42:21'!
