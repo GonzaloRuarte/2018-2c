@@ -358,7 +358,7 @@ invalidNumberTypeErrorDescription
 
 !classDefinition: #Entero category: #'Numero-Exercise'!
 Numero subclass: #Entero
-	instanceVariableNames: 'value'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
@@ -443,15 +443,15 @@ substractTheInteger: aMinuend
 	self subclassResponsibility ! !
 
 
-!Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 21:01'!
+!Entero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:50:31'!
 = anObject
 
-	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
+	self subclassResponsibility! !
 
-!Entero methodsFor: 'comparing' stamp: 'HernanWilkinson 5/7/2016 20:17'!
+!Entero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:53:15'!
 hash
 
-	^value hash! !
+	self subclassResponsibility ! !
 
 
 !Entero methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:39:07'!
@@ -460,12 +460,12 @@ initalizeWith: aValue
 	self subclassResponsibility! !
 
 
-!Entero methodsFor: 'value' stamp: 'HernanWilkinson 5/7/2016 21:02'!
+!Entero methodsFor: 'value' stamp: 'GR 9/30/2018 17:39:47'!
 integerValue
 
 	"Usamos integerValue en vez de value para que no haya problemas con el mensaje value implementado en Object - Hernan"
 	
-	^value! !
+	self subclassResponsibility ! !
 
 
 !Entero methodsFor: 'printing' stamp: 'HAW 9/24/2018 08:53:19'!
@@ -610,6 +610,21 @@ substractTheInteger: aMinuend
 	^aMinuend! !
 
 
+!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:14'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ 0 = anObject integerValue ]! !
+
+!Cero methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:53:05'!
+hash
+
+	^0 hash! !
+
+
+!Cero methodsFor: 'initialization' stamp: 'GR 9/30/2018 17:41:34'!
+initalizeWith: aValue ! !
+
+
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:42'!
 isNegative
 
@@ -639,10 +654,9 @@ shouldNotDivideIfZero
 	self error: Entero canNotDivideByZeroErrorDescription! !
 
 
-!Cero methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:43:35'!
-initalizeWith: aValue 
-	
-	value:=0! !
+!Cero methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:39'!
+integerValue
+	^0! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -658,7 +672,7 @@ isFor: aValue
 
 !classDefinition: #MayoresAUno category: #'Numero-Exercise'!
 Entero subclass: #MayoresAUno
-	instanceVariableNames: ''
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
@@ -751,6 +765,23 @@ substractTheInteger: aMinuend
 	^Entero with: aMinuend integerValue - value.! !
 
 
+!MayoresAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:34'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
+
+!MayoresAUno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:58'!
+hash
+
+	^value hash! !
+
+
+!MayoresAUno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:40'!
+initalizeWith: aValue 
+	
+	value:=aValue! !
+
+
 !MayoresAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:33'!
 isNegative
 
@@ -776,10 +807,9 @@ shouldNotBeZero! !
 shouldNotDivideIfZero! !
 
 
-!MayoresAUno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:40'!
-initalizeWith: aValue 
-	
-	value:=aValue! !
+!MayoresAUno methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:48'!
+integerValue
+	^value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -795,7 +825,7 @@ isFor: aValue
 
 !classDefinition: #Negativos category: #'Numero-Exercise'!
 Entero subclass: #Negativos
-	instanceVariableNames: ''
+	instanceVariableNames: 'value'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Numero-Exercise'!
@@ -884,6 +914,23 @@ substractTheInteger: aMinuend
 	^Entero with: aMinuend integerValue - value.! !
 
 
+!Negativos methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:45'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ value = anObject integerValue ]! !
+
+!Negativos methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:56'!
+hash
+
+	^value hash! !
+
+
+!Negativos methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:23'!
+initalizeWith: aValue 
+	
+	value:=aValue! !
+
+
 !Negativos methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:05'!
 isNegative
 
@@ -909,10 +956,9 @@ shouldNotBeZero! !
 shouldNotDivideIfZero! !
 
 
-!Negativos methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:23'!
-initalizeWith: aValue 
-	
-	value:=aValue! !
+!Negativos methodsFor: 'value' stamp: 'GR 9/30/2018 17:40:21'!
+integerValue
+	^value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -953,10 +999,10 @@ Entero subclass: #Uno
 	
 	^aDivisor divideTheInteger: self! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:18:53'!
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 17:43:37'!
 // aDivisor 
 	
-	^Entero with: value // aDivisor integerValue.
+	^Entero with: 1 // aDivisor integerValue.
 	
 	
 ! !
@@ -966,10 +1012,10 @@ addTheFraction: anAdder
 	
 	^anAdder denominator + anAdder numerator / anAdder denominator ! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/28/2018 00:39:18'!
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 17:44:06'!
 addTheInteger: anAdder 
 	
-	^Entero with: value + anAdder integerValue! !
+	^Entero with: 1 + anAdder integerValue! !
 
 !Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 16:01:19'!
 divideTheFraction: aDividend 
@@ -1007,10 +1053,25 @@ substractTheFraction: aMinuend
 	
 	^aMinuend numerator - aMinuend denominator / aMinuend denominator! !
 
-!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 15:59:36'!
+!Uno methodsFor: 'arithmetic operations' stamp: 'GR 9/30/2018 17:44:20'!
 substractTheInteger: aMinuend 
 	
-	^Entero with: aMinuend integerValue - value.! !
+	^Entero with: aMinuend integerValue - 1.! !
+
+
+!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:51:54'!
+= anObject
+
+	^(anObject isKindOf: self class) and: [ 1 = anObject integerValue ]! !
+
+!Uno methodsFor: 'comparing' stamp: 'GR 9/30/2018 17:52:51'!
+hash
+
+	^1 hash! !
+
+
+!Uno methodsFor: 'initialization' stamp: 'GR 9/30/2018 17:41:25'!
+initalizeWith: aValue ! !
 
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:39'!
@@ -1040,10 +1101,9 @@ shouldNotBeZero! !
 shouldNotDivideIfZero! !
 
 
-!Uno methodsFor: 'initialization' stamp: 'GR 9/27/2018 23:42:10'!
-initalizeWith: aValue 
-	
-	value:=1! !
+!Uno methodsFor: 'value' stamp: 'GR 9/30/2018 17:42:21'!
+integerValue
+	^1! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
