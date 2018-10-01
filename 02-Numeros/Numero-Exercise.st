@@ -514,7 +514,7 @@ Entero class
 negativeFibonacciErrorDescription
 	^ ' Fibonacci no esta definido aqui para enteros negativos'! !
 
-!Entero class methodsFor: 'instance creation' stamp: 'AP 9/30/2018 19:55:19'!
+!Entero class methodsFor: 'instance creation' stamp: 'GR 9/30/2018 22:38:57'!
 with: aValue 
 	
 	|distincionDeEntero|
@@ -523,9 +523,7 @@ with: aValue
 	
 	distincionDeEntero:=Entero subclasses detect:[:subclass | subclass isFor: aValue].
 	
-	distincionDeEntero = Uno ifTrue: [^Uno new] ifFalse:[distincionDeEntero = Cero ifTrue: [^Cero new]].
-	
-	^distincionDeEntero new initalizeWith: aValue! !
+	distincionDeEntero = Uno ifTrue: [^Uno new] ifFalse: [distincionDeEntero = Cero ifTrue: [^Cero new] ifFalse:[^distincionDeEntero new initalizeWith: aValue]].! !
 
 
 !classDefinition: #Cero category: #'Numero-Exercise'!
