@@ -479,14 +479,29 @@ isNegative
 	
 	self subclassResponsibility ! !
 
+!Entero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:30:17'!
+isNegativeThenDo: aBlock
+
+	self subclassResponsibility ! !
+
 !Entero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:45:58'!
 isOne
 	
 	self subclassResponsibility ! !
 
+!Entero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:28:03'!
+isOneThenDo: aBlock
+
+	self subclassResponsibility ! !
+
 !Entero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:46:01'!
 isZero
 	
+	self subclassResponsibility ! !
+
+!Entero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:59'!
+isZeroThenDo: aBlock
+
 	self subclassResponsibility ! !
 
 !Entero methodsFor: 'testing' stamp: 'GR 9/28/2018 01:02:40'!
@@ -626,15 +641,26 @@ isNegative
 
 	^false! !
 
+!Cero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:30:41'!
+isNegativeThenDo: aBlock! !
+
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:46:31'!
 isOne
 
 	^false! !
 
+!Cero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:22'!
+isOneThenDo: aBlock! !
+
 !Cero methodsFor: 'testing' stamp: 'GR 9/27/2018 23:46:23'!
 isZero
 
 	^true! !
+
+!Cero methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:04'!
+isZeroThenDo: aBlock
+
+	^aBlock value! !
 
 !Cero methodsFor: 'testing' stamp: 'GR 9/28/2018 01:02:54'!
 shouldNotBeOne! !
@@ -783,15 +809,27 @@ isNegative
 
 	^false! !
 
+!MayorAUno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:31:02'!
+isNegativeThenDo: aBlock
+! !
+
 !MayorAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:05'!
 isOne
 
 	^false! !
 
+!MayorAUno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:22'!
+isOneThenDo: aBlock
+! !
+
 !MayorAUno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:10'!
 isZero
 
 	^false! !
+
+!MayorAUno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:04'!
+isZeroThenDo: aBlock
+! !
 
 !MayorAUno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:01'!
 shouldNotBeOne! !
@@ -932,15 +970,26 @@ isNegative
 
 	^true! !
 
+!Negativo methodsFor: 'testing' stamp: 'GR 10/1/2018 11:31:16'!
+isNegativeThenDo: aBlock
+
+	^aBlock value.! !
+
 !Negativo methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:25'!
 isOne
 
 	^false! !
 
+!Negativo methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:22'!
+isOneThenDo: aBlock! !
+
 !Negativo methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:29'!
 isZero
 
 	^false! !
+
+!Negativo methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:04'!
+isZeroThenDo: aBlock! !
 
 !Negativo methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:09'!
 shouldNotBeOne! !
@@ -1071,15 +1120,26 @@ isNegative
 
 	^false! !
 
+!Uno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:31:24'!
+isNegativeThenDo: aBlock! !
+
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:44'!
 isOne
 
 	^true! !
 
+!Uno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:22'!
+isOneThenDo: aBlock
+
+	^aBlock value! !
+
 !Uno methodsFor: 'testing' stamp: 'GR 9/27/2018 23:47:37'!
 isZero
 
 	^false! !
+
+!Uno methodsFor: 'testing' stamp: 'GR 10/1/2018 11:27:04'!
+isZeroThenDo: aBlock! !
 
 !Uno methodsFor: 'testing' stamp: 'GR 9/28/2018 01:03:19'!
 shouldNotBeOne
@@ -1264,21 +1324,21 @@ printOn: aStream
 Fraccion class
 	instanceVariableNames: ''!
 
-!Fraccion class methodsFor: 'intance creation' stamp: 'GR 9/29/2018 18:18:48'!
+!Fraccion class methodsFor: 'intance creation' stamp: 'GR 10/1/2018 11:45:06'!
 with: aDividend over: aDivisor
 
 	| greatestCommonDivisor numerator denominator |
 	
 	aDivisor shouldNotDivideIfZero.
-	aDividend isZero ifTrue: [ ^aDividend ].
+	aDividend isZeroThenDo: [^aDividend].
 	
-	aDivisor isNegative ifTrue:[ ^aDividend negated / aDivisor negated].
+	aDivisor isNegativeThenDo: [^aDividend negated / aDivisor negated].
 	
 	greatestCommonDivisor := aDividend greatestCommonDivisorWith: aDivisor. 
 	numerator := aDividend // greatestCommonDivisor.
 	denominator := aDivisor // greatestCommonDivisor.
 	
-	denominator isOne ifTrue: [ ^numerator ].
+	denominator isOneThenDo: [^numerator].
 
 	^self new initializeWith: numerator over: denominator
 	! !
