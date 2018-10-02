@@ -135,19 +135,19 @@ Object subclass: #Container
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:19:29'!
-dequeue
-
-	self subclassResponsibility! !
-
-!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:33:26'!
-enqueue: aThing
+!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:04'!
+addLast: aThing
 
 	self subclassResponsibility.! !
 
-!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:17:20'!
-next
+!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:46:14'!
+first
 	
+	self subclassResponsibility! !
+
+!Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:46:43'!
+removeFirst
+
 	self subclassResponsibility! !
 
 !Container methodsFor: 'operations' stamp: 'GR 10/2/2018 00:14:03'!
@@ -164,6 +164,21 @@ isEmpty
 
 	self subclassResponsibility! !
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Container class' category: #'Queue-Exercise-WithStates'!
+Container class
+	instanceVariableNames: ''!
+
+!Container class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 01:05:14'!
+with: aCollection
+
+	|distincionDeContainer|
+
+	distincionDeContainer:=self subclasses detect:[:subclass | subclass isFor: (aCollection size)].
+	
+	^distincionDeContainer basicNew initializeWithCollection: aCollection! !
+
 
 !classDefinition: #EmptyContainer category: #'Queue-Exercise-WithStates'!
 Container subclass: #EmptyContainer
@@ -172,13 +187,8 @@ Container subclass: #EmptyContainer
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:18:44'!
-dequeue
-
-	self error: Queue queueEmptyErrorDescription! !
-
-!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:26:25'!
-enqueue: aThing
+!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:53:39'!
+addLast: aThing
 	
 	|aContainer|
 	
@@ -188,9 +198,14 @@ enqueue: aThing
 	
 	^aThing! !
 
-!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:17:52'!
-next
+!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:22'!
+first
 	
+	self error: Queue queueEmptyErrorDescription! !
+
+!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:46:43'!
+removeFirst
+
 	self error: Queue queueEmptyErrorDescription! !
 
 !EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:14:19'!
@@ -202,6 +217,20 @@ size
 isEmpty
 
 	^true! !
+
+
+!EmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 01:05:43'!
+initializeWithCollection: aCollection! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'EmptyContainer class' category: #'Queue-Exercise-WithStates'!
+EmptyContainer class
+	instanceVariableNames: ''!
+
+!EmptyContainer class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 01:09:25'!
+isFor: aValue
+	^aValue  = 1! !
 
 
 !classDefinition: #NonEmptyContainer category: #'Queue-Exercise-WithStates'!
@@ -216,25 +245,28 @@ initializeWith: aThing
 
 	elements := OrderedCollection with: aThing.! !
 
+!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 01:14:35'!
+initializeWithCollection: aCollection
 
-!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:31:55'!
-dequeue
-	|aContainer|
-	(elements size = 1) ifTrue: [
-		aContainer := EmptyContainer new.
-		queue hasTheContainer: aContainer.
-	aContainer belongsToQueue: queue.
-		].
-	^elements removeFirst! !
+	elements := aCollection.! !
 
-!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:20:17'!
-enqueue: aThing
+
+!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:04'!
+addLast: aThing
 	^elements addLast: aThing.! !
 
-!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:18:05'!
-next
+!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:35'!
+first
 	
 	^elements first! !
+
+!NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 01:13:22'!
+removeFirst
+	|aContainer|
+		aContainer := Container with: elements.
+		queue hasTheContainer: aContainer.
+	aContainer belongsToQueue: queue.
+	^elements removeFirst! !
 
 !NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:14:45'!
 size
@@ -245,6 +277,16 @@ size
 isEmpty
 
 	^false! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NonEmptyContainer class' category: #'Queue-Exercise-WithStates'!
+NonEmptyContainer class
+	instanceVariableNames: ''!
+
+!NonEmptyContainer class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 01:09:19'!
+isFor: aValue
+	^aValue  > 1! !
 
 
 !classDefinition: #Queue category: #'Queue-Exercise-WithStates'!
@@ -260,19 +302,19 @@ initialize
 	contents belongsToQueue: self.! !
 
 
-!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:18:22'!
+!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:45:33'!
 dequeue
 
-	^contents dequeue! !
+	^contents removeFirst! !
 
-!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:19:48'!
+!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:45:49'!
 enqueue: aThing
-	^contents enqueue: aThing.! !
+	^contents addLast: aThing.! !
 
-!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:17:00'!
+!Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:55'!
 next
 	
-	^contents next.! !
+	^contents first.! !
 
 !Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 15:09:14'!
 size
