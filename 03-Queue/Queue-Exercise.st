@@ -140,10 +140,10 @@ initialize
 	contents := OrderedCollection new.! !
 
 
-!Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 15:19:11'!
+!Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 21:13:23'!
 dequeue
 
-	contents isEmpty ifTrue: [self error: self class queueEmptyErrorDescription].
+	contents at: 1 ifAbsent: [self error: self class queueEmptyErrorDescription].
 
 	^contents removeFirst! !
 
@@ -151,12 +151,10 @@ dequeue
 enqueue: aThing
 	^contents addLast: aThing.! !
 
-!Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 15:13:34'!
+!Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 21:03:38'!
 next
 	
-	contents isEmpty ifTrue: [self error: self class queueEmptyErrorDescription].
-	
-	^contents first! !
+	^contents at: 1 ifAbsent: [self error: self class queueEmptyErrorDescription].! !
 
 !Queue methodsFor: 'operations' stamp: 'GR 9/28/2018 15:09:14'!
 size
