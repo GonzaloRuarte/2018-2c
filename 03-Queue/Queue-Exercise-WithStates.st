@@ -155,16 +155,11 @@ size
 	self subclassResponsibility! !
 
 
-!Container methodsFor: 'testing' stamp: 'GR 10/2/2018 00:12:40'!
+!Container methodsFor: 'operations - private' stamp: 'GR 10/2/2018 00:12:40'!
 belongsToQueue: aQueue
 	queue := aQueue! !
 
-!Container methodsFor: 'testing' stamp: 'GR 10/2/2018 00:16:41'!
-isEmpty
-
-	self subclassResponsibility! !
-
-!Container methodsFor: 'testing' stamp: 'GR 10/2/2018 23:44:34'!
+!Container methodsFor: 'operations - private' stamp: 'GR 10/2/2018 23:44:34'!
 syncQueueWith: aCollection
 
 	|newContainer|
@@ -173,13 +168,19 @@ syncQueueWith: aCollection
 	queue hasTheContainer: newContainer.
 	newContainer belongsToQueue: queue.! !
 
+
+!Container methodsFor: 'testing' stamp: 'GR 10/2/2018 00:16:41'!
+isEmpty
+
+	self subclassResponsibility! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Container class' category: #'Queue-Exercise-WithStates'!
 Container class
 	instanceVariableNames: ''!
 
-!Container class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 23:27:06'!
+!Container class methodsFor: 'instance creation - private' stamp: 'GR 10/2/2018 23:27:06'!
 with: aCollection
 
 	|distincionDeContainer|
@@ -187,6 +188,11 @@ with: aCollection
 	distincionDeContainer:=Container subclasses detect:[:subclass | subclass isFor: (aCollection size)].
 	
 	^distincionDeContainer basicNew initializeWith: aCollection! !
+
+
+!Container class methodsFor: 'instance creation' stamp: 'GR 10/3/2018 12:00:58'!
+new
+	^Queue new container! !
 
 
 !classDefinition: #EmptyContainer category: #'Queue-Exercise-WithStates'!
@@ -227,7 +233,7 @@ isEmpty
 	^true! !
 
 
-!EmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 23:10:50'!
+!EmptyContainer methodsFor: 'initialization' stamp: 'GR 10/3/2018 01:35:43'!
 initializeWith: aValue! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -248,10 +254,10 @@ Container subclass: #NonEmptyContainer
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 23:11:23'!
-initializeWith: aValue
+!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/3/2018 01:30:17'!
+initializeWith: aCollection
 
-	elements := aValue.! !
+	elements := aCollection.! !
 
 
 !NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:04'!
@@ -301,11 +307,15 @@ Object subclass: #Queue
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!Queue methodsFor: 'initialization' stamp: 'GR 10/2/2018 00:12:01'!
+!Queue methodsFor: 'initialization' stamp: 'GR 10/3/2018 11:57:44'!
 initialize
-	contents := EmptyContainer new.
+	contents := EmptyContainer basicNew initialize.
 	contents belongsToQueue: self.! !
 
+
+!Queue methodsFor: 'operations' stamp: 'GR 10/3/2018 12:01:20'!
+container
+	^contents! !
 
 !Queue methodsFor: 'operations' stamp: 'GR 10/2/2018 00:45:33'!
 dequeue
@@ -326,10 +336,11 @@ size
 	^contents size! !
 
 
-!Queue methodsFor: 'testing' stamp: 'GR 10/2/2018 00:21:33'!
+!Queue methodsFor: 'operations - private' stamp: 'GR 10/2/2018 00:21:33'!
 hasTheContainer: aContainer
 
 	contents := aContainer! !
+
 
 !Queue methodsFor: 'testing' stamp: 'GR 9/28/2018 15:46:10'!
 isEmpty
