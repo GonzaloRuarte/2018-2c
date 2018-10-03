@@ -170,14 +170,14 @@ isEmpty
 Container class
 	instanceVariableNames: ''!
 
-!Container class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 01:05:14'!
+!Container class methodsFor: 'instance creation' stamp: 'GR 10/2/2018 23:11:33'!
 with: aCollection
 
 	|distincionDeContainer|
 
 	distincionDeContainer:=self subclasses detect:[:subclass | subclass isFor: (aCollection size)].
 	
-	^distincionDeContainer basicNew initializeWithCollection: aCollection! !
+	^distincionDeContainer basicNew initializeWith: aCollection! !
 
 
 !classDefinition: #EmptyContainer category: #'Queue-Exercise-WithStates'!
@@ -187,12 +187,12 @@ Container subclass: #EmptyContainer
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:53:39'!
+!EmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 23:10:36'!
 addLast: aThing
 	
 	|aContainer|
 	
-	aContainer := NonEmptyContainer basicNew initializeWith: aThing.
+	aContainer := NonEmptyContainer basicNew initializeWith: (OrderedCollection with: aThing).
 	queue hasTheContainer: aContainer.
 	aContainer belongsToQueue: queue.	
 	
@@ -219,8 +219,8 @@ isEmpty
 	^true! !
 
 
-!EmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 01:05:43'!
-initializeWithCollection: aCollection! !
+!EmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 23:10:50'!
+initializeWith: aValue! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -240,15 +240,10 @@ Container subclass: #NonEmptyContainer
 	poolDictionaries: ''
 	category: 'Queue-Exercise-WithStates'!
 
-!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 00:25:52'!
-initializeWith: aThing
+!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 23:11:23'!
+initializeWith: aValue
 
-	elements := OrderedCollection with: aThing.! !
-
-!NonEmptyContainer methodsFor: 'initialization' stamp: 'GR 10/2/2018 01:14:35'!
-initializeWithCollection: aCollection
-
-	elements := aCollection.! !
+	elements := aValue.! !
 
 
 !NonEmptyContainer methodsFor: 'operations' stamp: 'GR 10/2/2018 00:47:04'!
