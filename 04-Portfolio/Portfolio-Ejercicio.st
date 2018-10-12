@@ -143,21 +143,21 @@ accounts
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
 SummarizingAccount subclass: #Portfolio
-	instanceVariableNames: 'accountsCollection'
+	instanceVariableNames: 'accounts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!Portfolio methodsFor: 'balance' stamp: 'ap 10/12/2018 00:21:12'!
+!Portfolio methodsFor: 'balance' stamp: 'GR 10/12/2018 19:00:33'!
 balance
 
-	^ accountsCollection sum: [:anAccount| anAccount balance].! !
+	^ accounts sum: [:anAccount| anAccount balance].! !
 
 
-!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 10:40:06'!
+!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 18:58:14'!
 doesManage: anAccount
 
-	^self accounts includes: anAccount
+	^self managedAccounts includes: anAccount
 
 ! !
 
@@ -167,45 +167,45 @@ hasRegistered: aTransaction
 	^self transactions includes: aTransaction ! !
 
 
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 10:48:59'!
-accounts
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 19:02:50'!
+managedAccounts
 	
 	|anAccountCollection|
 	
 	anAccountCollection := OrderedCollection with: self.
 	
-	^self placeIn: anAccountCollection objects: #accounts.! !
+	^self sendToAccounts: #managedAccounts andAddTo: anAccountCollection.! !
 
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 10:50:31'!
-placeIn: aCollection objects: anObject
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 19:00:41'!
+sendToAccounts: aMessage andAddTo: aCollection
 
 
 	
-	accountsCollection do:[:anAccount| aCollection addAll: (anObject asMessage sendTo: anAccount) ].
+	accounts do:[:anAccount| aCollection addAll: (aMessage sendTo: anAccount) ].
 	
 	^aCollection! !
 
 
-!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 10:49:12'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 19:02:57'!
 transactions 
 
 	|transactionCollection|
-	transactionCollection:=OrderedCollection  new.
+	transactionCollection:= OrderedCollection  new.
 	
-	^self placeIn: transactionCollection objects: #transactions.! !
+	^self sendToAccounts: #transactions andAddTo: transactionCollection.! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 12:04:58'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 18:57:56'!
 transactionsOf: anAccount 
 	
 	|account|
-	account := self accounts detect: [:anotherAccount| anotherAccount = anAccount] ifNone: [^self error: self class accountNotManagedMessageDescription ].
+	account := self managedAccounts detect: [:anotherAccount| anotherAccount = anAccount] ifNone: [^self error: self class accountNotManagedMessageDescription ].
 	^account transactions! !
 
 
-!Portfolio methodsFor: 'initialization' stamp: 'ap 10/12/2018 00:16:22'!
+!Portfolio methodsFor: 'initialization' stamp: 'GR 10/12/2018 19:00:49'!
 initializeWith: aCollectionOfAccounts
 	
-	accountsCollection := aCollectionOfAccounts.! !
+	accounts := aCollectionOfAccounts.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -213,12 +213,12 @@ initializeWith: aCollectionOfAccounts
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/12/2018 11:58:30'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/12/2018 18:58:41'!
 with: leftAccount with: rightAccount
 	
-	leftAccount accounts detect: [:anAccount| (rightAccount doesManage: anAccount)]
+	leftAccount managedAccounts detect: [:anAccount| (rightAccount doesManage: anAccount)]
 				 			ifNone:[
-	rightAccount accounts detect: [:anAccount| (leftAccount doesManage: anAccount)]
+	rightAccount managedAccounts detect: [:anAccount| (leftAccount doesManage: anAccount)]
 							ifNone:[
 							^self basicNew initializeWith: (OrderedCollection with: leftAccount with: rightAccount).
 							]								
@@ -275,8 +275,8 @@ balance
 	^ self transactions inject: 0 into: [:aSum :aTransaction| aSum +aTransaction weightInBalance].! !
 
 
-!ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 01:48:25'!
-accounts
+!ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 18:58:57'!
+managedAccounts
 	
 	^OrderedCollection with: self.! !
 
