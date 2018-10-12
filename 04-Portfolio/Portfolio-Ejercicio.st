@@ -269,10 +269,10 @@ transactions
 	^ transactions copy! !
 
 
-!ReceptiveAccount methodsFor: 'balance' stamp: 'GR 10/12/2018 00:44:42'!
+!ReceptiveAccount methodsFor: 'balance' stamp: 'GR 10/12/2018 18:43:52'!
 balance
 
-	^ self transactions sum: [:aTransaction| aTransaction weightInBalance ] ifEmpty:[0].! !
+	^ self transactions inject: 0 into: [:aSum :aTransaction| aSum +aTransaction weightInBalance].! !
 
 
 !ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 01:48:25'!
