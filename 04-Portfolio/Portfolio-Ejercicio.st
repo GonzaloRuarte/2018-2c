@@ -194,12 +194,12 @@ transactions
 	
 	^self placeIn: transactionCollection objects: #transactions.! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 11:01:23'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 12:04:58'!
 transactionsOf: anAccount 
 	
 	|account|
-	account := (self accounts select: [:anotherAccount| anotherAccount = anAccount]) at: 1 ifAbsent: [^self error: self class accountNotManagedMessageDescription ].
-	^account transactions ! !
+	account := self accounts detect: [:anotherAccount| anotherAccount = anAccount] ifNone: [^self error: self class accountNotManagedMessageDescription ].
+	^account transactions! !
 
 
 !Portfolio methodsFor: 'initialization' stamp: 'ap 10/12/2018 00:16:22'!
@@ -213,14 +213,18 @@ initializeWith: aCollectionOfAccounts
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/12/2018 02:03:53'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/12/2018 11:58:30'!
 with: leftAccount with: rightAccount
 	
-	leftAccount accounts do: [:anAccount| (rightAccount doesManage: anAccount) ifTrue:[^self error: self accountAlreadyManagedErrorMessage ]] .
-	rightAccount accounts do: [:anAccount| (leftAccount doesManage: anAccount) ifTrue:[^self error: self accountAlreadyManagedErrorMessage ]] .
-	
-	
-	^self basicNew initializeWith: (OrderedCollection with: leftAccount with: rightAccount).! !
+	leftAccount accounts detect: [:anAccount| (rightAccount doesManage: anAccount)]
+				 			ifNone:[
+	rightAccount accounts detect: [:anAccount| (leftAccount doesManage: anAccount)]
+							ifNone:[
+							^self basicNew initializeWith: (OrderedCollection with: leftAccount with: rightAccount).
+							]								
+							] .
+	^self error: self accountAlreadyManagedErrorMessage.
+! !
 
 !Portfolio class methodsFor: 'instance creation' stamp: 'ap 10/12/2018 00:15:44'!
 withAll: aCollectionOfAccounts
