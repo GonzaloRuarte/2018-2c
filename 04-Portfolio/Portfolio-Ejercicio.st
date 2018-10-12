@@ -5,13 +5,14 @@ Object subclass: #AccountTransaction
 	poolDictionaries: ''
 	category: 'Portfolio-Ejercicio'!
 
-!AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
-value 
+!AccountTransaction methodsFor: 'value - private' stamp: 'GR 10/12/2018 00:44:26'!
+weightInBalance
 
 	self subclassResponsibility ! !
 
-!AccountTransaction methodsFor: 'value' stamp: 'GR 10/12/2018 00:44:26'!
-weightInBalance
+
+!AccountTransaction methodsFor: 'value' stamp: 'HernanWilkinson 9/12/2011 12:25'!
+value 
 
 	self subclassResponsibility ! !
 
@@ -45,15 +46,16 @@ initializeFor: aValue
 	value := aValue ! !
 
 
+!Deposit methodsFor: 'value - private' stamp: 'GR 10/12/2018 00:44:26'!
+weightInBalance
+
+	^ self value! !
+
+
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
 
 	^ value! !
-
-!Deposit methodsFor: 'value' stamp: 'GR 10/12/2018 00:44:26'!
-weightInBalance
-
-	^ self value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -85,7 +87,8 @@ value
 
 	^ value! !
 
-!Withdraw methodsFor: 'value' stamp: 'GR 10/12/2018 00:44:26'!
+
+!Withdraw methodsFor: 'value - private' stamp: 'GR 10/12/2018 00:44:26'!
 weightInBalance
 
 	^self value negated! !
@@ -137,11 +140,6 @@ accounts
 	
 	self subclassResponsibility ! !
 
-!SummarizingAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 00:57:06'!
-doesManageHandle: anAccount
-
-	self subclassResponsibility ! !
-
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
 SummarizingAccount subclass: #Portfolio
@@ -156,70 +154,52 @@ balance
 	^ accountsCollection sum: [:anAccount| anAccount balance].! !
 
 
-!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 01:17:41'!
+!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 10:40:06'!
 doesManage: anAccount
 
-	^anAccount = self or: [self doesManageHandle: anAccount]
+	^self accounts includes: anAccount
 
 ! !
 
-!Portfolio methodsFor: 'testing' stamp: 'ap 10/12/2018 00:41:47'!
+!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 10:39:54'!
 hasRegistered: aTransaction
 
-	^self transactions includes: aTransaction! !
+	^self transactions includes: aTransaction ! !
 
 
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 01:49:57'!
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 10:48:59'!
 accounts
 	
 	|anAccountCollection|
 	
 	anAccountCollection := OrderedCollection with: self.
 	
-	accountsCollection do:[:anAccount | anAccountCollection addAll: anAccount accounts].
+	^self placeIn: anAccountCollection objects: #accounts.! !
+
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 10:50:31'!
+placeIn: aCollection objects: anObject
+
+
 	
-	^anAccountCollection ! !
-
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 01:11:58'!
-doesManageHandle: anAccount
+	accountsCollection do:[:anAccount| aCollection addAll: (anObject asMessage sendTo: anAccount) ].
 	
-	accountsCollection detect: [:anotherAccount | anotherAccount = anAccount or: [anotherAccount doesManageHandle: anAccount]] ifNone:[^false].
-	^true! !
+	^aCollection! !
 
 
-!Portfolio methodsFor: 'transactions - private' stamp: 'GR 10/12/2018 02:10:17'!
-handleTransactionsOf: anAccount 
-
-	|transactionCollection|
-	transactionCollection:=OrderedCollection  new.
-	
-	accountsCollection do:[:anotherAccount| (anAccount=anotherAccount) ifTrue:[ transactionCollection addAll: anotherAccount transactions]
-								ifFalse:[ (anotherAccount  isKindOf: Portfolio ) ifTrue:[transactionCollection addAll: (anotherAccount transactionsOf: anAccount) ] ] ].
-	
-	^transactionCollection ! !
-
-
-!Portfolio methodsFor: 'transactions' stamp: 'ap 10/12/2018 00:26:02'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 10:49:12'!
 transactions 
 
 	|transactionCollection|
 	transactionCollection:=OrderedCollection  new.
 	
-	accountsCollection do:[:anAccount| transactionCollection addAll: anAccount transactions].
-	
-	^transactionCollection.! !
+	^self placeIn: transactionCollection objects: #transactions.! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 02:11:15'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 11:01:23'!
 transactionsOf: anAccount 
-
-	|transactionCollection|
-	transactionCollection:=OrderedCollection  new.
 	
-	accountsCollection do:[:anotherAccount| (anAccount=anotherAccount) ifTrue:[ transactionCollection addAll: anotherAccount transactions]
-								ifFalse:[ (anotherAccount  isKindOf: Portfolio ) ifTrue:[transactionCollection addAll: (anotherAccount handleTransactionsOf: anAccount) ] ] ].
-	
-	transactionCollection ifEmpty: [^self error: self class accountNotManagedMessageDescription ].
-	^transactionCollection ! !
+	|account|
+	account := (self accounts select: [:anotherAccount| anotherAccount = anAccount]) at: 1 ifAbsent: [^self error: self class accountNotManagedMessageDescription ].
+	^account transactions ! !
 
 
 !Portfolio methodsFor: 'initialization' stamp: 'ap 10/12/2018 00:16:22'!
@@ -296,21 +276,15 @@ accounts
 	
 	^OrderedCollection with: self.! !
 
-!ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 00:56:14'!
-doesManageHandle: anAccount
+
+!ReceptiveAccount methodsFor: 'testing' stamp: 'GR 10/12/2018 09:58:51'!
+doesManage: anAccount
 
 	^ self = anAccount 
 ! !
 
+!ReceptiveAccount methodsFor: 'testing' stamp: 'GR 10/12/2018 10:28:14'!
+hasRegistered: aTransaction
 
-!ReceptiveAccount methodsFor: 'testing' stamp: 'GR 10/12/2018 00:58:17'!
-doesManage: anAccount
-
-	^ self doesManageHandle: anAccount 
-! !
-
-!ReceptiveAccount methodsFor: 'testing' stamp: 'HAW 10/11/2018 16:53:54'!
-hasRegistered: aTtransaction
-
-	^ transactions includes: aTtransaction 
+	^ transactions includes: aTransaction 
 ! !
