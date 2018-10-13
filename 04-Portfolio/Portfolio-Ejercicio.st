@@ -213,23 +213,23 @@ initializeWith: aCollectionOfAccounts
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/12/2018 18:58:41'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 20:11:35'!
 with: leftAccount with: rightAccount
 	
 	leftAccount managedAccounts detect: [:anAccount| (rightAccount doesManage: anAccount)]
 				 			ifNone:[
 	rightAccount managedAccounts detect: [:anAccount| (leftAccount doesManage: anAccount)]
 							ifNone:[
-							^self basicNew initializeWith: (OrderedCollection with: leftAccount with: rightAccount).
+							^self withAll: (OrderedCollection with: leftAccount with: rightAccount).
 							]								
 							] .
 	^self error: self accountAlreadyManagedErrorMessage.
 ! !
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'ap 10/12/2018 00:15:44'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 20:14:25'!
 withAll: aCollectionOfAccounts
 
-	^self new initializeWith:  aCollectionOfAccounts! !
+	^self basicNew initializeWith:  aCollectionOfAccounts! !
 
 
 !Portfolio class methodsFor: 'error messages' stamp: 'HAW 5/8/2018 16:08:43'!
