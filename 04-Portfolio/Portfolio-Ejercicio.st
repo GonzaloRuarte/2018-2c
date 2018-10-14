@@ -135,8 +135,13 @@ balance
 	self subclassResponsibility ! !
 
 
-!SummarizingAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 01:48:41'!
-accounts
+!SummarizingAccount methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:34:33'!
+accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
+
+		self subclassResponsibility ! !
+
+!SummarizingAccount methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:33:38'!
+managedAccounts
 	
 	self subclassResponsibility ! !
 
@@ -167,6 +172,12 @@ hasRegistered: aTransaction
 	^self transactions includes: aTransaction ! !
 
 
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:34:15'!
+accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
+
+^(anotherAccount managedAccounts detect: [:account| (self doesManage: account)]
+							ifNone: aCollaborationToEval)! !
+
 !Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 19:02:50'!
 managedAccounts
 	
@@ -176,7 +187,7 @@ managedAccounts
 	
 	^self sendToAccounts: #managedAccounts andAddTo: anAccountCollection.! !
 
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 19:00:41'!
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/13/2018 20:22:49'!
 sendToAccounts: aMessage andAddTo: aCollection
 
 
@@ -213,23 +224,28 @@ initializeWith: aCollectionOfAccounts
 Portfolio class
 	instanceVariableNames: ''!
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 20:11:35'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 20:31:26'!
 with: leftAccount with: rightAccount
 	
-	leftAccount managedAccounts detect: [:anAccount| (rightAccount doesManage: anAccount)]
-				 			ifNone:[
-	rightAccount managedAccounts detect: [:anAccount| (leftAccount doesManage: anAccount)]
-							ifNone:[
-							^self withAll: (OrderedCollection with: leftAccount with: rightAccount).
-							]								
-							] .
-	^self error: self accountAlreadyManagedErrorMessage.
+
+		^self withAll: (OrderedCollection with: leftAccount with: rightAccount).
 ! !
 
-!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 20:14:25'!
+!Portfolio class methodsFor: 'instance creation' stamp: 'GR 10/13/2018 21:33:07'!
 withAll: aCollectionOfAccounts
 
-	^self basicNew initializeWith:  aCollectionOfAccounts! !
+	aCollectionOfAccounts do: [:anAccountInCollection| 
+		aCollectionOfAccounts do: [:anotherAccountInCollection|
+			anAccountInCollection accountsAlsoManagedBy: anotherAccountInCollection ifNone: [
+			anotherAccountInCollection accountsAlsoManagedBy: anAccountInCollection ifNone: [
+							^self basicNew initializeWith: aCollectionOfAccounts.
+							]
+							]
+							]
+		without: anAccountInCollection
+							].
+	^self error: self accountAlreadyManagedErrorMessage.
+! !
 
 
 !Portfolio class methodsFor: 'error messages' stamp: 'HAW 5/8/2018 16:08:43'!
@@ -274,6 +290,11 @@ balance
 
 	^ self transactions inject: 0 into: [:aSum :aTransaction| aSum +aTransaction weightInBalance].! !
 
+
+!ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:39:35'!
+accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
+
+	^aCollaborationToEval value! !
 
 !ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 18:58:57'!
 managedAccounts
