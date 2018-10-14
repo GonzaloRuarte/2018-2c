@@ -205,11 +205,11 @@ transactions
 	
 	^self sendToAccounts: #transactions andAddTo: transactionCollection.! !
 
-!Portfolio methodsFor: 'transactions' stamp: 'GR 10/12/2018 18:57:56'!
+!Portfolio methodsFor: 'transactions' stamp: 'GR 10/14/2018 20:01:20'!
 transactionsOf: anAccount 
 	
 	|account|
-	account := self managedAccounts detect: [:anotherAccount| anotherAccount = anAccount] ifNone: [^self error: self class accountNotManagedMessageDescription ].
+	account := self managedAccounts detect: [:aManagedAccount| aManagedAccount = anAccount] ifNone: [^self error: self class accountNotManagedMessageDescription ].
 	^account transactions! !
 
 
