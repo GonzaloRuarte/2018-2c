@@ -122,6 +122,11 @@ hasRegistered: aTransaction
 
 	self subclassResponsibility ! !
 
+!SummarizingAccount methodsFor: 'testing' stamp: 'GR 10/13/2018 21:33:38'!
+managedAccounts
+	
+	self subclassResponsibility ! !
+
 
 !SummarizingAccount methodsFor: 'transactions' stamp: 'HernanWilkinson 7/13/2011 18:35'!
 transactions
@@ -139,11 +144,6 @@ balance
 accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
 
 		self subclassResponsibility ! !
-
-!SummarizingAccount methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:33:38'!
-managedAccounts
-	
-	self subclassResponsibility ! !
 
 
 !classDefinition: #Portfolio category: #'Portfolio-Ejercicio'!
@@ -171,14 +171,7 @@ hasRegistered: aTransaction
 
 	^self transactions includes: aTransaction ! !
 
-
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:34:15'!
-accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
-
-^(anotherAccount managedAccounts detect: [:account| (self doesManage: account)]
-							ifNone: aCollaborationToEval)! !
-
-!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/12/2018 19:02:50'!
+!Portfolio methodsFor: 'testing' stamp: 'GR 10/12/2018 19:02:50'!
 managedAccounts
 	
 	|anAccountCollection|
@@ -186,6 +179,13 @@ managedAccounts
 	anAccountCollection := OrderedCollection with: self.
 	
 	^self sendToAccounts: #managedAccounts andAddTo: anAccountCollection.! !
+
+
+!Portfolio methodsFor: 'testing - private' stamp: 'GR 10/13/2018 21:34:15'!
+accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
+
+^(anotherAccount managedAccounts detect: [:account| (self doesManage: account)]
+							ifNone: aCollaborationToEval)! !
 
 !Portfolio methodsFor: 'testing - private' stamp: 'GR 10/13/2018 20:22:49'!
 sendToAccounts: aMessage andAddTo: aCollection
@@ -296,11 +296,6 @@ accountsAlsoManagedBy: anotherAccount ifNone: aCollaborationToEval
 
 	^aCollaborationToEval value! !
 
-!ReceptiveAccount methodsFor: 'testing - private' stamp: 'GR 10/12/2018 18:58:57'!
-managedAccounts
-	
-	^OrderedCollection with: self.! !
-
 
 !ReceptiveAccount methodsFor: 'testing' stamp: 'GR 10/12/2018 09:58:51'!
 doesManage: anAccount
@@ -313,3 +308,8 @@ hasRegistered: aTransaction
 
 	^ transactions includes: aTransaction 
 ! !
+
+!ReceptiveAccount methodsFor: 'testing' stamp: 'GR 10/12/2018 18:58:57'!
+managedAccounts
+	
+	^OrderedCollection with: self.! !
