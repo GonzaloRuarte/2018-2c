@@ -295,12 +295,12 @@ Object subclass: #Consultant
 Consultant class
 	instanceVariableNames: ''!
 
-!Consultant class methodsFor: 'operations' stamp: 'GR 10/19/2018 13:01:06'!
+!Consultant class methodsFor: 'operations' stamp: 'GR 10/19/2018 13:15:09'!
 accountSummaryLinesOf: aReceptiveAccount
 
 	|visitor|
 	
-	visitor:= AccountSummaryLines new.
+	visitor:= AccountSummaryLinesVisitor new.
 
 	^aReceptiveAccount transactions inject: OrderedCollection new into: [:summary :aTransaction| summary add: (aTransaction accept: visitor). summary
 													
@@ -589,29 +589,29 @@ visitWithdraw: aWithdraw
 	self subclassResponsibility ! !
 
 
-!classDefinition: #AccountSummaryLines category: #'PortfolioTreePrinter-Ejercicio'!
-Visitor subclass: #AccountSummaryLines
+!classDefinition: #AccountSummaryLinesVisitor category: #'PortfolioTreePrinter-Ejercicio'!
+Visitor subclass: #AccountSummaryLinesVisitor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTreePrinter-Ejercicio'!
 
-!AccountSummaryLines methodsFor: 'operations' stamp: 'GR 10/19/2018 12:55:59'!
+!AccountSummaryLinesVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 12:55:59'!
 visitCertificateOfDeposit: aCertificateOfDeposit
 
 	^'Plazo fijo por ', aCertificateOfDeposit value asString, ' durante ', aCertificateOfDeposit days asString, ' dias a una tna de ', aCertificateOfDeposit rateAsPercentage asString, '%'! !
 
-!AccountSummaryLines methodsFor: 'operations' stamp: 'GR 10/19/2018 12:56:52'!
+!AccountSummaryLinesVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 12:56:52'!
 visitDeposit: aDeposit
 
 	^'Deposito por ', aDeposit value asString! !
 
-!AccountSummaryLines methodsFor: 'operations' stamp: 'GR 10/19/2018 13:03:27'!
+!AccountSummaryLinesVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 13:03:27'!
 visitTransferLeg: aTransferLeg
 
 	^'Transferencia por ', (aTransferLeg affectBalance: 0) asString! !
 
-!AccountSummaryLines methodsFor: 'operations' stamp: 'GR 10/19/2018 12:58:57'!
+!AccountSummaryLinesVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 12:58:57'!
 visitWithdraw: aWithdraw
 
 	^'Extraccion por ', aWithdraw value asString! !
