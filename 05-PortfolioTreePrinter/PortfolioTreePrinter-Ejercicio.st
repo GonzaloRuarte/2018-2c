@@ -475,6 +475,15 @@ portofolioTreeOf: aPortfolio namingAccountWith: aDictionary
 
 	^aPortfolio accept: visitor with: aDictionary spacing: ''! !
 
+!Consultant class methodsFor: 'operations' stamp: 'GR 10/22/2018 14:39:03'!
+reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary
+
+	|visitor|
+	
+	visitor := TreePrinterVisitor new.
+
+	^(aPortfolio accept: visitor with: aDictionary spacing: '') reversed! !
+
 
 !classDefinition: #SummarizingAccount category: #'PortfolioTreePrinter-Ejercicio'!
 Object subclass: #SummarizingAccount

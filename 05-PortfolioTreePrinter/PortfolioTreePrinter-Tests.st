@@ -564,7 +564,7 @@ registerTransferOf: anAmount from: fromAccount to: toAccount
 
 	^Transfer registerTransferOf: anAmount from: fromAccount to: toAccount.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'GR 10/22/2018 14:34:30'!
 reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	self shouldBeImplemented ! !
+	^Consultant reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary! !
