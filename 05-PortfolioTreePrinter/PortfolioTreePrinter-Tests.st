@@ -528,30 +528,30 @@ test29ReversePortfolioTreePrinterPrintsTheCompositeStartingFromTheLeaves
 	! !
 
 
-!PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 20:22:46'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:06:09'!
 accountSummaryLinesOf: aReceptiveAccount 
 	
-	^Consultant accountSummaryLinesOf: aReceptiveAccount! !
+	^(AccountSummaryLinesVisitor of: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 20:22:38'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:06:19'!
 accountTransferNetOf: aReceptiveAccount 
 	
-	^Consultant accountTransferNetOf: aReceptiveAccount ! !
+	^(AccountTransferNetVisitor of: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 21:30:53'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:06:28'!
 investmentEarningsOf: aReceptiveAccount 
 	
-		^Consultant investmentEarningsOf: aReceptiveAccount ! !
+		^(InvestmentEarningsVisitor of: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 21:22:39'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:06:46'!
 investmentNetOf: aReceptiveAccount 
 	
-	^Consultant investmentNetOf: aReceptiveAccount ! !
+	^(InvestmentNetVisitor of: aReceptiveAccount) value.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'GR 10/22/2018 13:11:58'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:36:34'!
 portofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	^Consultant portofolioTreeOf: aPortfolio namingAccountWith: aDictionary! !
+	^(TreePrinterVisitor of: aPortfolio with: aDictionary) value! !
 
 !PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 21:24:59'!
 registerCertificateOfDepositOf: anAmount during: aNumberOfDays at: anInteresRate on: anAccount
@@ -564,7 +564,7 @@ registerTransferOf: anAmount from: fromAccount to: toAccount
 
 	^Transfer registerTransferOf: anAmount from: fromAccount to: toAccount.! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'GR 10/22/2018 14:34:30'!
+!PortfolioTest methodsFor: 'test support' stamp: 'ap 10/22/2018 22:42:17'!
 reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	^Consultant reversePortofolioTreeOf: aPortfolio namingAccountWith: aDictionary! !
+	^(ReverseTreePrinterVisitor of: aPortfolio with: aDictionary) value! !
