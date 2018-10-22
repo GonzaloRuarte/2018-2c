@@ -548,10 +548,10 @@ investmentNetOf: aReceptiveAccount
 	
 	^Consultant investmentNetOf: aReceptiveAccount ! !
 
-!PortfolioTest methodsFor: 'test support' stamp: 'HernanWilkinson 9/6/2016 19:43'!
+!PortfolioTest methodsFor: 'test support' stamp: 'GR 10/22/2018 13:11:58'!
 portofolioTreeOf: aPortfolio namingAccountWith: aDictionary 
 	
-	self shouldBeImplemented ! !
+	^Consultant portofolioTreeOf: aPortfolio namingAccountWith: aDictionary! !
 
 !PortfolioTest methodsFor: 'test support' stamp: 'APç 10/18/2018 21:24:59'!
 registerCertificateOfDepositOf: anAmount during: aNumberOfDays at: anInteresRate on: anAccount
