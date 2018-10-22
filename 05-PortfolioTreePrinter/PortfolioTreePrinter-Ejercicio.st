@@ -357,10 +357,10 @@ visitWithdraw: aWithdraw
 	lines add: 'Extraccion por ', aWithdraw value asString! !
 
 
-!AccountSummaryLinesVisitor methodsFor: 'value' stamp: 'ap 10/22/2018 21:59:04'!
+!AccountSummaryLinesVisitor methodsFor: 'value' stamp: 'ap 10/22/2018 20:31:42'!
 value
 
-	account transactions do: [ :aTransaction|  (aTransaction accept: self)].
+	account visitTransactionsWith: self.
 	
 	^lines.! !
 
