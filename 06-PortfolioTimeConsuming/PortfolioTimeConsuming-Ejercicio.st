@@ -684,13 +684,13 @@ Object subclass: #ParallelEvaluation
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
-!ParallelEvaluation methodsFor: 'initialization' stamp: 'GR 10/26/2018 00:18:59'!
+!ParallelEvaluation methodsFor: 'initialization' stamp: 'GR 10/26/2018 11:13:29'!
 initializeOf: collaborationsToEval
 
-	collaborations := OrderedCollection newFrom: collaborationsToEval! !
+	collaborations := collaborationsToEval! !
 
 
-!ParallelEvaluation methodsFor: 'evaluating' stamp: 'GR 10/26/2018 00:19:25'!
+!ParallelEvaluation methodsFor: 'evaluating' stamp: 'GR 10/26/2018 11:14:19'!
 value
 
 	semaphores := OrderedCollection new.
@@ -698,7 +698,7 @@ value
 	collaborations do: [:aCollaborationToEval| 
 		
 		semaphores add: Semaphore new.
-		[aCollaborationToEval ensure: [(semaphores at: (collaborations find: aCollaborationToEval )) signal]] fork.
+		[aCollaborationToEval ensure: [(semaphores at: (collaborations find: aCollaborationToEval )-2) signal]] fork.
 		
 		].
 	
