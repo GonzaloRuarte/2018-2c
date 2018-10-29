@@ -11,12 +11,12 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'GR 10/25/2018 23:37:04'!
+!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:20:59'!
 lines 
 
 	| lines investmentEarnings collaborationsToEval|
 	
-	collaborationsToEval := OrderedCollection with: [investmentEarnings := (InvestmentNetVisitor for: account) value] with: [lines := (AccountSummaryWithInvestmentEarnings for: account) lines].
+	collaborationsToEval := OrderedCollection with: (Thread for: [investmentEarnings := (InvestmentNetVisitor for: account) value]) with: (Thread for: [lines := (AccountSummaryWithInvestmentEarnings for: account) lines]).
 		
 	(ParallelEvaluation of: collaborationsToEval) value.
 
@@ -49,12 +49,12 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'GR 10/25/2018 23:37:15'!
+!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:15:31'!
 lines 
 
 	| lines investmentEarnings collaborationsToEval|
 	
-	collaborationsToEval := OrderedCollection with: [investmentEarnings := (InvestmentEarningVisitor for: account) value] with: [lines := (AccountSummary for: account) lines].
+	collaborationsToEval := OrderedCollection with: (Thread for: [investmentEarnings := (InvestmentEarningVisitor for: account) value]) with: (Thread for: [lines := (AccountSummary for: account) lines]).
 	
 	(ParallelEvaluation of: collaborationsToEval) value.
 
@@ -679,7 +679,7 @@ for: aReceptiveAccount
 
 !classDefinition: #ParallelEvaluation category: #'PortfolioTimeConsuming-Ejercicio'!
 Object subclass: #ParallelEvaluation
-	instanceVariableNames: 'collaborations semaphores'
+	instanceVariableNames: 'collaborations'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
@@ -690,18 +690,12 @@ initializeOf: collaborationsToEval
 	collaborations := collaborationsToEval! !
 
 
-!ParallelEvaluation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 19:37:30'!
+!ParallelEvaluation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:33:26'!
 value
 
-	semaphores := Dictionary new.
+	collaborations do: [:aCollaborationToEval| aCollaborationToEval run].
 	
-	collaborations do: [:aCollaborationToEval| 
-		semaphores at: aCollaborationToEval put: Semaphore new.
-		[aCollaborationToEval ensure: [(semaphores at: aCollaborationToEval ) signal]] fork.
-		
-		].
-	
-	semaphores do: [:aSemaphore| aSemaphore wait]
+	collaborations do: [:aCollaborationToValue| aCollaborationToValue value].
 	
 	
 
@@ -1039,6 +1033,44 @@ of: aPortfolio namingAccountsWith: aDictionary
 	
 	^ self new initializeOf: aPortfolio namingAccountsWith: aDictionary 
 	! !
+
+
+!classDefinition: #Thread category: #'PortfolioTimeConsuming-Ejercicio'!
+Object subclass: #Thread
+	instanceVariableNames: 'block semaphore value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTimeConsuming-Ejercicio'!
+
+!Thread methodsFor: 'executing' stamp: 'APç 10/29/2018 20:32:51'!
+run
+
+	[ value:=block ensure: [semaphore signal] ] fork.! !
+
+!Thread methodsFor: 'executing' stamp: 'APç 10/29/2018 20:49:50'!
+value
+
+	semaphore wait.
+	semaphore signal.
+	^value.! !
+
+
+!Thread methodsFor: 'initialization' stamp: 'APç 10/29/2018 20:52:28'!
+initializeFor: aBlock
+
+	block:=aBlock .
+	semaphore:= Semaphore new.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Thread class' category: #'PortfolioTimeConsuming-Ejercicio'!
+Thread class
+	instanceVariableNames: ''!
+
+!Thread class methodsFor: 'instance creation' stamp: 'APç 10/29/2018 20:52:28'!
+for: aBlock
+
+	^self new initializeFor: aBlock! !
 
 
 !classDefinition: #Transfer category: #'PortfolioTimeConsuming-Ejercicio'!
