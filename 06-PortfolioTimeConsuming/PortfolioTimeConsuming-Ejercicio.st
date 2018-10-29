@@ -690,15 +690,14 @@ initializeOf: collaborationsToEval
 	collaborations := collaborationsToEval! !
 
 
-!ParallelEvaluation methodsFor: 'evaluating' stamp: 'GR 10/26/2018 11:14:19'!
+!ParallelEvaluation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 19:37:30'!
 value
 
-	semaphores := OrderedCollection new.
+	semaphores := Dictionary new.
 	
 	collaborations do: [:aCollaborationToEval| 
-		
-		semaphores add: Semaphore new.
-		[aCollaborationToEval ensure: [(semaphores at: (collaborations find: aCollaborationToEval )-2) signal]] fork.
+		semaphores at: aCollaborationToEval put: Semaphore new.
+		[aCollaborationToEval ensure: [(semaphores at: aCollaborationToEval ) signal]] fork.
 		
 		].
 	
