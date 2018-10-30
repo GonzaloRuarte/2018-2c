@@ -11,12 +11,12 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:20:59'!
+!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'GR 10/30/2018 13:24:18'!
 lines 
 
 	| lines investmentEarnings collaborationsToEval|
 	
-	collaborationsToEval := OrderedCollection with: (Thread for: [investmentEarnings := (InvestmentNetVisitor for: account) value]) with: (Thread for: [lines := (AccountSummaryWithInvestmentEarnings for: account) lines]).
+	collaborationsToEval := OrderedCollection with: (Future for: [investmentEarnings := (InvestmentNetVisitor for: account) value]) with: (Future for: [lines := (AccountSummaryWithInvestmentEarnings for: account) lines]).
 		
 	(ParallelEvaluation of: collaborationsToEval) value.
 
@@ -49,12 +49,12 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:15:31'!
+!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'GR 10/30/2018 13:24:18'!
 lines 
 
 	| lines investmentEarnings collaborationsToEval|
 	
-	collaborationsToEval := OrderedCollection with: (Thread for: [investmentEarnings := (InvestmentEarningVisitor for: account) value]) with: (Thread for: [lines := (AccountSummary for: account) lines]).
+	collaborationsToEval := OrderedCollection with: (Future for: [investmentEarnings := (InvestmentEarningVisitor for: account) value]) with: (Future for: [lines := (AccountSummary for: account) lines]).
 	
 	(ParallelEvaluation of: collaborationsToEval) value.
 
@@ -677,6 +677,44 @@ for: aReceptiveAccount
 	^ self new initializeFor: aReceptiveAccount ! !
 
 
+!classDefinition: #Future category: #'PortfolioTimeConsuming-Ejercicio'!
+Object subclass: #Future
+	instanceVariableNames: 'collaborationsToRun semaphore returnValue'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'PortfolioTimeConsuming-Ejercicio'!
+
+!Future methodsFor: 'executing' stamp: 'GR 10/30/2018 13:19:51'!
+run
+
+	[ returnValue :=collaborationsToRun ensure: [semaphore signal] ] fork.! !
+
+!Future methodsFor: 'executing' stamp: 'GR 10/30/2018 13:19:31'!
+value
+
+	semaphore wait.
+	semaphore signal.
+	^returnValue.! !
+
+
+!Future methodsFor: 'initialization' stamp: 'GR 10/30/2018 13:20:00'!
+initializeFor: aBlock
+
+	collaborationsToRun :=aBlock .
+	semaphore:= Semaphore new.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Future class' category: #'PortfolioTimeConsuming-Ejercicio'!
+Future class
+	instanceVariableNames: ''!
+
+!Future class methodsFor: 'instance creation' stamp: 'APç 10/29/2018 20:52:28'!
+for: aBlock
+
+	^self new initializeFor: aBlock! !
+
+
 !classDefinition: #ParallelEvaluation category: #'PortfolioTimeConsuming-Ejercicio'!
 Object subclass: #ParallelEvaluation
 	instanceVariableNames: 'collaborations'
@@ -1033,44 +1071,6 @@ of: aPortfolio namingAccountsWith: aDictionary
 	
 	^ self new initializeOf: aPortfolio namingAccountsWith: aDictionary 
 	! !
-
-
-!classDefinition: #Thread category: #'PortfolioTimeConsuming-Ejercicio'!
-Object subclass: #Thread
-	instanceVariableNames: 'block semaphore value'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'PortfolioTimeConsuming-Ejercicio'!
-
-!Thread methodsFor: 'executing' stamp: 'APç 10/29/2018 20:32:51'!
-run
-
-	[ value:=block ensure: [semaphore signal] ] fork.! !
-
-!Thread methodsFor: 'executing' stamp: 'APç 10/29/2018 20:49:50'!
-value
-
-	semaphore wait.
-	semaphore signal.
-	^value.! !
-
-
-!Thread methodsFor: 'initialization' stamp: 'APç 10/29/2018 20:52:28'!
-initializeFor: aBlock
-
-	block:=aBlock .
-	semaphore:= Semaphore new.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Thread class' category: #'PortfolioTimeConsuming-Ejercicio'!
-Thread class
-	instanceVariableNames: ''!
-
-!Thread class methodsFor: 'instance creation' stamp: 'APç 10/29/2018 20:52:28'!
-for: aBlock
-
-	^self new initializeFor: aBlock! !
 
 
 !classDefinition: #Transfer category: #'PortfolioTimeConsuming-Ejercicio'!
