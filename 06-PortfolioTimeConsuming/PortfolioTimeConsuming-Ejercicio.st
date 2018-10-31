@@ -98,7 +98,6 @@ value
 	self subclassResponsibility ! !
 
 
-
 !AccountTransaction methodsFor: 'visiting' stamp: 'HAW 5/15/2018 07:23:29'!
 accept: anAccountTransactionVisitor
 
@@ -159,7 +158,6 @@ initializeWith: anAmount at: aRate during: aNumberOfDays
 	value:= anAmount.
 	rate:=aRate .
 	days:=aNumberOfDays .! !
-
 
 
 !CertificateOfDeposit methodsFor: 'accessing' stamp: 'HernanWilkinson 7/14/2011 06:23'!
@@ -238,7 +236,6 @@ affectBalance: currentBalance
 value
 
 	^ value! !
-
 
 
 !Deposit methodsFor: 'visiting' stamp: 'HernanWilkinson 7/14/2011 06:52'!
@@ -341,7 +338,6 @@ TransferLeg subclass: #TransferDeposit
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
-
 !TransferDeposit methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 20:34:58'!
 affectBalance: currentBalance
 
@@ -360,7 +356,6 @@ TransferLeg subclass: #TransferWithdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
-
 
 !TransferWithdraw methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 20:34:40'!
 affectBalance: currentBalance
@@ -396,7 +391,6 @@ affectBalance: currentBalance
 value
 
 	^ value ! !
-
 
 
 !Withdraw methodsFor: 'visiting' stamp: 'HAW 10/24/2018 12:40:17'!
@@ -780,19 +774,20 @@ run
 
 	[ returnValue :=collaborationsToRun ensure: [semaphore signal] ] fork.! !
 
-!Future methodsFor: 'executing' stamp: 'GR 10/30/2018 13:19:31'!
-value
-
-	semaphore wait.
-	semaphore signal.
-	^returnValue.! !
-
 
 !Future methodsFor: 'initialization' stamp: 'GR 10/30/2018 13:20:00'!
 initializeFor: aBlock
 
 	collaborationsToRun :=aBlock .
 	semaphore:= Semaphore new.! !
+
+
+!Future methodsFor: 'value' stamp: 'GR 10/30/2018 13:19:31'!
+value
+
+	semaphore wait.
+	semaphore signal.
+	^returnValue.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -804,42 +799,6 @@ Future class
 for: aBlock
 
 	^self new initializeFor: aBlock! !
-
-
-!classDefinition: #ParallelEvaluation category: #'PortfolioTimeConsuming-Ejercicio'!
-Object subclass: #ParallelEvaluation
-	instanceVariableNames: 'collaborations'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'PortfolioTimeConsuming-Ejercicio'!
-
-!ParallelEvaluation methodsFor: 'initialization' stamp: 'GR 10/26/2018 11:13:29'!
-initializeOf: collaborationsToEval
-
-	collaborations := collaborationsToEval! !
-
-
-!ParallelEvaluation methodsFor: 'evaluating' stamp: 'APç 10/29/2018 20:33:26'!
-value
-
-	collaborations do: [:aCollaborationToEval| aCollaborationToEval run].
-	
-	collaborations do: [:aCollaborationToValue| aCollaborationToValue value].
-	
-	
-
-! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'ParallelEvaluation class' category: #'PortfolioTimeConsuming-Ejercicio'!
-ParallelEvaluation class
-	instanceVariableNames: ''!
-
-!ParallelEvaluation class methodsFor: 'instance creation' stamp: 'GR 10/25/2018 23:19:17'!
-of: collaborationsToEval
-
-	^self new initializeOf: collaborationsToEval ! !
 
 
 !classDefinition: #ReversePortfolioTreePrinter category: #'PortfolioTimeConsuming-Ejercicio'!
@@ -1170,7 +1129,6 @@ Object subclass: #Transfer
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
-
 
 !Transfer methodsFor: 'initialization' stamp: 'HAW 10/18/2018 21:08:52'!
 initializeOf: anAmount 
