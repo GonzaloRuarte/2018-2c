@@ -11,18 +11,21 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'GR 10/30/2018 13:24:18'!
+!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'ap 10/30/2018 23:48:02'!
 lines 
 
-	| lines investmentEarnings collaborationsToEval|
-	
-	collaborationsToEval := OrderedCollection with: (Future for: [investmentEarnings := (InvestmentNetVisitor for: account) value]) with: (Future for: [lines := (AccountSummaryWithInvestmentEarnings for: account) lines]).
-		
-	(ParallelEvaluation of: collaborationsToEval) value.
+	| lines investmentEarnings |
 
-	lines add: 'Inversiones por ', investmentEarnings printString.
 	
-	 ^ lines! !
+	lines:= Future for: [(AccountSummaryWithInvestmentEarnings for: account) lines].
+	
+	investmentEarnings := Future for: [(InvestmentNetVisitor for: account) value].
+	lines run.
+	investmentEarnings run.
+	
+	lines value add: 'Inversiones por ', investmentEarnings value printString.
+	
+	 ^ lines value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -49,18 +52,21 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'GR 10/30/2018 13:24:18'!
+!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'ap 10/30/2018 23:48:48'!
 lines 
 
-	| lines investmentEarnings collaborationsToEval|
+	| lines investmentEarnings|
 	
-	collaborationsToEval := OrderedCollection with: (Future for: [investmentEarnings := (InvestmentEarningVisitor for: account) value]) with: (Future for: [lines := (AccountSummary for: account) lines]).
+	lines:= Future for: [(AccountSummary for: account) lines].
 	
-	(ParallelEvaluation of: collaborationsToEval) value.
-
-	lines add: 'Ganancias por ', investmentEarnings printString.
+	investmentEarnings:= Future for: [(InvestmentEarningVisitor for: account) value].
 	
-	 ^ lines! !
+	lines run.
+	investmentEarnings  run.
+	
+	lines value add: 'Ganancias por ', investmentEarnings value printString.
+	
+	 ^ lines value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -90,6 +96,7 @@ affectBalance: currentBalance
 value
 
 	self subclassResponsibility ! !
+
 
 
 !AccountTransaction methodsFor: 'visiting' stamp: 'HAW 5/15/2018 07:23:29'!
@@ -127,6 +134,34 @@ AccountTransaction subclass: #CertificateOfDeposit
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
+!CertificateOfDeposit methodsFor: 'value' stamp: 'APç 10/18/2018 21:37:53'!
+rateAsPercentage
+
+	^ rate * 100.! !
+
+!CertificateOfDeposit methodsFor: 'value' stamp: 'APç 10/18/2018 21:32:56'!
+valueOfEarnings
+
+	^ value*(rate /360)*days ! !
+
+
+!CertificateOfDeposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/14/2011 05:16'!
+initializeFor: aValue during: aNumberOfDay at: aTNA on: anAccount
+
+	value := aValue.
+	numberOfDays := aNumberOfDay.
+	tna := aTNA.
+	account := anAccount ! !
+
+!CertificateOfDeposit methodsFor: 'initialization' stamp: 'APç 10/18/2018 21:20:04'!
+initializeWith: anAmount at: aRate during: aNumberOfDays
+
+	value:= anAmount.
+	rate:=aRate .
+	days:=aNumberOfDays .! !
+
+
+
 !CertificateOfDeposit methodsFor: 'accessing' stamp: 'HernanWilkinson 7/14/2011 06:23'!
 days
 	
@@ -152,15 +187,6 @@ value
 accept: aTransactionVisitor
 
 	^ aTransactionVisitor visitCertificateOfDeposit: self! !
-
-
-!CertificateOfDeposit methodsFor: 'initialization' stamp: 'HernanWilkinson 7/14/2011 05:16'!
-initializeFor: aValue during: aNumberOfDay at: aTNA on: anAccount
-
-	value := aValue.
-	numberOfDays := aNumberOfDay.
-	tna := aTNA.
-	account := anAccount ! !
 
 
 !CertificateOfDeposit methodsFor: 'evaluating' stamp: 'HAW 10/24/2018 12:41:35'!
@@ -214,6 +240,7 @@ value
 	^ value! !
 
 
+
 !Deposit methodsFor: 'visiting' stamp: 'HernanWilkinson 7/14/2011 06:52'!
 accept: aTransactionVisitor
 
@@ -230,6 +257,16 @@ for: aValue
 
 	^ self new initializeFor: aValue ! !
 
+!Deposit class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/13/2011 19:41'!
+register: aValue on: account
+
+	| withdraw |
+	
+	withdraw := self for: aValue.
+	account register: withdraw.
+		
+	^ withdraw! !
+
 
 !classDefinition: #TransferLeg category: #'PortfolioTimeConsuming-Ejercicio'!
 AccountTransaction subclass: #TransferLeg
@@ -238,16 +275,34 @@ AccountTransaction subclass: #TransferLeg
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
-!TransferLeg methodsFor: 'transfer' stamp: 'HAW 10/18/2018 21:05:34'!
-transfer
-
-	^transfer ! !
-
-
 !TransferLeg methodsFor: 'initialization' stamp: 'HAW 10/18/2018 21:07:15'!
 initializeRelatedTo: aTransfer 
 	
 	transfer := aTransfer ! !
+
+!TransferLeg methodsFor: 'initialization' stamp: 'APç 10/18/2018 19:56:50'!
+initializeWith:anAmount belongingTo: aTransfer
+
+	value:=anAmount.
+	transfer:=aTransfer. ! !
+
+
+!TransferLeg methodsFor: 'value' stamp: 'APç 10/18/2018 19:51:32'!
+affectBalance: currentBalance
+
+	self subclassResponsibility ! !
+
+
+!TransferLeg methodsFor: 'visitor - private' stamp: 'GR 10/19/2018 12:46:45'!
+accept: aVisitor
+	
+	^aVisitor visitTransferLeg: self! !
+
+
+!TransferLeg methodsFor: 'transfer' stamp: 'HAW 10/18/2018 21:05:34'!
+transfer
+
+	^transfer ! !
 
 
 !TransferLeg methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 20:35:56'!
@@ -261,6 +316,18 @@ value
 TransferLeg class
 	instanceVariableNames: ''!
 
+!TransferLeg class methodsFor: 'instance creation' stamp: 'APç 10/18/2018 19:55:25'!
+register:anAmount on:fromAccount belongingTo: aTransfer
+
+
+	| withdraw |
+	
+	withdraw := self new initializeWith:anAmount belongingTo: aTransfer.
+	fromAccount register: withdraw.
+		
+	^ withdraw
+! !
+
 !TransferLeg class methodsFor: 'instance creation' stamp: 'HAW 10/18/2018 21:07:07'!
 relatedTo: aTransfer 
 	
@@ -273,6 +340,7 @@ TransferLeg subclass: #TransferDeposit
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
+
 
 !TransferDeposit methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 20:34:58'!
 affectBalance: currentBalance
@@ -292,6 +360,7 @@ TransferLeg subclass: #TransferWithdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
+
 
 !TransferWithdraw methodsFor: 'evaluating' stamp: 'HAW 10/18/2018 20:34:40'!
 affectBalance: currentBalance
@@ -329,6 +398,7 @@ value
 	^ value ! !
 
 
+
 !Withdraw methodsFor: 'visiting' stamp: 'HAW 10/24/2018 12:40:17'!
 accept: anAccountTransactionVisitor
 
@@ -344,6 +414,16 @@ Withdraw class
 for: aValue
 
 	^ self new initializeFor: aValue ! !
+
+!Withdraw class methodsFor: 'instance creation' stamp: 'HernanWilkinson 7/14/2011 05:32'!
+register: aValue on: account
+
+	| withdraw |
+	
+	withdraw := self for: aValue.
+	account register: withdraw.
+		
+	^ withdraw! !
 
 
 !classDefinition: #AccountTransactionVisitor category: #'PortfolioTimeConsuming-Ejercicio'!
@@ -451,6 +531,12 @@ AccountTransactionVisitor subclass: #AccountTransferNetVisitor
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
+
+!AccountTransferNetVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 12:38:21'!
+visitTransferLeg: aTransferLeg
+
+	^aTransferLeg affectBalance: 0! !
+
 
 !AccountTransferNetVisitor methodsFor: 'evaluating' stamp: 'HernanWilkinson 7/14/2011 06:07'!
 value 
@@ -625,6 +711,11 @@ AccountTransactionVisitor subclass: #InvestmentNetVisitor
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
+
+!InvestmentNetVisitor methodsFor: 'operations' stamp: 'GR 10/19/2018 12:43:22'!
+visitTransferLeg: aTransferLeg
+	^0! !
+
 
 !InvestmentNetVisitor methodsFor: 'visiting' stamp: 'ap 10/25/2018 21:36:19'!
 visitCertificateOfDeposit: aCertificateOfDeposit 
@@ -1080,6 +1171,7 @@ Object subclass: #Transfer
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
+
 !Transfer methodsFor: 'initialization' stamp: 'HAW 10/18/2018 21:08:52'!
 initializeOf: anAmount 
 	
@@ -1088,6 +1180,16 @@ initializeOf: anAmount
 	withdrawLeg := TransferWithdraw relatedTo: self 
 	
 	! !
+
+!Transfer methodsFor: 'initialization' stamp: 'APç 10/18/2018 20:43:32'!
+initializeWith: anAmount from: fromAccount to: toAccount
+
+
+	
+	withdrawLeg:=TransferWithdraw register:anAmount on:fromAccount belongingTo: self.
+	depositLeg:=TransferDeposit register: anAmount on: toAccount belongingTo: self.
+	value:=anAmount.
+! !
 
 
 !Transfer methodsFor: 'legs' stamp: 'HAW 10/18/2018 20:53:34'!
@@ -1116,6 +1218,13 @@ Transfer class
 of: anAmount 
 
 	^self new initializeOf: anAmount ! !
+
+!Transfer class methodsFor: 'instance creation' stamp: 'APç 10/18/2018 19:06:22'!
+registerTransferOf: anAmount from: fromAccount to: toAccount
+
+	^self new initializeWith: anAmount from:fromAccount to: toAccount.
+	
+	! !
 
 
 !Transfer class methodsFor: 'registering' stamp: 'HAW 10/18/2018 20:50:53'!
