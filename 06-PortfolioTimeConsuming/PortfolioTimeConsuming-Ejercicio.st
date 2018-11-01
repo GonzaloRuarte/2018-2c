@@ -11,7 +11,7 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'ap 10/30/2018 23:48:02'!
+!AccountSummaryWithAllInvestmentInformation methodsFor: 'evaluating' stamp: 'GR 10/31/2018 22:12:19'!
 lines 
 
 	| lines investmentEarnings |
@@ -20,9 +20,7 @@ lines
 	lines:= Future for: [(AccountSummaryWithInvestmentEarnings for: account) lines].
 	
 	investmentEarnings := Future for: [(InvestmentNetVisitor for: account) value].
-	lines run.
-	investmentEarnings run.
-	
+		
 	lines value add: 'Inversiones por ', investmentEarnings value printString.
 	
 	 ^ lines value! !
@@ -52,7 +50,7 @@ initializeFor: aReceptiveAccount
 	account := aReceptiveAccount ! !
 
 
-!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'ap 10/30/2018 23:48:48'!
+!AccountSummaryWithInvestmentEarnings methodsFor: 'evaluating' stamp: 'GR 10/31/2018 22:12:29'!
 lines 
 
 	| lines investmentEarnings|
@@ -60,9 +58,6 @@ lines
 	lines:= Future for: [(AccountSummary for: account) lines].
 	
 	investmentEarnings:= Future for: [(InvestmentEarningVisitor for: account) value].
-	
-	lines run.
-	investmentEarnings  run.
 	
 	lines value add: 'Ganancias por ', investmentEarnings value printString.
 	
@@ -764,22 +759,16 @@ for: aReceptiveAccount
 
 !classDefinition: #Future category: #'PortfolioTimeConsuming-Ejercicio'!
 Object subclass: #Future
-	instanceVariableNames: 'collaborationsToRun semaphore returnValue'
+	instanceVariableNames: 'semaphore returnValue'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'PortfolioTimeConsuming-Ejercicio'!
 
-!Future methodsFor: 'executing' stamp: 'GR 10/30/2018 13:19:51'!
-run
+!Future methodsFor: 'initialization' stamp: 'GR 10/31/2018 22:13:32'!
+initializeFor: collaborationsToRun
 
-	[ returnValue :=collaborationsToRun ensure: [semaphore signal] ] fork.! !
-
-
-!Future methodsFor: 'initialization' stamp: 'GR 10/30/2018 13:20:00'!
-initializeFor: aBlock
-
-	collaborationsToRun :=aBlock .
-	semaphore:= Semaphore new.! !
+	semaphore:= Semaphore new.
+	[ returnValue := collaborationsToRun ensure: [semaphore signal] ] fork.! !
 
 
 !Future methodsFor: 'value' stamp: 'GR 10/30/2018 13:19:31'!
