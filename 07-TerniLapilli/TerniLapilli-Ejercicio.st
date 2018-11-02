@@ -71,6 +71,16 @@ GameState subclass: #OMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
+!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 17:38:40'!
+movingTokenAt: aPosition to: anotherPosition
+
+	"no se si se puede sacar este if"
+	
+	(terniLapilli isXTokenAt: aPosition) ifTrue: [terniLapilli tokenOwnershipError].
+	
+	terniLapilli safelyMoveTokenAt: aPosition to: anotherPosition belongingTo: #oTokens.
+	terniLapilli changeTo: (XMovesTokenNext for: terniLapilli).! !
+
 !OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:54:21'!
 placingTokenAt: aPosition
 	
@@ -94,6 +104,11 @@ GameState subclass: #OPlacesTokenNext
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
+
+!OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 16:20:54'!
+movingTokenAt: aPosition to: anotherPosition
+	
+	terniLapilli shouldNotMoveError! !
 
 !OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:42'!
 placingTokenAt: aPosition
@@ -120,6 +135,16 @@ GameState subclass: #XMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
+!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 17:37:37'!
+movingTokenAt: aPosition to: anotherPosition
+	
+	"no se si se puede sacar este if"
+	
+	(terniLapilli isOTokenAt: aPosition) ifTrue: [terniLapilli tokenOwnershipError].
+	
+	terniLapilli safelyMoveTokenAt: aPosition to: anotherPosition belongingTo: #xTokens.
+	terniLapilli changeTo: (OMovesTokenNext for: terniLapilli).! !
+
 !XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:45'!
 placingTokenAt: aPosition
 	
@@ -143,6 +168,11 @@ GameState subclass: #XPlacesTokenNext
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
+
+!XPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 16:20:48'!
+movingTokenAt: aPosition to: anotherPosition
+	
+	terniLapilli shouldNotMoveError! !
 
 !XPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:25'!
 placingTokenAt: aPosition
@@ -169,6 +199,27 @@ Object subclass: #TerniLapilli
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 12:43:01'!
+gameAlreadyOverError
+	
+	self error: self class GameAlreadyOverErrorDescription! !
+
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 16:21:44'!
+shouldNotMoveError
+	
+	self error: self class AllTokensShouldBePlacedErrorDescription ! !
+
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 14:47:59'!
+timeOutError
+	
+	self error: self class TokenPositioningAtMovingStageErrorDescription! !
+
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 16:51:34'!
+tokenOwnershipError
+	
+	self error: self class TokenOwnershipErrorDescription! !
+
+
 !TerniLapilli methodsFor: 'initialization' stamp: 'GR 11/2/2018 02:17:42'!
 initialize
 	xTokens := Set new.
@@ -177,40 +228,24 @@ initialize
 	state:=XPlacesTokenNext for: self.! !
 
 
-!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 15:08:52'!
-placeTokenAt: aPoint 
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:18'!
+doesOMoveNext
 
-	"estos ifs no se si pueden sacarse"
+	^(state isKindOf: OMovesTokenNext)! !
 
-	 (aPoint x abs > 1 or:[aPoint y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
-		
-	(self isOcuppied: aPoint) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:34'!
+doesOPlaceNext
 
-	state placingTokenAt: aPoint .! !
+	^(state isKindOf: OPlacesTokenNext)! !
 
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:47'!
+doesXMoveNext
+	^state isKindOf: XMovesTokenNext ! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 13:17:54'!
-are: positions straightConsidering: aCoordinate
-	
-	
-	^(-1 to: 1) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = (aCoordinate sendTo: aPosition)]]]! !
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:36:02'!
+doesXPlaceNext
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 15:07:26'!
-areDiagonal: positions
-	"creo que hay refactoring posible aca"
-	
-	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| aPosition x = aPosition y negated]]]! !
-
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:03'!
-oTokens
-
-	^oTokens! !
-
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:11'!
-xTokens
-
-	^xTokens! !
-
+	^(state isKindOf: XPlacesTokenNext)! !
 
 !TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:36:46'!
 isFinished
@@ -251,28 +286,37 @@ noXTokensPlaced
 
 	^xTokens size = 0! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:36:11'!
-oMovesNext
-
-	^(state isKindOf: OMovesTokenNext)! !
-
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:31:37'!
-oPlacesNext
-
-	^(state isKindOf: OPlacesTokenNext)! !
-
 !TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 12:59:19'!
 winner
 	^winner! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:35:28'!
-xMovesNext
-	^state isKindOf: XMovesTokenNext ! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:31:29'!
-xPlacesNext
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 13:17:54'!
+are: positions straightConsidering: aCoordinate
+	
+	
+	^(-1 to: 1) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = (aCoordinate sendTo: aPosition)]]]! !
 
-	^(state isKindOf: XPlacesTokenNext)! !
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 15:07:26'!
+areDiagonal: positions
+	"creo que hay refactoring posible aca"
+	
+	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| aPosition x = aPosition y negated]]]! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 17:24:49'!
+isInvalidMoveFrom: aPosition to: anotherPosition
+	
+	^((aPosition x - anotherPosition x) abs > 1) or: [(aPosition y - anotherPosition y) abs > 1] or: [aPosition transposed = anotherPosition] or: [aPosition transposed = anotherPosition negated]! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:03'!
+oTokens
+
+	^oTokens! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:11'!
+xTokens
+
+	^xTokens! !
 
 
 !TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 15:12:01'!
@@ -293,22 +337,46 @@ hasThePositioningEnded
 	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
 
-!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 12:43:01'!
-gameAlreadyOverError
+!TerniLapilli methodsFor: 'token movement' stamp: 'GR 11/2/2018 17:15:46'!
+moveTokenAt: aPosition to: anotherPosition 
+
+	"estos ifs no se si pueden sacarse, algunos estan repetidos en el place tambien"
+
+	(self isVacant: aPosition) ifTrue: [self error: self class TryingToMoveNonTokenErrorDescription ].
+
+	(anotherPosition x abs > 1 or:[anotherPosition y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
 	
-	self error: self class GameAlreadyOverErrorDescription! !
-
-!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 14:47:59'!
-timeOutError
+	(self isOcuppied: anotherPosition) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
 	
-	self error: self class TokenPositioningAtMovingStageErrorDescription! !
+	(self isInvalidMoveFrom: aPosition to: anotherPosition) ifTrue: [self error: self class GameboardLayoutErrorDescription].
+
+	state movingTokenAt: aPosition to: anotherPosition.! !
 
 
-!TerniLapilli methodsFor: 'token positioning - private' stamp: 'GR 11/2/2018 15:08:42'!
-safelyPlaceTokenAt: aPoint belongingTo: aPositionsSet
+!TerniLapilli methodsFor: 'token movement - private' stamp: 'GR 11/2/2018 17:41:21'!
+safelyMoveTokenAt: aPosition to: anotherPosition belongingTo: aPositionsSet
+
+	(aPositionsSet sendTo: self) add: anotherPosition.
+	(aPositionsSet sendTo: self) remove: aPosition.! !
+
+
+!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 17:10:40'!
+placeTokenAt: aPosition 
+
+	"estos ifs no se si pueden sacarse y estan repetidos en el move"
+
+	(aPosition x abs > 1 or:[aPosition y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
+		
+	(self isOcuppied: aPosition) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
+
+	state placingTokenAt: aPosition.! !
+
+
+!TerniLapilli methodsFor: 'token positioning - private' stamp: 'GR 11/2/2018 16:12:40'!
+safelyPlaceTokenAt: aPosition belongingTo: aPositionsSet
 
 	
-	 (aPositionsSet sendTo: self) add: aPoint! !
+	 (aPositionsSet sendTo: self) add: aPosition! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -316,22 +384,42 @@ safelyPlaceTokenAt: aPoint belongingTo: aPositionsSet
 TerniLapilli class
 	instanceVariableNames: ''!
 
-!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 12:44:33'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:02:27'!
+AllTokensShouldBePlacedErrorDescription
+
+	^'It s not possible to move tokens before all of them are placed'! !
+
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:02:02'!
 GameAlreadyOverErrorDescription
 
 	^'You can t move or place tokens after the game ends'! !
 
-!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 01:41:19'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 17:09:05'!
+GameboardLayoutErrorDescription
+
+	^'You can only move a token throughout the border or the diagonals, one space at a time'! !
+
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:02:08'!
 OccupiedPositionErrorDescription
 
 	^'The position designated for the token is already occupied by another token'! !
 
-!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 01:40:58'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:02:14'!
 OutOfBoundsErrorDescription
 
 	^'The position designated for the token is out of bounds'! !
 
-!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 14:47:59'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:51:00'!
+TokenOwnershipErrorDescription
+
+	^'The token you are trying to move belongs to the other player'! !
+
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:02:21'!
 TokenPositioningAtMovingStageErrorDescription
 
 	^'It s not possible to place tokens at this stage of the game'! !
+
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 16:47:21'!
+TryingToMoveNonTokenErrorDescription
+
+	^'There is no token at the position you are trying to move from'! !
