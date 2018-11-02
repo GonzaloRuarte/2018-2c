@@ -5,81 +5,141 @@ TestCase subclass: #TerniLapilliTest
 	poolDictionaries: ''
 	category: 'TerniLapilli-Test'!
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 19:24:33'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:31:21'!
 test01
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	self assert: (tablero estaVacia: 1@1). ! !
+	self assert: (terniLapilli noXTokensPlaced).
+	self assert: (terniLapilli noOTokensPlaced).
+	self assert: (terniLapilli xPlacesNext)
+	! !
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:28:56'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:31:59'!
 test03
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	tablero ponerEn: 1@1	.
+	terniLapilli placeTokenAt: 1@1.
 	
-	self deny: (tablero estaVacia: 1@1). ! !
+	self deny: (terniLapilli isVacant: 1@1). 
+	self deny: (terniLapilli noXTokensPlaced).
+	self assert: (terniLapilli noOTokensPlaced).
+	self assert: (terniLapilli oPlacesNext)! !
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:29:00'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:22'!
 test04
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	tablero ponerEn: 1@1.
-	tablero ponerEn: 1@1.
-	
-	self deny: (tablero hayFichaDeOEn: 1@1). 
-	self assert: (tablero hayFichaDeXEn: 1@1). ! !
+	terniLapilli placeTokenAt: 1@1.
+	self should:  [terniLapilli placeTokenAt: 1@1.] raise: Error withExceptionDo: 
+	[:anException|
+		self deny: (terniLapilli isOTokenAt: 1@1). 
+		self assert: (terniLapilli isXTokenAt: 1@1).
+		self deny: (terniLapilli noXTokensPlaced).
+		self assert: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli oPlacesNext)]
+	description: TerniLapilli OccupiedPositionErrorDescription ! !
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:29:05'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:31'!
 test05
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	tablero ponerEn: 1@2.
-	tablero ponerEn: 2@1.
-	
-	self assert: (tablero estaVacia: 2@1). 
-	self assert: (tablero estaVacia: 1@2). ! !
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:29:13'!
+	self should:  [terniLapilli placeTokenAt: 1@2.] raise: Error withExceptionDo: 
+	[:anException|
+		self assert: (terniLapilli isVacant: 1@2).
+		self assert: (terniLapilli noXTokensPlaced).
+		self assert: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli xPlacesNext)]
+	description: TerniLapilli OutOfBoundsErrorDescription ! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:37'!
 test06
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	tablero ponerEn: 1@1.
-	tablero ponerEn: 0@1.
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
 	
-	self deny: (tablero estaVacia: 1@1). 
-	self deny: (tablero estaVacia: 0@1). ! !
+	self deny: (terniLapilli isVacant: 1@1). 
+	self deny: (terniLapilli isVacant: 0@1). 
+	self deny: (terniLapilli noXTokensPlaced).
+	self deny: (terniLapilli noOTokensPlaced).
+	self assert: (terniLapilli xPlacesNext)! !
 
-!TerniLapilliTest methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:59:39'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:55'!
 test07
 
-	|tablero|
+	|terniLapilli|
 	
-	tablero:= Tablero new.
+	terniLapilli := TerniLapilli new.
 	
-	tablero ponerEn: 1@1.
-	tablero ponerEn: 0@1.
-	tablero ponerEn: -1@1.
-	tablero ponerEn: 0@-1.
-	tablero ponerEn: -1@-1.
-	tablero ponerEn: 1@-1.
-	[tablero ponerEn: 1@0.
-		self fail]
-	on: MessageNotUnderstood 
-	do:[self assert: (tablero estaVacia: 1@0). ].
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: 0@-1.
+	terniLapilli placeTokenAt: 1@-1.
+	self should:[terniLapilli placeTokenAt: -1@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: -1@-1).
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli xMovesNext)]
+	description: TerniLapilli TokenPositioningTimeOutErrorDescription 
+	
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:37:03'!
+test08
+
+	|terniLapilli|
+	
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: 1@-1.
+	self assert: (terniLapilli winner = 'X'). 
+	self deny: (terniLapilli noXTokensPlaced).
+	self deny: (terniLapilli noOTokensPlaced).
+	self assert:(terniLapilli isFinished).! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:37:10'!
+test09
+
+	|terniLapilli|
+	
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: 1@-1.
+	self should:[terniLapilli placeTokenAt: 0@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: 0@-1). 
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert:(terniLapilli isFinished)].
+			"aca iria error de no se puede poner una ficha si ya gano alguien, notar que al momento de poner una pieza solo pudo haber ganado X"
 	
 	! !

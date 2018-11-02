@@ -1,38 +1,61 @@
-!classDefinition: #EstadoTablero category: #'TerniLapilli-Ejercicio'!
-Object subclass: #EstadoTablero
-	instanceVariableNames: 'tablero'
+!classDefinition: #GameState category: #'TerniLapilli-Ejercicio'!
+Object subclass: #GameState
+	instanceVariableNames: 'terniLapilli'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!EstadoTablero methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 19:59:33'!
-initializeWith: aTablero
+!GameState methodsFor: 'initialization' stamp: 'GR 11/2/2018 02:10:26'!
+initializeWith: aTerniLapilli
 
-	tablero:= aTablero .! !
+	terniLapilli:= aTerniLapilli.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'EstadoTablero class' category: #'TerniLapilli-Ejercicio'!
-EstadoTablero class
+!classDefinition: 'GameState class' category: #'TerniLapilli-Ejercicio'!
+GameState class
 	instanceVariableNames: ''!
 
-!EstadoTablero class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:00:10'!
-for: aTablero
-
-	^self new initializeWith: aTablero .! !
-
-!EstadoTablero class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:55:21'!
-for: aTablero with: aNumber
+!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:11:40'!
+decideGameStage: aTerniLapilli using: aTokenCount
 
 	|estado|
 	
-	estado := self subclasses detect: [:aSubclass| aSubclass isFor: aNumber].
+	estado := self subclasses detect: [:aSubclass| aSubclass isFor: aTokenCount].
 	
-	^estado new initializeWith: aTablero.! !
+	^estado new initializeWith: aTerniLapilli.! !
+
+!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:09:46'!
+for: aTerniLapilli
+	^self new initializeWith: aTerniLapilli .! !
+
+!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:12:40'!
+isFor: aTokenCount
+
+	self subclassResponsibility ! !
 
 
-!classDefinition: #JuegaO category: #'TerniLapilli-Ejercicio'!
-EstadoTablero subclass: #JuegaO
+!classDefinition: #Finished category: #'TerniLapilli-Ejercicio'!
+GameState subclass: #Finished
+	instanceVariableNames: 'winner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'Finished class' category: #'TerniLapilli-Ejercicio'!
+Finished class
+	instanceVariableNames: ''!
+
+
+!Finished class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:12:24'!
+isFor: aTokenCount
+	^false! !
+
+
+!classDefinition: #OMovesTokenNext category: #'TerniLapilli-Ejercicio'!
+GameState subclass: #OMovesTokenNext
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -40,159 +63,224 @@ EstadoTablero subclass: #JuegaO
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'JuegaO class' category: #'TerniLapilli-Ejercicio'!
-JuegaO class
+!classDefinition: 'OMovesTokenNext class' category: #'TerniLapilli-Ejercicio'!
+OMovesTokenNext class
 	instanceVariableNames: ''!
 
-!JuegaO class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:56:24'!
-isFor: aNumber
+!OMovesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:11:59'!
+isFor: aTokenCount
 
 	^false! !
 
 
-!classDefinition: #JuegaX category: #'TerniLapilli-Ejercicio'!
-EstadoTablero subclass: #JuegaX
+!classDefinition: #OPlacesTokenNext category: #'TerniLapilli-Ejercicio'!
+GameState subclass: #OPlacesTokenNext
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'JuegaX class' category: #'TerniLapilli-Ejercicio'!
-JuegaX class
-	instanceVariableNames: ''!
-
-!JuegaX class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:56:04'!
-isFor: aNumber
-
-	^aNumber = 3! !
-
-
-!classDefinition: #PoneO category: #'TerniLapilli-Ejercicio'!
-EstadoTablero subclass: #PoneO
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TerniLapilli-Ejercicio'!
-
-!PoneO methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:57:18'!
-ponerFichaEn: aPoint
+!OPlacesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:42'!
+placingTokenAt: aPosition
 	
-	tablero ponerFichaOEn: aPoint.
-	tablero amIReadyToPlay .! !
+	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #oTokens.
+	terniLapilli hasThePositioningEnded.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'PoneO class' category: #'TerniLapilli-Ejercicio'!
-PoneO class
+!classDefinition: 'OPlacesTokenNext class' category: #'TerniLapilli-Ejercicio'!
+OPlacesTokenNext class
 	instanceVariableNames: ''!
 
-!PoneO class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:56:31'!
-isFor: aNumber
+!OPlacesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:12'!
+isFor: aTokenCount
 
 	^false! !
 
 
-!classDefinition: #PoneX category: #'TerniLapilli-Ejercicio'!
-EstadoTablero subclass: #PoneX
+!classDefinition: #XMovesTokenNext category: #'TerniLapilli-Ejercicio'!
+GameState subclass: #XMovesTokenNext
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!PoneX methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:24:33'!
-ponerFichaEn: aPoint
+!XMovesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:45'!
+placingTokenAt: aPosition
 	
-	tablero ponerFichaXEn: aPoint.
-	tablero cambiarA: (PoneO for: tablero).! !
+	terniLapilli timeOutError! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'PoneX class' category: #'TerniLapilli-Ejercicio'!
-PoneX class
+!classDefinition: 'XMovesTokenNext class' category: #'TerniLapilli-Ejercicio'!
+XMovesTokenNext class
 	instanceVariableNames: ''!
 
-!PoneX class methodsFor: 'as yet unclassified' stamp: 'APç 11/1/2018 20:56:56'!
-isFor: aNumber
+!XMovesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:25'!
+isFor: aTokenCount
 
-	^aNumber < 3! !
+	^aTokenCount = 3! !
 
 
-!classDefinition: #Tablero category: #'TerniLapilli-Ejercicio'!
-Object subclass: #Tablero
-	instanceVariableNames: 'fichasX fichasO estado'
+!classDefinition: #XPlacesTokenNext category: #'TerniLapilli-Ejercicio'!
+GameState subclass: #XPlacesTokenNext
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:53:19'!
-amIReadyToPlay
-
+!XPlacesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:25'!
+placingTokenAt: aPosition
 	
+	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #xTokens.
+	terniLapilli changeTo: (OPlacesTokenNext for: terniLapilli).! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'XPlacesTokenNext class' category: #'TerniLapilli-Ejercicio'!
+XPlacesTokenNext class
+	instanceVariableNames: ''!
+
+!XPlacesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:37'!
+isFor: aTokenCount
+
+	^aTokenCount < 3! !
+
+
+!classDefinition: #TerniLapilli category: #'TerniLapilli-Ejercicio'!
+Object subclass: #TerniLapilli
+	instanceVariableNames: 'state oTokens xTokens'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli-Ejercicio'!
+
+!TerniLapilli methodsFor: 'initialization' stamp: 'GR 11/2/2018 02:17:42'!
+initialize
+	xTokens := Set new.
+	oTokens := Set new.
 	
-	self cambiarA: (EstadoTablero for: self with: fichasX size)! !
+	state:=XPlacesTokenNext for: self.! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:08:39'!
-cambiarA: aEstado
 
-	estado := aEstado! !
+!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 01:32:56'!
+placeTokenAt: aPoint 
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:32:56'!
-estaOcupada: aPoint
+	state placingTokenAt: aPoint .! !
 
-	^(self estaVacia: aPoint)  not.! !
+!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 02:15:57'!
+safelyPlaceTokenAt: aPoint belongingTo: aPositionsSet
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 19:47:36'!
-estaVacia: aPoint 
-	((fichasX includes: aPoint) or: [ fichasO  includes: aPoint ]) ifTrue:[^false].
+	 (aPoint x abs > 1 or:[aPoint y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
+		
+	(self isOcuppied: aPoint) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
+	
+	 (aPositionsSet sendTo: self) add: aPoint! !
+
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:03'!
+oTokens
+
+	^oTokens! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:11'!
+xTokens
+
+	^xTokens! !
+
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:36:46'!
+isFinished
+
+	^(state isKindOf: Finished)! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:28'!
+isOTokenAt: aPosition
+
+	^oTokens includes: aPosition.	
+
+	! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:32'!
+isOcuppied: aPosition
+
+	^(self isVacant: aPosition)  not.! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:39'!
+isVacant: aPosition 
+	((xTokens includes: aPosition) or: [ oTokens  includes: aPosition ]) ifTrue:[^false].
 	^true! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 19:42:00'!
-hayFichaDeOEn: aPoint
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:43'!
+isXTokenAt: aPosition
 
-	^fichasO includes: aPoint.	
-
-	! !
-
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 19:42:06'!
-hayFichaDeXEn: aPoint
-
-	^fichasX includes: aPoint.	
+	^xTokens includes: aPosition.	
 
 	! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:04:35'!
-initialize
-	fichasX := Set new.
-	fichasO:= Set new.
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:18:15'!
+noOTokensPlaced
+
+	^oTokens size = 0! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:18:18'!
+noXTokensPlaced
+
+	^xTokens size = 0! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:36:11'!
+oMovesNext
+
+	^(state isKindOf: OMovesTokenNext)! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:31:37'!
+oPlacesNext
+
+	^(state isKindOf: OPlacesTokenNext)! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:35:28'!
+xMovesNext
+	^state isKindOf: XMovesTokenNext ! !
+
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:31:29'!
+xPlacesNext
+
+	^(state isKindOf: XPlacesTokenNext)! !
+
+
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 02:20:01'!
+changeTo: aGameState
+	state := aGameState! !
+
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 02:17:31'!
+hasThePositioningEnded
+
 	
-	estado:=PoneX for: self.! !
+	
+	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:12:19'!
-listoParaJugar
 
-	^fichasX size = 3 and: [ fichasO size = 3]! !
+!TerniLapilli methodsFor: 'exception' stamp: 'GR 11/2/2018 02:38:45'!
+timeOutError
+	
+	self error: self class TokenPositioningTimeOutErrorDescription! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:24:17'!
-ponerEn: aPoint 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-	estado ponerFichaEn: aPoint .! !
+!classDefinition: 'TerniLapilli class' category: #'TerniLapilli-Ejercicio'!
+TerniLapilli class
+	instanceVariableNames: ''!
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:32:28'!
-ponerFichaEn: aPoint in: set.
+!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:41:19'!
+OccupiedPositionErrorDescription
 
-	 (aPoint x abs > 1 or:[aPoint y abs > 1 ] or: [self estaOcupada: aPoint] )  ifFalse: [set add: aPoint].
-   ! !
+	^'The position designated for the token is already occupied by another token'! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:28:07'!
-ponerFichaOEn: aPoint 
+!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:40:58'!
+OutOfBoundsErrorDescription
 
-	self ponerFichaEn: aPoint in: fichasO.
-   ! !
+	^'The position designated for the token is out of bounds'! !
 
-!Tablero methodsFor: 'xxxx' stamp: 'APç 11/1/2018 20:27:34'!
-ponerFichaXEn: aPoint 
+!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:44:55'!
+TokenPositioningTimeOutErrorDescription
 
-	self ponerFichaEn: aPoint in: fichasX.
-   ! !
+	^'It s not possible to place tokens at this stage of the game'! !
