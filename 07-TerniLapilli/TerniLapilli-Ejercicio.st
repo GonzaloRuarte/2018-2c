@@ -230,65 +230,65 @@ initialize
 	state:=XPlacesTokenNext for: self.! !
 
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:18'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 17:35:18'!
 doesOMoveNext
 
 	^(state isKindOf: OMovesTokenNext)! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:34'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 17:35:34'!
 doesOPlaceNext
 
 	^(state isKindOf: OPlacesTokenNext)! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:35:47'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 17:35:47'!
 doesXMoveNext
 	^state isKindOf: XMovesTokenNext ! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:36:02'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 17:36:02'!
 doesXPlaceNext
 
 	^(state isKindOf: XPlacesTokenNext)! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:36:46'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:36:46'!
 isFinished
 
 	^(state isKindOf: Finished)! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:28'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:20:28'!
 isOTokenAt: aPosition
 
 	^oTokens includes: aPosition.	
 
 	! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:32'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:20:32'!
 isOcuppied: aPosition
 
 	^(self isVacant: aPosition)  not.! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:39'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:20:39'!
 isVacant: aPosition 
 	((xTokens includes: aPosition) or: [ oTokens  includes: aPosition ]) ifTrue:[^false].
 	^true! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:20:43'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:20:43'!
 isXTokenAt: aPosition
 
 	^xTokens includes: aPosition.	
 
 	! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:18:15'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:18:15'!
 noOTokensPlaced
 
 	^oTokens size = 0! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:18:18'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:18:18'!
 noXTokensPlaced
 
 	^xTokens size = 0! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 12:59:19'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 12:59:19'!
 winner
 	^winner! !
 
@@ -331,10 +331,10 @@ changeTo: aGameState
 	( (self are: oTokens straightConsidering: #x ) or: [self are: oTokens straightConsidering: #y] or: [self areDiagonal:oTokens]) ifTrue: [state := Finished for: self. winner:= 'O'] ifFalse: [
 													state := aGameState]].! !
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 02:17:31'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 17:49:04'!
 hasThePositioningEnded
 
-	
+	"no se si es necesario tener esta abstraccion"
 	
 	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
