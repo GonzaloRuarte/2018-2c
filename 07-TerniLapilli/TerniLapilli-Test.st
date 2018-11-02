@@ -5,8 +5,8 @@ TestCase subclass: #TerniLapilliTest
 	poolDictionaries: ''
 	category: 'TerniLapilli-Test'!
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:31:21'!
-test01
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 13:58:36'!
+test01InitialTerniLapilliShouldHaveNoTokensAndXShouldPlaceNext
 
 	|terniLapilli|
 	
@@ -17,8 +17,8 @@ test01
 	self assert: (terniLapilli xPlacesNext)
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:31:59'!
-test03
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 13:59:37'!
+test02AfterFirstTokenOShouldPlaceNextAndPositionShouldBeOccupied
 
 	|terniLapilli|
 	
@@ -31,8 +31,8 @@ test03
 	self assert: (terniLapilli noOTokensPlaced).
 	self assert: (terniLapilli oPlacesNext)! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:22'!
-test04
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 14:01:02'!
+test03TokenShouldNotBePlacedAtOccupiedPosition
 
 	|terniLapilli|
 	
@@ -48,8 +48,8 @@ test04
 		self assert: (terniLapilli oPlacesNext)]
 	description: TerniLapilli OccupiedPositionErrorDescription ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:31'!
-test05
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 14:01:22'!
+test04TokenShouldNotBePlacedAtOutOfBoundsPosition
 
 	|terniLapilli|
 	
@@ -64,8 +64,8 @@ test05
 		self assert: (terniLapilli xPlacesNext)]
 	description: TerniLapilli OutOfBoundsErrorDescription ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:37'!
-test06
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 14:02:03'!
+test05TokenPlacedForXAndOShouldCount
 
 	|terniLapilli|
 	
@@ -80,8 +80,8 @@ test06
 	self deny: (terniLapilli noOTokensPlaced).
 	self assert: (terniLapilli xPlacesNext)! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:32:55'!
-test07
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 14:47:59'!
+test06ShouldNotPlaceTokenAfterAllHaveBeenPlaced
 
 	|terniLapilli|
 	
@@ -100,12 +100,12 @@ test07
 		self deny: (terniLapilli noXTokensPlaced).
 		self deny: (terniLapilli noOTokensPlaced).
 		self assert: (terniLapilli xMovesNext)]
-	description: TerniLapilli TokenPositioningTimeOutErrorDescription 
+	description: TerniLapilli TokenPositioningAtMovingStageErrorDescription 
 	
 	! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:37:03'!
-test08
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:20:44'!
+test07TokenShouldNotBePlacedAfterXWinsByPlacing3TokensHorizontally
 
 	|terniLapilli|
 	
@@ -117,12 +117,88 @@ test08
 	terniLapilli placeTokenAt: 0@0.
 	terniLapilli placeTokenAt: 1@-1.
 	self assert: (terniLapilli winner = 'X'). 
-	self deny: (terniLapilli noXTokensPlaced).
-	self deny: (terniLapilli noOTokensPlaced).
-	self assert:(terniLapilli isFinished).! !
+	self should:[terniLapilli placeTokenAt: 0@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: 0@-1). 
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert:(terniLapilli isFinished)]
+	description: TerniLapilli GameAlreadyOverErrorDescription ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 02:37:10'!
-test09
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:20:51'!
+test08TokenShouldNotBePlacedAfterOWinsByPlacing3TokensHorizontally
+
+	|terniLapilli|
+	
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: -1@1.
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: 1@-1.
+	self assert: (terniLapilli winner = 'O'). 
+	self should:[terniLapilli placeTokenAt: 0@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: 0@-1). 
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert:(terniLapilli isFinished)]
+	description: TerniLapilli GameAlreadyOverErrorDescription 
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:20:58'!
+test09TokenShouldNotBePlacedAfterXWinsByPlacing3TokensVertically
+
+	|terniLapilli|
+	
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: -1@1.
+	self assert: (terniLapilli winner = 'X'). 
+		self should:[terniLapilli placeTokenAt: -1@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: -1@-1).
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli isFinished )]
+	description: TerniLapilli TokenPositioningAtMovingStageErrorDescription 
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:21:08'!
+test10TokenShouldNotBePlacedAfterOWinsByPlacing3TokensVertically
+
+	|terniLapilli|
+	
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: -1@-1.
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: -1@1.
+	self assert: (terniLapilli winner = 'O'). 
+		self should:[terniLapilli placeTokenAt: -1@0]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: -1@0).
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli isFinished )]
+	description: TerniLapilli TokenPositioningAtMovingStageErrorDescription 
+	! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:21:18'!
+test11TokenShouldNotBePlacedAfterXWinsByPlacing3TokensDiagonally
 
 	|terniLapilli|
 	
@@ -130,16 +206,38 @@ test09
 	
 	terniLapilli placeTokenAt: 1@1.
 	terniLapilli placeTokenAt: 0@1.
-	terniLapilli placeTokenAt: 1@0.
 	terniLapilli placeTokenAt: 0@0.
-	terniLapilli placeTokenAt: 1@-1.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: -1@-1.
+	self assert: (terniLapilli winner = 'X'). 
 	self should:[terniLapilli placeTokenAt: 0@-1]
 	raise: Error
 	withExceptionDo:[:anException|
-		self assert: (terniLapilli isVacant: 0@-1). 
+		self assert: (terniLapilli isVacant: 0@-1).
 		self deny: (terniLapilli noXTokensPlaced).
 		self deny: (terniLapilli noOTokensPlaced).
-		self assert:(terniLapilli isFinished)].
-			"aca iria error de no se puede poner una ficha si ya gano alguien, notar que al momento de poner una pieza solo pudo haber ganado X"
+		self assert: (terniLapilli isFinished )]
+	description: TerniLapilli TokenPositioningAtMovingStageErrorDescription ! !
+
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/2/2018 15:21:26'!
+test12TokenShouldNotBePlacedAfterOWinsByPlacing3TokensDiagonally
+
+	|terniLapilli|
 	
-	! !
+	terniLapilli := TerniLapilli new.
+	
+	terniLapilli placeTokenAt: -1@0.
+	terniLapilli placeTokenAt: 1@1.
+	terniLapilli placeTokenAt: 0@1.
+	terniLapilli placeTokenAt: 0@0.
+	terniLapilli placeTokenAt: 1@0.
+	terniLapilli placeTokenAt: -1@-1.
+	self assert: (terniLapilli winner = 'O'). 
+	self should:[terniLapilli placeTokenAt: 0@-1]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: (terniLapilli isVacant: 0@-1).
+		self deny: (terniLapilli noXTokensPlaced).
+		self deny: (terniLapilli noOTokensPlaced).
+		self assert: (terniLapilli isFinished )]
+	description: TerniLapilli TokenPositioningAtMovingStageErrorDescription ! !

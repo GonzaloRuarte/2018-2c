@@ -5,10 +5,16 @@ Object subclass: #GameState
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!GameState methodsFor: 'initialization' stamp: 'GR 11/2/2018 02:10:26'!
+!GameState methodsFor: 'initialization - private' stamp: 'GR 11/2/2018 02:10:26'!
 initializeWith: aTerniLapilli
 
 	terniLapilli:= aTerniLapilli.! !
+
+
+!GameState methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:54:03'!
+placingTokenAt: aPosition
+
+	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -16,7 +22,7 @@ initializeWith: aTerniLapilli
 GameState class
 	instanceVariableNames: ''!
 
-!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:11:40'!
+!GameState class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:11:40'!
 decideGameStage: aTerniLapilli using: aTokenCount
 
 	|estado|
@@ -25,11 +31,11 @@ decideGameStage: aTerniLapilli using: aTokenCount
 	
 	^estado new initializeWith: aTerniLapilli.! !
 
-!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:09:46'!
+!GameState class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:09:46'!
 for: aTerniLapilli
 	^self new initializeWith: aTerniLapilli .! !
 
-!GameState class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:12:40'!
+!GameState class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:12:40'!
 isFor: aTokenCount
 
 	self subclassResponsibility ! !
@@ -37,10 +43,15 @@ isFor: aTokenCount
 
 !classDefinition: #Finished category: #'TerniLapilli-Ejercicio'!
 GameState subclass: #Finished
-	instanceVariableNames: 'winner'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
+
+!Finished methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:44:45'!
+placingTokenAt: aPosition
+	
+	terniLapilli gameAlreadyOverError! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -48,8 +59,7 @@ GameState subclass: #Finished
 Finished class
 	instanceVariableNames: ''!
 
-
-!Finished class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:12:24'!
+!Finished class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:12:24'!
 isFor: aTokenCount
 	^false! !
 
@@ -61,13 +71,18 @@ GameState subclass: #OMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
+!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:54:21'!
+placingTokenAt: aPosition
+	
+	terniLapilli timeOutError! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'OMovesTokenNext class' category: #'TerniLapilli-Ejercicio'!
 OMovesTokenNext class
 	instanceVariableNames: ''!
 
-!OMovesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:11:59'!
+!OMovesTokenNext class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:11:59'!
 isFor: aTokenCount
 
 	^false! !
@@ -80,7 +95,7 @@ GameState subclass: #OPlacesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!OPlacesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:42'!
+!OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:42'!
 placingTokenAt: aPosition
 	
 	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #oTokens.
@@ -92,7 +107,7 @@ placingTokenAt: aPosition
 OPlacesTokenNext class
 	instanceVariableNames: ''!
 
-!OPlacesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:12'!
+!OPlacesTokenNext class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:13:12'!
 isFor: aTokenCount
 
 	^false! !
@@ -105,7 +120,7 @@ GameState subclass: #XMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!XMovesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:45'!
+!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:45'!
 placingTokenAt: aPosition
 	
 	terniLapilli timeOutError! !
@@ -116,7 +131,7 @@ placingTokenAt: aPosition
 XMovesTokenNext class
 	instanceVariableNames: ''!
 
-!XMovesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:25'!
+!XMovesTokenNext class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:13:25'!
 isFor: aTokenCount
 
 	^aTokenCount = 3! !
@@ -129,7 +144,7 @@ GameState subclass: #XPlacesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!XPlacesTokenNext methodsFor: 'operations' stamp: 'GR 11/2/2018 02:19:25'!
+!XPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:25'!
 placingTokenAt: aPosition
 	
 	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #xTokens.
@@ -141,7 +156,7 @@ placingTokenAt: aPosition
 XPlacesTokenNext class
 	instanceVariableNames: ''!
 
-!XPlacesTokenNext class methodsFor: 'instance creation' stamp: 'GR 11/2/2018 02:13:37'!
+!XPlacesTokenNext class methodsFor: 'instance creation - private' stamp: 'GR 11/2/2018 02:13:37'!
 isFor: aTokenCount
 
 	^aTokenCount < 3! !
@@ -149,7 +164,7 @@ isFor: aTokenCount
 
 !classDefinition: #TerniLapilli category: #'TerniLapilli-Ejercicio'!
 Object subclass: #TerniLapilli
-	instanceVariableNames: 'state oTokens xTokens'
+	instanceVariableNames: 'state oTokens xTokens winner'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
@@ -162,20 +177,29 @@ initialize
 	state:=XPlacesTokenNext for: self.! !
 
 
-!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 01:32:56'!
+!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 15:08:52'!
 placeTokenAt: aPoint 
 
-	state placingTokenAt: aPoint .! !
-
-!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 02:15:57'!
-safelyPlaceTokenAt: aPoint belongingTo: aPositionsSet
+	"estos ifs no se si pueden sacarse"
 
 	 (aPoint x abs > 1 or:[aPoint y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
 		
 	(self isOcuppied: aPoint) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
-	
-	 (aPositionsSet sendTo: self) add: aPoint! !
 
+	state placingTokenAt: aPoint .! !
+
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 13:17:54'!
+are: positions straightConsidering: aCoordinate
+	
+	
+	^(-1 to: 1) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = (aCoordinate sendTo: aPosition)]]]! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 15:07:26'!
+areDiagonal: positions
+	"creo que hay refactoring posible aca"
+	
+	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| aPosition x = aPosition y negated]]]! !
 
 !TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:17:03'!
 oTokens
@@ -237,6 +261,10 @@ oPlacesNext
 
 	^(state isKindOf: OPlacesTokenNext)! !
 
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 12:59:19'!
+winner
+	^winner! !
+
 !TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 02:35:28'!
 xMovesNext
 	^state isKindOf: XMovesTokenNext ! !
@@ -247,9 +275,15 @@ xPlacesNext
 	^(state isKindOf: XPlacesTokenNext)! !
 
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 02:20:01'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 15:12:01'!
 changeTo: aGameState
-	state := aGameState! !
+"aca hay refactoring posible de aca a la china"
+
+
+( (self are: xTokens straightConsidering: #x ) or: [self are: xTokens straightConsidering: #y] or: [self areDiagonal:xTokens]) ifTrue: [state := Finished for: self. winner:= 'X'] ifFalse: [
+	
+	( (self are: oTokens straightConsidering: #x ) or: [self are: oTokens straightConsidering: #y] or: [self areDiagonal:oTokens]) ifTrue: [state := Finished for: self. winner:= 'O'] ifFalse: [
+													state := aGameState]].! !
 
 !TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 02:17:31'!
 hasThePositioningEnded
@@ -259,10 +293,22 @@ hasThePositioningEnded
 	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
 
-!TerniLapilli methodsFor: 'exception' stamp: 'GR 11/2/2018 02:38:45'!
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 12:43:01'!
+gameAlreadyOverError
+	
+	self error: self class GameAlreadyOverErrorDescription! !
+
+!TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 14:47:59'!
 timeOutError
 	
-	self error: self class TokenPositioningTimeOutErrorDescription! !
+	self error: self class TokenPositioningAtMovingStageErrorDescription! !
+
+
+!TerniLapilli methodsFor: 'token positioning - private' stamp: 'GR 11/2/2018 15:08:42'!
+safelyPlaceTokenAt: aPoint belongingTo: aPositionsSet
+
+	
+	 (aPositionsSet sendTo: self) add: aPoint! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -270,17 +316,22 @@ timeOutError
 TerniLapilli class
 	instanceVariableNames: ''!
 
-!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:41:19'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 12:44:33'!
+GameAlreadyOverErrorDescription
+
+	^'You can t move or place tokens after the game ends'! !
+
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 01:41:19'!
 OccupiedPositionErrorDescription
 
 	^'The position designated for the token is already occupied by another token'! !
 
-!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:40:58'!
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 01:40:58'!
 OutOfBoundsErrorDescription
 
 	^'The position designated for the token is out of bounds'! !
 
-!TerniLapilli class methodsFor: 'error' stamp: 'GR 11/2/2018 01:44:55'!
-TokenPositioningTimeOutErrorDescription
+!TerniLapilli class methodsFor: 'error - private' stamp: 'GR 11/2/2018 14:47:59'!
+TokenPositioningAtMovingStageErrorDescription
 
 	^'It s not possible to place tokens at this stage of the game'! !
