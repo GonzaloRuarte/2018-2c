@@ -48,6 +48,12 @@ GameState subclass: #Finished
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
+!Finished methodsFor: 'operations - private' stamp: 'GR 11/2/2018 17:53:27'!
+movingTokenAt: aPosition to: anotherPosition
+
+	
+	terniLapilli gameAlreadyOverError! !
+
 !Finished methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:44:45'!
 placingTokenAt: aPosition
 	
@@ -339,7 +345,7 @@ hasThePositioningEnded
 	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
 
-!TerniLapilli methodsFor: 'token movement' stamp: 'GR 11/2/2018 17:15:46'!
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:15:46'!
 moveTokenAt: aPosition to: anotherPosition 
 
 	"estos ifs no se si pueden sacarse, algunos estan repetidos en el place tambien"
@@ -354,8 +360,7 @@ moveTokenAt: aPosition to: anotherPosition
 
 	state movingTokenAt: aPosition to: anotherPosition.! !
 
-
-!TerniLapilli methodsFor: 'token positioning' stamp: 'GR 11/2/2018 17:10:40'!
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/2/2018 17:10:40'!
 placeTokenAt: aPosition 
 
 	"estos ifs no se si pueden sacarse y estan repetidos en el move"
