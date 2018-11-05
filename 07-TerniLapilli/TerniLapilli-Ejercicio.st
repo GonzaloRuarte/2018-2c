@@ -379,10 +379,10 @@ changeTo: aGameState
 
 ( (self are: (state currentPlayerTokens) straightConsidering: #x ) or: [self are: (state currentPlayerTokens) straightConsidering: #y] or: [self areDiagonal:(state currentPlayerTokens)]) ifTrue: [winner:= (state currentPlayer ). state := Finished for: self.] ifFalse: [state := aGameState].! !
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/2/2018 17:49:04'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/4/2018 22:15:18'!
 hasThePositioningEnded
 
-	"no se si es necesario tener esta abstraccion"
+	"esto lo agregamos por el xTokens size"
 	
 	self changeTo: (GameState decideGameStage: self using: xTokens size)! !
 
