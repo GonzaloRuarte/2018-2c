@@ -132,11 +132,11 @@ OActivePlayer subclass: #OMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:04:24'!
+!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:54:02'!
 movingTokenAt: aPosition to: anotherPosition
 
 	
-	(terniLapilli isXTokenAt: aPosition + 2) ifTrue: [terniLapilli tokenOwnershipError].
+	(terniLapilli isXTokenAt: aPosition) ifTrue: [terniLapilli tokenOwnershipError].
 	
 	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: #oTokens.
 	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: #oTokens.
@@ -312,10 +312,10 @@ XActivePlayer subclass: #XMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:04:10'!
+!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:53:46'!
 movingTokenAt: aPosition to: anotherPosition
 	
-	(terniLapilli isOTokenAt: (aPosition + 2)) ifTrue: [terniLapilli tokenOwnershipError].
+	(terniLapilli isOTokenAt: (aPosition)) ifTrue: [terniLapilli tokenOwnershipError].
 
 	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: #xTokens.
 	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: #xTokens.
@@ -477,13 +477,11 @@ isFinished
 
 	^state isFinished! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:43:40'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 20:53:30'!
 isOTokenAt: aPosition
 
-	| aPositionTrue |
-	aPositionTrue := aPosition - 2.
 
-	^oTokens includes: aPositionTrue.	
+	^oTokens includes: aPosition.	
 
 	! !
 
@@ -504,14 +502,10 @@ isVacant: aPosition
 
 	^((self isXTokenAt: aPosition )or: [ self isOTokenAt: aPosition ]) not! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:43:22'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 20:53:39'!
 isXTokenAt: aPosition
-
-
-	| aPositionTrue |
-	aPositionTrue := aPosition - 2.
 	
-	^xTokens includes: aPositionTrue.	
+	^xTokens includes: aPosition.	
 
 	! !
 
@@ -535,37 +529,41 @@ winner
 	^state winner! !
 
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/2/2018 13:17:54'!
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:54:18'!
 are: positions straightConsidering: aCoordinate
 	
 	
-	^(-1 to: 1) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = (aCoordinate sendTo: aPosition)]]]! !
+	^(1 to: 3) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = (aCoordinate sendTo: aPosition)]]]! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/4/2018 22:06:27'!
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:58:28'!
 areDiagonal: positions
 
 	
-	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| aPosition x = aPosition y negated]]]! !
+	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| (aPosition - 2) x = (aPosition - 2)  y negated]]]! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:07:47'!
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:59:13'!
 assertMovementConditionsFrom: aPosition to: anotherPosition
 
-	(self isVacant: aPosition + 2) ifTrue: [self error: self class TryingToMoveNonTokenErrorDescription ].
 
-	(((aPosition x - anotherPosition x) abs > 1) or: [(aPosition y - anotherPosition y) abs > 1] or: [aPosition transposed = anotherPosition] or: [aPosition transposed = anotherPosition negated]) ifTrue: [
+
+
+	(self isVacant: aPosition) ifTrue: [self error: self class TryingToMoveNonTokenErrorDescription ].
+
+	(((aPosition x - anotherPosition x) abs > 1) or: [(aPosition y - anotherPosition y) abs > 1] or: [aPosition transposed = anotherPosition] or: [(aPosition - 2) transposed = (anotherPosition - 2) negated]) ifTrue: [
 		
 		self error: self class GameboardLayoutErrorDescription].
 ! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:07:00'!
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:55:34'!
 assertPlacementConditionsOf: aPosition 
 
-
-
-
-	(aPosition x abs > 1 or:[aPosition y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
+	|truePosition|
 	
-	(self isOcuppied: (aPosition + 2)) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
+	truePosition := aPosition - 2.
+
+	(truePosition x abs > 1 or:[truePosition y abs > 1 ]) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
+	
+	(self isOcuppied: (aPosition)) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
 ! !
 
 !TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 18:09:11'!
@@ -618,30 +616,21 @@ winningConditions
 	^(self are: (state currentPlayerTokens) straightConsidering: #x ) or: [self are: (state currentPlayerTokens) straightConsidering: #y] or: [self areDiagonal:(state currentPlayerTokens)]! !
 
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/5/2018 19:39:14'!
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/5/2018 20:53:06'!
 moveTokenAt: aPosition to: anotherPosition 
 
-	|aPositionTrue anotherPositionTrue|
+	self assertPlacementConditionsOf: anotherPosition.
+
+	self assertMovementConditionsFrom: aPosition to: anotherPosition.
 	
-	aPositionTrue  := aPosition -2.
-	anotherPositionTrue  := anotherPosition -2.
+	state movingTokenAt: aPosition to: anotherPosition.! !
 
-	self assertPlacementConditionsOf: anotherPositionTrue.
-
-	self assertMovementConditionsFrom: aPositionTrue to: anotherPositionTrue.
-	
-	state movingTokenAt: aPositionTrue to: anotherPositionTrue.! !
-
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/5/2018 19:45:06'!
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/5/2018 20:53:15'!
 placeTokenAt: aPosition 
 
-	|aPositionTrue|
-	
-	aPositionTrue := aPosition -2.
+	self assertPlacementConditionsOf: aPosition.
 
-	self assertPlacementConditionsOf: aPositionTrue.
-
-	state placingTokenAt: aPositionTrue.! !
+	state placingTokenAt: aPosition.! !
 
 
 !TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/2/2018 16:12:40'!
