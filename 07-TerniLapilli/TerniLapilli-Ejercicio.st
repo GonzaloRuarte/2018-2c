@@ -11,37 +11,6 @@ initializeWith: aTerniLapilli
 	terniLapilli:= aTerniLapilli.! !
 
 
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:25:17'!
-doesOMoveNext
-
-	^false! !
-
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:25:23'!
-doesOPlaceNext
-
-	^false! !
-
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:25:29'!
-doesXMoveNext
-
-	^false! !
-
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:25:35'!
-doesXPlaceNext
-
-	^false! !
-
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 13:37:58'!
-isOWinner
-
-	^false! !
-
-!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 13:37:55'!
-isXWinner
-
-	^false! !
-
-
 !GameState methodsFor: 'operations - private' stamp: 'GR 11/5/2018 17:59:34'!
 activePlayerWon
 	self subclassResponsibility ! !
@@ -63,6 +32,37 @@ movingTokenAt: aPosition to: anotherPosition
 
 !GameState methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:54:03'!
 placingTokenAt: aPosition
+
+	self subclassResponsibility ! !
+
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:31'!
+doesOMoveNext
+
+	self subclassResponsibility ! !
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:28'!
+doesOPlaceNext
+
+	self subclassResponsibility ! !
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:25'!
+doesXMoveNext
+
+	self subclassResponsibility ! !
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:23'!
+doesXPlaceNext
+
+	self subclassResponsibility ! !
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:20'!
+isOWinner
+
+	self subclassResponsibility ! !
+
+!GameState methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:11:18'!
+isXWinner
 
 	self subclassResponsibility ! !
 
@@ -113,10 +113,36 @@ placingTokenAt: aPosition
 
 	self subclassResponsibility ! !
 
-!OActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/5/2018 18:06:13'!
-winner
-	
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:12:39'!
+doesOMoveNext
+
 	self subclassResponsibility ! !
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:13:18'!
+doesOPlaceNext
+
+	self subclassResponsibility ! !
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:13:31'!
+doesXMoveNext
+
+	^false! !
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:13:34'!
+doesXPlaceNext
+
+	^false! !
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:14:15'!
+isOWinner
+
+	self subclassResponsibility ! !
+
+!OActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:14:23'!
+isXWinner
+
+	^false! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -157,6 +183,14 @@ placingTokenAt: aPosition
 doesOMoveNext
 	^true! !
 
+!OMovesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:18:56'!
+doesOPlaceNext
+	^false! !
+
+!OMovesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:19:01'!
+isOWinner
+	^false! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'OMovesTokenNext class' category: #'TerniLapilli-Ejercicio'!
@@ -188,9 +222,17 @@ placingTokenAt: aPosition
 	terniLapilli hasThePlacementEnded.! !
 
 
+!OPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:19:26'!
+doesOMoveNext
+	^false! !
+
 !OPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:26:38'!
 doesOPlaceNext
 	^true! !
+
+!OPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:19:15'!
+isOWinner
+	^false! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -222,6 +264,14 @@ placingTokenAt: aPosition
 	
 	terniLapilli gameAlreadyOverError! !
 
+
+!OWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:19:36'!
+doesOMoveNext
+	^false! !
+
+!OWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:19:40'!
+doesOPlaceNext
+	^false! !
 
 !OWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 13:38:14'!
 isOWinner
@@ -269,9 +319,35 @@ placingTokenAt: aPosition
 
 	self subclassResponsibility ! !
 
-!XActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/5/2018 18:06:10'!
-winner
-	
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:15:20'!
+doesOMoveNext
+
+	^false! !
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:15:18'!
+doesOPlaceNext
+
+	^false! !
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:14:43'!
+doesXMoveNext
+
+	self subclassResponsibility ! !
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:14:40'!
+doesXPlaceNext
+
+	self subclassResponsibility ! !
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:15:13'!
+isOWinner
+
+	^false! !
+
+!XActivePlayer methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:14:49'!
+isXWinner
+
 	self subclassResponsibility ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -321,6 +397,14 @@ placingTokenAt: aPosition
 doesXMoveNext
 	^true! !
 
+!XMovesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:15:45'!
+doesXPlaceNext
+	^false! !
+
+!XMovesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:16:21'!
+isXWinner
+	^false! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'XMovesTokenNext class' category: #'TerniLapilli-Ejercicio'!
@@ -352,9 +436,17 @@ placingTokenAt: aPosition
 	terniLapilli changeTo: (OPlacesTokenNext for: terniLapilli).! !
 
 
+!XPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:15:57'!
+doesXMoveNext
+	^false! !
+
 !XPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/5/2018 19:27:39'!
 doesXPlaceNext
 	^true! !
+
+!XPlacesTokenNext methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:16:24'!
+isXWinner
+	^false! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -387,6 +479,14 @@ placingTokenAt: aPosition
 	terniLapilli gameAlreadyOverError! !
 
 
+!XWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:16:42'!
+doesXMoveNext
+	^false! !
+
+!XWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 14:16:39'!
+doesXPlaceNext
+	^false! !
+
 !XWon methodsFor: 'testing - private' stamp: 'GR 11/6/2018 13:38:20'!
 isXWinner
 	^true! !
@@ -398,6 +498,60 @@ Object subclass: #TerniLapilli
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:48:47'!
+assertMovementConditionsFrom: aPosition to: anotherPosition
+
+	(self isVacant: aPosition) ifTrue: [self error: self class TryingToMoveNonTokenErrorDescription ].
+
+	(self isMovingIncorrectlyFrom: aPosition to: anotherPosition) ifTrue: [self error: self class GameboardLayoutErrorDescription].
+! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 01:07:22'!
+assertPlacementConditionsAt: aPosition 
+
+	(self isOutOfBounds: (aPosition - 2)) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
+	
+	(self isOcuppied: (aPosition)) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
+! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:59:58'!
+badDiagonalMoveFrom: aPosition to: anotherPosition
+
+	
+	^(aPosition - 2) transposed = (anotherPosition - 2) negated! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:59:23'!
+badInvertedDiagonalMoveFrom: aPosition to: anotherPosition
+
+	
+	^aPosition transposed = anotherPosition! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:32:12'!
+horizontalFarJumpFrom: aPosition to: anotherPosition
+
+	
+	^(aPosition x - anotherPosition x) abs > 1! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 01:00:44'!
+isMovingIncorrectlyFrom: aPosition to: anotherPosition
+
+	
+	^(self horizontalFarJumpFrom: aPosition to: anotherPosition) or: [self verticalFarJumpFrom: aPosition to: anotherPosition] 
+	or: [self badInvertedDiagonalMoveFrom: aPosition to: anotherPosition ] or: [self badDiagonalMoveFrom: aPosition to: anotherPosition]! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:31:17'!
+isOutOfBounds: aPosition
+
+	
+	^(aPosition x abs > 1) or: [aPosition y abs > 1]! !
+
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:32:28'!
+verticalFarJumpFrom: aPosition to: anotherPosition
+
+	
+	^(aPosition y - anotherPosition y) abs > 1! !
+
 
 !TerniLapilli methodsFor: 'exception - private' stamp: 'GR 11/2/2018 12:43:01'!
 gameAlreadyOverError
@@ -428,71 +582,21 @@ initialize
 	state:=XPlacesTokenNext for: self.! !
 
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:19:49'!
-doesOMoveNext
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/6/2018 00:47:29'!
+moveTokenAt: aPosition to: anotherPosition 
 
-	^(state doesOMoveNext)! !
+	self assertPlacementConditionsAt: anotherPosition.
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:19:59'!
-doesOPlaceNext
-
-	^(state doesOPlaceNext)! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:20:06'!
-doesXMoveNext
-	^state doesXMoveNext ! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:20:19'!
-doesXPlaceNext
-
-	^state doesXPlaceNext ! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:32'!
-isOTokenAt: aPosition
-
-
-	^oTokensPositions includes: aPosition.	
-
-	! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 13:37:35'!
-isOWinner
-
-	^state isOWinner! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:04:14'!
-isOcuppied: aPosition
-
-	^(self isXTokenAt: aPosition) or: [self isOTokenAt: aPosition]! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:03:39'!
-isVacant: aPosition 
+	self assertMovementConditionsFrom: aPosition to: anotherPosition.
 	
+	state movingTokenAt: aPosition to: anotherPosition.! !
 
+!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/6/2018 00:47:29'!
+placeTokenAt: aPosition 
 
-	^(self isOcuppied: aPosition) not! !
+	self assertPlacementConditionsAt: aPosition.
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:23'!
-isXTokenAt: aPosition
-	
-	^xTokensPositions includes: aPosition.	
-
-	! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 13:37:28'!
-isXWinner
-
-	^state isXWinner! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:14'!
-noOTokensPlaced
-
-	^oTokensPositions size = 0! !
-
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:08'!
-noXTokensPlaced
-
-	^xTokensPositions size = 0! !
+	state placingTokenAt: aPosition.! !
 
 
 !TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/6/2018 00:21:58'!
@@ -571,21 +675,71 @@ winningConditions
 	^(tokensPositions size = 3) and: [(self areInLine: tokensPositions) or: [self areDiagonal: tokensPositions]]! !
 
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/6/2018 00:47:29'!
-moveTokenAt: aPosition to: anotherPosition 
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:19:49'!
+doesOMoveNext
 
-	self assertPlacementConditionsAt: anotherPosition.
+	^(state doesOMoveNext)! !
 
-	self assertMovementConditionsFrom: aPosition to: anotherPosition.
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:19:59'!
+doesOPlaceNext
+
+	^(state doesOPlaceNext)! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:20:06'!
+doesXMoveNext
+	^state doesXMoveNext ! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:20:19'!
+doesXPlaceNext
+
+	^state doesXPlaceNext ! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:32'!
+isOTokenAt: aPosition
+
+
+	^oTokensPositions includes: aPosition.	
+
+	! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 13:37:35'!
+isOWinner
+
+	^state isOWinner! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:04:14'!
+isOcuppied: aPosition
+
+	^(self isXTokenAt: aPosition) or: [self isOTokenAt: aPosition]! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:03:39'!
+isVacant: aPosition 
 	
-	state movingTokenAt: aPosition to: anotherPosition.! !
 
-!TerniLapilli methodsFor: 'operations' stamp: 'GR 11/6/2018 00:47:29'!
-placeTokenAt: aPosition 
 
-	self assertPlacementConditionsAt: aPosition.
+	^(self isOcuppied: aPosition) not! !
 
-	state placingTokenAt: aPosition.! !
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:23'!
+isXTokenAt: aPosition
+	
+	^xTokensPositions includes: aPosition.	
+
+	! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 13:37:28'!
+isXWinner
+
+	^state isXWinner! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:14'!
+noOTokensPlaced
+
+	^oTokensPositions size = 0! !
+
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/6/2018 00:21:08'!
+noXTokensPlaced
+
+	^xTokensPositions size = 0! !
 
 
 !TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/6/2018 00:45:05'!
@@ -597,60 +751,6 @@ safelyPlaceTokenAt: aPosition belongingTo: aPositionsSet
 safelyRemoveTokenAt: aPosition belongingTo: aPositionsSet
 
 	aPositionsSet remove: aPosition.! !
-
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:48:47'!
-assertMovementConditionsFrom: aPosition to: anotherPosition
-
-	(self isVacant: aPosition) ifTrue: [self error: self class TryingToMoveNonTokenErrorDescription ].
-
-	(self isMovingIncorrectlyFrom: aPosition to: anotherPosition) ifTrue: [self error: self class GameboardLayoutErrorDescription].
-! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 01:07:22'!
-assertPlacementConditionsAt: aPosition 
-
-	(self isOutOfBounds: (aPosition - 2)) ifTrue: [self error: self class OutOfBoundsErrorDescription ].
-	
-	(self isOcuppied: (aPosition)) ifTrue: [self error: self class OccupiedPositionErrorDescription ].
-! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:59:58'!
-badDiagonalMoveFrom: aPosition to: anotherPosition
-
-	
-	^(aPosition - 2) transposed = (anotherPosition - 2) negated! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:59:23'!
-badInvertedDiagonalMoveFrom: aPosition to: anotherPosition
-
-	
-	^aPosition transposed = anotherPosition! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:32:12'!
-horizontalFarJumpFrom: aPosition to: anotherPosition
-
-	
-	^(aPosition x - anotherPosition x) abs > 1! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 01:00:44'!
-isMovingIncorrectlyFrom: aPosition to: anotherPosition
-
-	
-	^(self horizontalFarJumpFrom: aPosition to: anotherPosition) or: [self verticalFarJumpFrom: aPosition to: anotherPosition] 
-	or: [self badInvertedDiagonalMoveFrom: aPosition to: anotherPosition ] or: [self badDiagonalMoveFrom: aPosition to: anotherPosition]! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:31:17'!
-isOutOfBounds: aPosition
-
-	
-	^(aPosition x abs > 1) or: [aPosition y abs > 1]! !
-
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 13:32:28'!
-verticalFarJumpFrom: aPosition to: anotherPosition
-
-	
-	^(aPosition y - anotherPosition y) abs > 1! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
