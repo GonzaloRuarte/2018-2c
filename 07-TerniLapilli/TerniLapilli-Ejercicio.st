@@ -132,14 +132,14 @@ OActivePlayer subclass: #OMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:54:02'!
+!OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:11:32'!
 movingTokenAt: aPosition to: anotherPosition
 
 	
 	(terniLapilli isXTokenAt: aPosition) ifTrue: [terniLapilli tokenOwnershipError].
 	
-	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: #oTokens.
-	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: #oTokens.
+	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: terniLapilli oTokens.
+	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: terniLapilli oTokens.
 	terniLapilli changeTo: (XMovesTokenNext for: terniLapilli).! !
 
 !OMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 12:54:21'!
@@ -181,10 +181,10 @@ movingTokenAt: aPosition to: anotherPosition
 	
 	terniLapilli shouldNotMoveError! !
 
-!OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:42'!
+!OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:11:36'!
 placingTokenAt: aPosition
 	
-	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #oTokens.
+	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: terniLapilli oTokens.
 	terniLapilli hasThePositioningEnded.! !
 
 !OPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 18:07:09'!
@@ -312,13 +312,13 @@ XActivePlayer subclass: #XMovesTokenNext
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
 
-!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:53:46'!
+!XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:11:48'!
 movingTokenAt: aPosition to: anotherPosition
 	
 	(terniLapilli isOTokenAt: (aPosition)) ifTrue: [terniLapilli tokenOwnershipError].
 
-	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: #xTokens.
-	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: #xTokens.
+	terniLapilli safelyRemoveTokenAt: aPosition belongingTo: terniLapilli xTokens.
+	terniLapilli safelyPlaceTokenAt: anotherPosition belongingTo: terniLapilli xTokens.
 	terniLapilli changeTo: (OMovesTokenNext for: terniLapilli).! !
 
 !XMovesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/2/2018 02:19:45'!
@@ -360,10 +360,10 @@ movingTokenAt: aPosition to: anotherPosition
 	
 	terniLapilli shouldNotMoveError! !
 
-!XPlacesTokenNext methodsFor: 'operations - private' stamp: 'ap 11/4/2018 17:34:04'!
+!XPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:11:57'!
 placingTokenAt: aPosition
 	
-	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: #xTokens.
+	terniLapilli safelyPlaceTokenAt: aPosition belongingTo: terniLapilli xTokens.
 	terniLapilli changeTo: (OPlacesTokenNext for: terniLapilli).! !
 
 !XPlacesTokenNext methodsFor: 'operations - private' stamp: 'GR 11/5/2018 18:06:58'!
@@ -490,17 +490,17 @@ isOWinner
 
 	^self winner = 'O'! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/2/2018 02:20:32'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:04:14'!
 isOcuppied: aPosition
 
-	^(self isVacant: aPosition)  not.! !
+	^(self isXTokenAt: aPosition) or: [self isOTokenAt: aPosition]! !
 
-!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:44:17'!
+!TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 21:03:39'!
 isVacant: aPosition 
 	
 
 
-	^((self isXTokenAt: aPosition )or: [ self isOTokenAt: aPosition ]) not! !
+	^(self isOcuppied: aPosition) not! !
 
 !TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 20:53:39'!
 isXTokenAt: aPosition
@@ -633,16 +633,16 @@ placeTokenAt: aPosition
 	state placingTokenAt: aPosition.! !
 
 
-!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/2/2018 16:12:40'!
+!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/5/2018 21:12:32'!
 safelyPlaceTokenAt: aPosition belongingTo: aPositionsSet
 
 	
-	 (aPositionsSet sendTo: self) add: aPosition! !
+	 aPositionsSet add: aPosition! !
 
-!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/2/2018 17:44:26'!
+!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/5/2018 21:12:39'!
 safelyRemoveTokenAt: aPosition belongingTo: aPositionsSet
 
-	(aPositionsSet sendTo: self) remove: aPosition.! !
+	aPositionsSet remove: aPosition.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
