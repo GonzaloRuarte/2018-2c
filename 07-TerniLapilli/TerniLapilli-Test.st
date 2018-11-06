@@ -210,7 +210,7 @@ test13OShouldWinAfterPlacing3TokensInDiagonalLine
 	self assert: (terniLapilli isOWinner). 
 ! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 00:02:32'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 13:40:18'!
 test14TokenShouldNotBePlacedAfterSomeoneWins
 
 	|terniLapilli|
@@ -228,7 +228,7 @@ test14TokenShouldNotBePlacedAfterSomeoneWins
 		self assert: (terniLapilli isVacant: 2@1). 
 		self deny: (terniLapilli noXTokensPlaced).
 		self deny: (terniLapilli noOTokensPlaced).
-		self assert:(terniLapilli isFinished).
+		self assert:(terniLapilli isXWinner).
 		self assert: (anException messageText = TerniLapilli GameAlreadyOverErrorDescription )]! !
 
 !TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 00:02:50'!
@@ -453,7 +453,7 @@ test25ValidMovementShouldLeaveVacantSpace
 	self assert: (terniLapilli doesOMoveNext)
 		! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 00:05:19'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 13:40:28'!
 test26TokenShouldNotBeMovedAfterSomeoneWinsByPlacing
 	|terniLapilli|
 	
@@ -470,7 +470,7 @@ test26TokenShouldNotBeMovedAfterSomeoneWinsByPlacing
 	withExceptionDo:[:anException|
 		self assert: (terniLapilli isVacant: 1@2). 
 		self assert: (terniLapilli isXTokenAt: 1@3).
-		self assert:(terniLapilli isFinished).
+		self assert:(terniLapilli isOWinner).
 		self assert: (anException messageText = TerniLapilli GameAlreadyOverErrorDescription )]! !
 
 !TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 00:05:09'!
@@ -585,7 +585,7 @@ test32TokenShouldNotBeMovedAfterXWinsDiagonallyByMoving
 	
 	self assert: (terniLapilli isXWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 00:04:27'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/6/2018 13:40:46'!
 test33TokenShouldNotBeMovedAfterSomeoneWinsByMoving
 
 	|terniLapilli|
@@ -605,5 +605,5 @@ test33TokenShouldNotBeMovedAfterSomeoneWinsByMoving
 	withExceptionDo:[:anException|
 		self assert: (terniLapilli isVacant: 2@1). 
 		self assert: (terniLapilli isOTokenAt: 3@1).
-		self assert:(terniLapilli isFinished).
+		self assert:(terniLapilli isOWinner).
 		self assert: (anException messageText = TerniLapilli GameAlreadyOverErrorDescription )]! !
