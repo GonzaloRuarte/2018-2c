@@ -546,7 +546,7 @@ areHorizontalStraight: positions
 	
 	^(1 to: 3) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = aPosition x]]]! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:34:11'!
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:40:42'!
 areVerticalStraight: positions
 	
 	
