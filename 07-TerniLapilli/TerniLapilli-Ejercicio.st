@@ -540,17 +540,23 @@ areDiagonal: positions
 	
 	^ positions size = 3 and: [(positions allSatisfy: [:aPosition | aPosition x = aPosition y]) or:[positions allSatisfy: [:aPosition| (aPosition - 2) x = (aPosition - 2)  y negated]]]! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:33:59'!
-areHorizontalStraight: positions
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 23:04:28'!
+areHorizontal: positions atRow: aRowNumber
 	
 	
-	^(1 to: 3) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = aPosition x]]]! !
+	^positions allSatisfy: [:aPosition | aRowNumber = aPosition x]! !
 
-!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 21:40:42'!
-areVerticalStraight: positions
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 23:33:01'!
+areInLine: positions
 	
 	
-	^(1 to: 3) anySatisfy: [:aCoordinateValue| positions size = 3 and: [positions allSatisfy: [:aPosition | aCoordinateValue = aPosition y]]]! !
+	^(1 to: 3) anySatisfy: [:aCoordinateValue| positions size = 3 and: [(self areHorizontal: positions atRow: aCoordinateValue) or: [self areVertical: positions atColumn: aCoordinateValue]]]! !
+
+!TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 23:04:36'!
+areVertical: positions atColumn: aRowNumber
+	
+	
+	^positions allSatisfy: [:aPosition | aRowNumber = aPosition y]! !
 
 !TerniLapilli methodsFor: 'operations - private' stamp: 'GR 11/5/2018 20:59:13'!
 assertMovementConditionsFrom: aPosition to: anotherPosition
@@ -620,7 +626,7 @@ theWinnerIs: aWinner
 	
 	state := aWinner for: self.! !
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/5/2018 21:37:02'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/5/2018 23:33:01'!
 winningConditions
 	
 	|tokensPositions|
@@ -628,7 +634,7 @@ winningConditions
 	tokensPositions := state currentPlayerTokensPositions.
 	
 
-	^(self areHorizontalStraight: tokensPositions) or: [self areVerticalStraight: tokensPositions] or: [self areDiagonal: tokensPositions]! !
+	^(self areInLine: tokensPositions) or: [self areDiagonal: tokensPositions]! !
 
 
 !TerniLapilli methodsFor: 'operations' stamp: 'GR 11/5/2018 20:53:06'!
