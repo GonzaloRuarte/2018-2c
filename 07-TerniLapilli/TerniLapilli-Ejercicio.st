@@ -521,9 +521,9 @@ badDiagonalMoveFrom: aPosition to: anotherPosition
 	
 	^(aPosition - 2) transposed = (anotherPosition - 2) negated! !
 
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 00:59:23'!
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/7/2018 02:10:33'!
 badInvertedDiagonalMoveFrom: aPosition to: anotherPosition
-
+	
 	
 	^aPosition transposed = anotherPosition! !
 
@@ -533,7 +533,7 @@ horizontalFarJumpFrom: aPosition to: anotherPosition
 	
 	^(aPosition x - anotherPosition x) abs > 1! !
 
-!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/6/2018 01:00:44'!
+!TerniLapilli methodsFor: 'assertions - private' stamp: 'GR 11/7/2018 02:15:45'!
 isMovingIncorrectlyFrom: aPosition to: anotherPosition
 
 	

@@ -185,7 +185,7 @@ test21ShouldNotMoveATokenFromSomeoneElse
 		self assert: (terniLapilli doesXMoveNext).
 		self assert: (anException messageText = TerniLapilli TokenOwnershipErrorDescription )]! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:55:14'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 02:16:35'!
 test22TokenShouldNotBeMovedToOccupiedPosition
 	
 	self allTokensPlacedWithNoWinners .
