@@ -154,15 +154,20 @@ tokenAmountForX
 	
 	^xTokensPositions size! !
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/8/2018 00:42:11'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/8/2018 14:52:35'!
+winningConditionsFor: tokenPositions
+
+	^(tokenPositions size = 3) and: [(self areInLine: tokenPositions) or: [self areDiagonal: tokenPositions]]! !
+
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/8/2018 14:49:55'!
 winningConditionsForO
 
-	^(oTokensPositions size = 3) and: [(self areInLine: oTokensPositions) or: [self areDiagonal: oTokensPositions]]! !
+	^self winningConditionsFor: oTokensPositions.! !
 
-!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/8/2018 00:43:21'!
+!TerniLapilli methodsFor: 'state transition - private' stamp: 'GR 11/8/2018 14:50:03'!
 winningConditionsForX
 
-	^(xTokensPositions size = 3) and: [(self areInLine: xTokensPositions) or: [self areDiagonal: xTokensPositions]]! !
+	^self winningConditionsFor: xTokensPositions.! !
 
 
 !TerniLapilli methodsFor: 'testing' stamp: 'GR 11/5/2018 19:19:49'!
@@ -232,17 +237,21 @@ noXTokensPlaced
 	^xTokensPositions size = 0! !
 
 
-!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 00:43:50'!
+!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 14:52:25'!
+safelyPlaceTokenAt: aPosition for: tokenPositions andChangeTo: aTerniLapilliState
+
+	tokenPositions add: aPosition.
+	self changeTo: aTerniLapilliState.! !
+
+!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 14:54:06'!
 safelyPlaceTokenForOAt: aPosition andChangeTo: aTerniLapilliState
 
-	oTokensPositions add: aPosition.
-	self changeTo: aTerniLapilliState.! !
+	self safelyPlaceTokenAt: aPosition for: oTokensPositions andChangeTo: aTerniLapilliState! !
 
-!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 00:44:07'!
+!TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 14:54:13'!
 safelyPlaceTokenForXAt: aPosition andChangeTo: aTerniLapilliState
 	
-	xTokensPositions add: aPosition.
-	self changeTo: aTerniLapilliState.! !
+	self safelyPlaceTokenAt: aPosition for: xTokensPositions andChangeTo: aTerniLapilliState! !
 
 !TerniLapilli methodsFor: 'token addition and removal - private' stamp: 'GR 11/8/2018 00:44:25'!
 safelyRemoveTokenForOAt: aPosition
