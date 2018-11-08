@@ -314,11 +314,6 @@ initializeWith: aTerniLapilli
 	terniLapilli:= aTerniLapilli.! !
 
 
-!TerniLapilliState methodsFor: 'operations - private' stamp: 'GR 11/5/2018 17:37:56'!
-currentPlayer
-
-	self subclassResponsibility ! !
-
 !TerniLapilliState methodsFor: 'operations - private' stamp: 'GR 11/7/2018 23:28:42'!
 gameOverFor: aTerniLapilli
 
@@ -392,11 +387,6 @@ TerniLapilliState subclass: #OActivePlayer
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
-
-!OActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/6/2018 13:34:05'!
-currentPlayer
-
-	^'O'! !
 
 !OActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/7/2018 23:30:53'!
 gameOverFor: aTerniLapilli
@@ -597,11 +587,6 @@ TerniLapilliState subclass: #XActivePlayer
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-Ejercicio'!
-
-!XActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/6/2018 13:34:12'!
-currentPlayer
-
-	^'X'! !
 
 !XActivePlayer methodsFor: 'operations - private' stamp: 'GR 11/7/2018 23:30:59'!
 gameOverFor: aTerniLapilli
