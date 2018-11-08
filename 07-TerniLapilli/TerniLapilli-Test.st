@@ -238,98 +238,98 @@ test28TokenShouldNotBeMovedAfterSomeoneWinsByPlacing
 	self fivePlacementsWithWinnerVertical.
 	self shouldRaiseGameAlreadyOverErrorMovingFrom: 1@3 to: 1@2.! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:28:26'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:56:35'!
 test29TokenShouldNotBeMovedAfterOWinsVerticallyByMoving
 	
 	terniLapilli placeTokenAt: 1@3.
-	self fivePlacementsToWinVerticallyByMoving.
-	terniLapilli moveTokenAt:  2@3 to: 2@2.
-	terniLapilli moveTokenAt:  2@1 to: 3@1.
+	self fivePlacementsToWinDiagonallyOrVerticallyByMoving .
+	terniLapilli moveTokenAt:  1@2 to: 1@1.
+	terniLapilli moveTokenAt:  3@3 to: 2@3.
 	
 	
 	self assert: (terniLapilli isOWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:28:32'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:56:42'!
 test30TokenShouldNotBeMovedAfterXWinsVerticallyByMoving
 
-	self fivePlacementsToWinVerticallyByMoving.
+	self fivePlacementsToWinDiagonallyOrVerticallyByMoving .
 	terniLapilli placeTokenAt: 1@3.
-	terniLapilli moveTokenAt:  2@1 to: 3@1.
+	terniLapilli moveTokenAt:  3@3 to: 2@3.
 	
 	
 	self assert: (terniLapilli isXWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:29:56'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 01:00:53'!
 test31TokenShouldNotBeMovedAfterOWinsHorizontallyByMoving
 
 	terniLapilli placeTokenAt: 3@1.
-	self fivePlacementsToWinHorizontallyByMoving.
-	terniLapilli moveTokenAt:  3@2 to: 2@2.
-	terniLapilli moveTokenAt:  1@2 to: 1@3.
+	self fivePlacementsToWinDiagonallyInvertedOrHorizontallyByMoving.
+	terniLapilli moveTokenAt:  2@1 to: 1@1.
+	terniLapilli moveTokenAt:  3@3 to: 3@2.
 	
 	
 	self assert: (terniLapilli isOWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:30:02'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 01:01:08'!
 test32TokenShouldNotBeMovedAfterXWinsHorizontallyByMoving
 	
-	self fivePlacementsToWinHorizontallyByMoving.
+	self fivePlacementsToWinDiagonallyInvertedOrHorizontallyByMoving.
 	terniLapilli placeTokenAt: 3@1.
-	terniLapilli moveTokenAt:  1@2 to: 1@3.
+	terniLapilli moveTokenAt:  3@3 to: 3@2.
 	
 	
 	self assert: (terniLapilli isXWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:30:55'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:56:23'!
 test33TokenShouldNotBeMovedAfterOWinsDiagonallyByMoving
 	
 	terniLapilli placeTokenAt: 1@3.
-	self fivePlacementsToWinDiagonallyByMoving.
+	self fivePlacementsToWinDiagonallyOrVerticallyByMoving.
 	terniLapilli moveTokenAt: 3@1 to: 3@2.
 	terniLapilli moveTokenAt: 2@1 to: 1@1.
 	
 	
 	self assert: (terniLapilli isOWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:31:01'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:56:23'!
 test34TokenShouldNotBeMovedAfterXWinsDiagonallyByMoving
 	
-	self fivePlacementsToWinDiagonallyByMoving.
+	self fivePlacementsToWinDiagonallyOrVerticallyByMoving.
 	terniLapilli placeTokenAt: 1@3.
 	terniLapilli moveTokenAt: 2@1 to: 1@1.
 	
 	
 	self assert: (terniLapilli isXWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:33:51'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 01:00:27'!
 test35TokenShouldNotBeMovedAfterOWinsDiagonallyByMovingInverted
 	
-	terniLapilli placeTokenAt: 1@1.
-	self fivePlacementsToWinDiagonallyInvertedByMoving.
-	terniLapilli moveTokenAt: 3@3 to: 2@3.
-	terniLapilli moveTokenAt: 1@2 to: 1@3.
+	terniLapilli placeTokenAt: 3@1.
+	self fivePlacementsToWinDiagonallyInvertedOrHorizontallyByMoving .
+	terniLapilli moveTokenAt: 1@3 to: 2@3.
+	terniLapilli moveTokenAt: 1@2 to: 1@1.
 	
 	
 	self assert: (terniLapilli isOWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:33:31'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:59:45'!
 test36TokenShouldNotBeMovedAfterXWinsDiagonallyByMovingInverted
 	
-	self fivePlacementsToWinDiagonallyInvertedByMoving.
-	terniLapilli placeTokenAt: 1@1.
-	terniLapilli moveTokenAt: 1@2 to: 1@3.
+	self fivePlacementsToWinDiagonallyInvertedOrHorizontallyByMoving .
+	terniLapilli placeTokenAt: 3@1.
+	terniLapilli moveTokenAt: 1@2 to: 1@1.
 	
 	
 	self assert: (terniLapilli isXWinner).! !
 
-!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/7/2018 01:28:20'!
+!TerniLapilliTest methodsFor: 'tests' stamp: 'GR 11/8/2018 00:56:52'!
 test37TokenShouldNotBeMovedAfterSomeoneWinsByMoving
 	
 	terniLapilli placeTokenAt: 1@3.
-	self fivePlacementsToWinVerticallyByMoving.
-	terniLapilli moveTokenAt:  2@3 to: 2@2.
-	terniLapilli moveTokenAt:  2@1 to: 3@1.
-	self shouldRaiseGameAlreadyOverErrorMovingFrom: 2@2 to: 2@3.! !
+	self fivePlacementsToWinDiagonallyOrVerticallyByMoving.
+	terniLapilli moveTokenAt:  1@2 to: 1@1.
+	terniLapilli moveTokenAt:  3@3 to: 2@3.
+	self shouldRaiseGameAlreadyOverErrorMovingFrom: 1@1 to: 1@2.! !
 
 
 !TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/7/2018 01:55:14'!
@@ -350,48 +350,25 @@ bothPlayersShouldHaveTokensPlaced
 	self deny: (terniLapilli noOTokensPlaced).
 ! !
 
-!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/7/2018 01:30:39'!
-fivePlacementsToWinDiagonallyByMoving
+!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/8/2018 00:58:49'!
+fivePlacementsToWinDiagonallyInvertedOrHorizontallyByMoving
+
+	terniLapilli placeTokenAt: 3@3.
+	terniLapilli placeTokenAt: 2@1.
+	terniLapilli placeTokenAt: 2@2.
+	terniLapilli placeTokenAt: 1@3.
+	terniLapilli placeTokenAt: 1@2.
+	
+! !
+
+!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/8/2018 00:56:23'!
+fivePlacementsToWinDiagonallyOrVerticallyByMoving
 
 	terniLapilli placeTokenAt: 3@3.
 	terniLapilli placeTokenAt: 1@2.
 	terniLapilli placeTokenAt: 2@2.
 	terniLapilli placeTokenAt: 3@1.
 	terniLapilli placeTokenAt: 2@1.
-	
-! !
-
-!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/7/2018 01:32:50'!
-fivePlacementsToWinDiagonallyInvertedByMoving
-
-	terniLapilli placeTokenAt: 3@1.
-	terniLapilli placeTokenAt: 2@1.
-	terniLapilli placeTokenAt: 2@2.
-	terniLapilli placeTokenAt: 3@3.
-	terniLapilli placeTokenAt: 1@2.
-	
-! !
-
-!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/7/2018 01:29:27'!
-fivePlacementsToWinHorizontallyByMoving
-
-	terniLapilli placeTokenAt: 3@3.
-	terniLapilli placeTokenAt: 2@1.
-	terniLapilli placeTokenAt: 2@3.
-	terniLapilli placeTokenAt: 3@2.
-	terniLapilli placeTokenAt: 1@2.
-	
-! !
-
-!TerniLapilliTest methodsFor: 'setup' stamp: 'GR 11/7/2018 01:27:57'!
-fivePlacementsToWinVerticallyByMoving
-
-	terniLapilli placeTokenAt: 3@3.
-	terniLapilli placeTokenAt: 1@2.
-	terniLapilli placeTokenAt: 3@2.
-	terniLapilli placeTokenAt: 2@3.
-	terniLapilli placeTokenAt: 2@1.
-
 	
 ! !
 
