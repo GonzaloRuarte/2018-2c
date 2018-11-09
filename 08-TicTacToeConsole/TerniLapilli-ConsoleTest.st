@@ -1,11 +1,11 @@
 !classDefinition: #TerniLapilliConsoleTest category: #'TerniLapilli-ConsoleTest'!
 TestCase subclass: #TerniLapilliConsoleTest
-	instanceVariableNames: 'game console'
+	instanceVariableNames: 'game console viewer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli-ConsoleTest'!
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:19'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:26:48'!
 test01
 
 	| lines |
@@ -19,10 +19,10 @@ test01
 	game putXAt: 2@2.
 	lines := console lines.
 	
-	self assert: 'X marcó en 2@2' equals: (lines at:1).
-	self assert: 'Estado: Jugando O' equals: (lines at:2)! !
+	self assert: 'X marcó en 2@2' equals: lines nextLine.
+	self assert: 'Estado: Jugando O' equals: lines nextLine.! !
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:27'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:42:25'!
 test02
 
 	| lines |
@@ -38,13 +38,13 @@ test02
 	
 	lines := console lines.
 	
-	self assert: 'X marcó en 2@2' equals: (lines at:1).
-	self assert: 'Estado: Jugando O' equals: (lines at:2).
-	self assert: 'O marcó en 1@1' equals: (lines at:3).
-	self assert: 'Estado: Jugando X' equals: (lines at:4).
+	self assert: 'X marcó en 2@2' equals: lines nextLine.
+	self assert: 'Estado: Jugando O' equals: lines nextLine.
+	self assert: 'O marcó en 1@1' equals: lines nextLine.
+	self assert: 'Estado: Jugando X' equals: lines nextLine.
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:31'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:42:53'!
 test03
 
 	| lines |
@@ -64,20 +64,20 @@ test03
 	lines := console lines.
 	
 	
-	self assert:  'X marcó en 2@2' equals: (lines at:1).
-	self assert:  'Estado: Jugando O' equals: (lines at:2).
-	self assert:  'O marcó en 1@1' equals: (lines at:3).
-	self assert:  'Estado: Jugando X' equals: (lines at:4).
-	self assert:  'X marcó en 1@3' equals: (lines at:5).
-	self assert:  'Estado: Jugando O' equals: (lines at:6).
-	self assert:  'O marcó en 1@2' equals: (lines at:7).
-	self assert:  'Estado: Jugando X' equals: (lines at:8).
-	self assert:  'X marcó en 3@1' equals: (lines at:9).
-	self assert:  'Estado: Juego terminado - ¡Ganó X!!' equals: (lines at:10).
+	self assert:  'X marcó en 2@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 1@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 1@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 3@1' equals: lines nextLine.
+	self assert:  'Estado: Juego terminado - ¡Ganó X!!' equals: lines nextLine.
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:35'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:43:15'!
 test04
 
 	| lines |
@@ -97,22 +97,22 @@ test04
 	lines := console lines.
 	
 	
-	self assert:  'X marcó en 3@3' equals: (lines at:1).
-	self assert:  'Estado: Jugando O' equals: (lines at:2).	
-	self assert:  'O marcó en 2@2' equals: (lines at:3).
-	self assert:  'Estado: Jugando X' equals: (lines at:4).
-	self assert:  'X marcó en 1@1' equals: (lines at:5).
-	self assert:  'Estado: Jugando O' equals: (lines at:6).
-	self assert:  'O marcó en 1@3' equals: (lines at:7).
-	self assert:  'Estado: Jugando X' equals: (lines at:8).
-	self assert:  'X marcó en 1@2' equals: (lines at:9).
-	self assert:  'Estado: Jugando O' equals: (lines at:10).
-	self assert:  'O marcó en 3@1' equals: (lines at:11).
-	self assert:  'Estado: Juego terminado - ¡Ganó O!!' equals: (lines at:12).
+	self assert:  'X marcó en 3@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 2@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 1@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 1@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 3@1' equals: lines nextLine.
+	self assert:  'Estado: Juego terminado - ¡Ganó O!!' equals: lines nextLine.
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:38'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:43:40'!
 test05a
 
 	| lines |
@@ -135,26 +135,26 @@ test05a
 	lines := console lines.
 	
 	
-	self assert:  'X marcó en 2@2' equals: (lines at:1).
-	self assert:  'Estado: Jugando O' equals: (lines at:2).	
-	self assert:  'O marcó en 1@1' equals: (lines at:3).
-	self assert:  'Estado: Jugando X' equals: (lines at:4).
-	self assert:  'X marcó en 1@3' equals: (lines at:5).
-	self assert:  'Estado: Jugando O' equals: (lines at:6).
-	self assert:  'O marcó en 3@1' equals: (lines at:7).
-	self assert:  'Estado: Jugando X' equals: (lines at:8).
-	self assert:  'X marcó en 2@1' equals: (lines at:9).
-	self assert:  'Estado: Jugando O' equals: (lines at:10).
-	self assert:  'O marcó en 2@3' equals: (lines at:11).
-	self assert:  'Estado: Jugando X' equals: (lines at:12).
-	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: (lines at:13).
-	self assert:  'Estado: Jugando O' equals: (lines at:14).
+	self assert:  'X marcó en 2@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 1@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 3@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 2@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 2@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
 
 	
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'as yet unclassified' stamp: 'APç 11/8/2018 21:59:42'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:44:11'!
 test05b
 
 	| lines |
@@ -179,24 +179,44 @@ test05b
 	lines := console lines.
 	
 	
-	self assert:  'X marcó en 2@2' equals: (lines at:1).
-	self assert:  'Estado: Jugando O' equals: (lines at:2).	
-	self assert:  'O marcó en 1@1' equals: (lines at:3).
-	self assert:  'Estado: Jugando X' equals: (lines at:4).
-	self assert:  'X marcó en 1@3' equals: (lines at:5).
-	self assert:  'Estado: Jugando O' equals: (lines at:6).
-	self assert:  'O marcó en 3@1' equals: (lines at:7).
-	self assert:  'Estado: Jugando X' equals: (lines at:8).
-	self assert:  'X marcó en 2@1' equals: (lines at:9).
-	self assert:  'Estado: Jugando O' equals: (lines at:10).
-	self assert:  'O marcó en 2@3' equals: (lines at:11).
-	self assert:  'Estado: Jugando X' equals: (lines at:12).
-	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: (lines at:13).
-	self assert:  'Estado: Jugando O' equals: (lines at:14).
-	self assert:  'O deslizó hasta 3@2 desde 3@1' equals: (lines at:15).
-	self assert:  'Estado: Jugando X' equals: (lines at:16).
-	self assert:  'X deslizó hasta 3@3 desde 2@2' equals: (lines at:17).
-	self assert:  'Estado: Jugando O' equals: (lines at:18).
+	self assert:  'X marcó en 2@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 1@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 3@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X marcó en 2@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O marcó en 2@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self assert:  'O deslizó hasta 3@2 desde 3@1' equals: lines nextLine.
+	self assert:  'Estado: Jugando X' equals: lines nextLine.
+	self assert:  'X deslizó hasta 3@3 desde 2@2' equals: lines nextLine.
+	self assert:  'Estado: Jugando O' equals: lines nextLine.
 	
 
 ! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 03:06:06'!
+test07
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2.
+	
+	self assert:
+' | | 
+-----
+ |X| 
+-----
+ | | 
+Playing O' equals: viewer contents.! !
