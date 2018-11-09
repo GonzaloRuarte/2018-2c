@@ -1317,13 +1317,13 @@ visitGameOverForX
 
 	log nextPutAll: 'Estado: Juego terminado - ¡Ganó X!!'.! !
 
-!TerniLapilliConsole methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:31:21'!
-visitWithOActivePlayer
+!TerniLapilliConsole methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:23:08'!
+visitPlayingO
 
 	log nextPutAll: 'Estado: Jugando O'.! !
 
-!TerniLapilliConsole methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:31:25'!
-visitWithXActivePlayer
+!TerniLapilliConsole methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:23:11'!
+visitPlayingX
 
 	log nextPutAll: 'Estado: Jugando X'.! !
 
@@ -1436,56 +1436,108 @@ isFor: aTerniLapilli
 	^self subclassResponsibility ! !
 
 
-!classDefinition: #GameOverState category: #TerniLapilli!
-TerniLapilliState subclass: #GameOverState
+!classDefinition: #PlayerOWon category: #TerniLapilli!
+TerniLapilliState subclass: #PlayerOWon
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!GameOverState methodsFor: 'testing game result' stamp: 'HAW 11/8/2018 12:15:43'!
-isOver
-
-	^ true.! !
-
-
-!GameOverState methodsFor: 'marking board' stamp: 'HAW 11/8/2018 11:08:57'!
+!PlayerOWon methodsFor: 'marking board' stamp: 'HAW 11/8/2018 11:08:57'!
 putOAt: aPosition
 
 	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
 
-!GameOverState methodsFor: 'marking board' stamp: 'HAW 11/8/2018 11:09:02'!
+!PlayerOWon methodsFor: 'marking board' stamp: 'HAW 11/8/2018 11:09:02'!
 putXAt: aPosition
 
 	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
 
 
-!GameOverState methodsFor: 'sliding' stamp: 'HAW 11/8/2018 11:48:38'!
+!PlayerOWon methodsFor: 'sliding' stamp: 'HAW 11/8/2018 11:48:38'!
 slideOFrom: aPosition to: anotherPostion
 
 	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
 
-!GameOverState methodsFor: 'sliding' stamp: 'HAW 11/8/2018 11:48:20'!
+!PlayerOWon methodsFor: 'sliding' stamp: 'HAW 11/8/2018 11:48:20'!
 slideXFrom: aPosition to: anotherPostion
 
 	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
 
 
-!GameOverState methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:47:07'!
+!PlayerOWon methodsFor: 'testing game result' stamp: 'HAW 11/8/2018 12:15:43'!
+isOver
+
+	^ true.! !
+
+
+!PlayerOWon methodsFor: 'visiting' stamp: 'GR 11/9/2018 11:25:28'!
 accept: aVisitor
 
-	game hasPlayerXWon ifTrue: [aVisitor visitGameOverForX] ifFalse: [aVisitor visitGameOverForO]! !
+	aVisitor visitGameOverForO! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'GameOverState class' category: #TerniLapilli!
-GameOverState class
+!classDefinition: 'PlayerOWon class' category: #TerniLapilli!
+PlayerOWon class
 	instanceVariableNames: ''!
 
-!GameOverState class methodsFor: 'state selection' stamp: 'HAW 11/8/2018 12:02:20'!
+!PlayerOWon class methodsFor: 'state selection' stamp: 'GR 11/9/2018 11:27:44'!
 isFor: aTerniLapilli 
 
-	^ aTerniLapilli hasPlayerXWon or: [ aTerniLapilli hasPlayerOWon ]! !
+	^  aTerniLapilli hasPlayerOWon ! !
+
+
+!classDefinition: #PlayerXWon category: #TerniLapilli!
+TerniLapilliState subclass: #PlayerXWon
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!PlayerXWon methodsFor: 'marking board' stamp: 'GR 11/9/2018 11:26:05'!
+putOAt: aPosition
+
+	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
+
+!PlayerXWon methodsFor: 'marking board' stamp: 'GR 11/9/2018 11:26:31'!
+putXAt: aPosition
+
+	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
+
+
+!PlayerXWon methodsFor: 'sliding' stamp: 'GR 11/9/2018 11:26:18'!
+slideOFrom: aPosition to: anotherPostion
+
+	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
+
+!PlayerXWon methodsFor: 'sliding' stamp: 'GR 11/9/2018 11:26:23'!
+slideXFrom: aPosition to: anotherPostion
+
+	game error: game class canNotPlayWhenGameIsOverErrorMessage ! !
+
+
+!PlayerXWon methodsFor: 'testing game result' stamp: 'GR 11/9/2018 11:25:58'!
+isOver
+
+	^ true.! !
+
+
+!PlayerXWon methodsFor: 'visiting' stamp: 'GR 11/9/2018 11:25:42'!
+accept: aVisitor
+
+	aVisitor visitGameOverForX! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'PlayerXWon class' category: #TerniLapilli!
+PlayerXWon class
+	instanceVariableNames: ''!
+
+!PlayerXWon class methodsFor: 'state selection' stamp: 'GR 11/9/2018 11:28:10'!
+isFor: aTerniLapilli
+
+	^aTerniLapilli hasPlayerXWon! !
 
 
 !classDefinition: #PlayingO category: #TerniLapilli!
@@ -1507,10 +1559,10 @@ slideXFrom: aPosition to: anotherPostion
 	game slideXWhenPlayingOFrom: aPosition to: anotherPostion .! !
 
 
-!PlayingO methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:29:55'!
+!PlayingO methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:24:07'!
 accept: aVisitor
 	
-	aVisitor visitWithOActivePlayer.! !
+	aVisitor visitPlayingO! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1619,10 +1671,10 @@ slideOFrom: aPosition to: anotherPostion
 	game slideOWhenPlayingXFrom: aPosition to: anotherPostion .! !
 
 
-!PlayingX methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:29:31'!
+!PlayingX methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:24:01'!
 accept: aVisitor
 	
-	aVisitor visitWithXActivePlayer ! !
+	aVisitor visitPlayingX! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1759,20 +1811,18 @@ visitGameOverForX
 
 	currentState := 'X Won'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 01:41:39'!
-visitWithOActivePlayer
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:22:33'!
+visitPlayingO
 
-	currentState := 'Playing O'.
-! !
+	currentState := 'Playing O'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 01:41:45'!
-visitWithXActivePlayer
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:22:37'!
+visitPlayingX
 
-	currentState := 'Playing X'.
-! !
+	currentState := 'Playing X'.! !
 
 
-!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/9/2018 03:06:55'!
+!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/9/2018 11:58:20'!
 contents
 	
-	^(ReadStream on: (board contents, currentState)) contents.! !
+	^board contents, currentState.! !

@@ -220,3 +220,73 @@ test07
 -----
  | | 
 Playing O' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 11:51:34'!
+test08
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1.
+
+	self assert:
+'O| | 
+-----
+ |X| 
+-----
+ | | 
+Playing O' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 11:59:23'!
+test09
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 1@2;
+			putXAt: 1@1.
+
+	self assert:
+'O| |X
+-----
+O|X| 
+-----
+X| | 
+X Won' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 11:59:19'!
+test10
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 1@2;
+			putXAt: 2@1;
+			putOAt: 1@1.
+
+	self assert:
+'O| |X
+-----
+O|X| 
+-----
+O|X| 
+O Won' equals: viewer contents.! !
