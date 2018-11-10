@@ -1015,13 +1015,13 @@ changeStateAfterAdding: aPosition to: positions
 	state changeTo: (TerniLapilliState for: self).
 	! !
 
-!TerniLapilli methodsFor: 'marking board - private' stamp: 'GR 11/9/2018 01:17:34'!
+!TerniLapilli methodsFor: 'marking board - private' stamp: 'GR 11/9/2018 20:53:54'!
 putOWhenPlacingOAt: aPosition
 
 	self playerOHasPiecesToPlace.
 	self assertIsFree: aPosition.
 	
-	lastPlay := 'O marcó en ',aPosition asString.
+	lastPlay := TerniLapilliPlay with: $O with: aPosition with: 'O marcó en ',aPosition asString.
 	self changeStateAfterAdding: aPosition to: playerOPositions
 		! !
 
@@ -1045,13 +1045,13 @@ putXWhenPlacingOAt: aPoint
 	
 	self error: self class notXTurnErrorMessage! !
 
-!TerniLapilli methodsFor: 'marking board - private' stamp: 'GR 11/9/2018 01:14:57'!
+!TerniLapilli methodsFor: 'marking board - private' stamp: 'GR 11/9/2018 20:53:44'!
 putXWhenPlacingXAt: aPosition
 
 	self playerXHasPiecesToPlace.
 	self assertIsFree: aPosition.
 	
-	lastPlay := 'X marcó en ',aPosition asString.	
+	lastPlay := TerniLapilliPlay with: $X with: aPosition with: 'X marcó en ',aPosition asString.	
 	self changeStateAfterAdding: aPosition to: playerXPositions
 	! !
 
@@ -1116,13 +1116,13 @@ slideOWhenPlayingXFrom: aPosition to: anotherPosition
 
 	self error: self class notOTurnErrorMessage ! !
 
-!TerniLapilli methodsFor: 'sliding - private' stamp: 'GR 11/9/2018 01:14:09'!
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'GR 11/9/2018 20:55:45'!
 slideOWhenSlidingOFrom: aPosition to: anotherPosition
 	
 	self assertIsFree: anotherPosition .
 	self assertIsLegalMovementFrom: aPosition to: anotherPosition.
 	
-	lastPlay := 'O deslizó hasta ',anotherPosition asString,' desde ',aPosition asString.
+	lastPlay := TerniLapilliPlay with: $O with: aPosition with: anotherPosition with: 'O deslizó hasta ',anotherPosition asString,' desde ',aPosition asString.
 	playerOPositions remove: aPosition.
 	self changeStateAfterAdding: anotherPosition to: playerOPositions
 	 ! !
@@ -1137,13 +1137,13 @@ slideXWhenPlayingOFrom: aPosition to: anotherPosition
 
 	self error: self class notXTurnErrorMessage! !
 
-!TerniLapilli methodsFor: 'sliding - private' stamp: 'GR 11/9/2018 01:13:52'!
+!TerniLapilli methodsFor: 'sliding - private' stamp: 'GR 11/9/2018 20:55:57'!
 slideXWhenSlidingXFrom: aPosition to: anotherPosition
 	
 	self assertIsFree: anotherPosition .
 	self assertIsLegalMovementFrom: aPosition to: anotherPosition.
 	
-	lastPlay := 'X deslizó hasta ',anotherPosition asString,' desde ',aPosition asString.
+	lastPlay := TerniLapilliPlay with: $X with: aPosition with: anotherPosition with: 'X deslizó hasta ',anotherPosition asString,' desde ',aPosition asString.
 	playerXPositions remove: aPosition.
 	self changeStateAfterAdding: anotherPosition to: playerXPositions! !
 
@@ -1328,12 +1328,65 @@ visitPlayingX
 	log nextPutAll: 'Estado: Jugando X'.! !
 
 
-!TerniLapilliConsole methodsFor: 'observing' stamp: 'GR 11/9/2018 01:16:58'!
+!TerniLapilliConsole methodsFor: 'observing' stamp: 'GR 11/9/2018 20:57:35'!
 update: aState
 
-	log nextPutAll: aState lastPlay; newLine.
+	log nextPutAll: aState lastPlay action; newLine.
 	aState accept: self.
 	log newLine.! !
+
+
+!classDefinition: #TerniLapilliPlay category: #TerniLapilli!
+Object subclass: #TerniLapilliPlay
+	instanceVariableNames: 'positionToClear positionToOccupy issuedPlayer action'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TerniLapilli'!
+
+!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:50:29'!
+action
+
+	^action ! !
+
+!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:51:11'!
+player
+
+	^issuedPlayer ! !
+
+!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:50:48'!
+positionToClear
+
+	^positionToClear! !
+
+!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:50:58'!
+positionToOccupy
+
+	^positionToOccupy! !
+
+
+!TerniLapilliPlay methodsFor: 'initialization' stamp: 'GR 11/9/2018 20:48:30'!
+initializeWith: aPlayer with: aPosition with: anotherPosition with: anAction
+
+	issuedPlayer := aPlayer.
+	positionToClear := aPosition.
+	positionToOccupy := anotherPosition.
+	action := anAction.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TerniLapilliPlay class' category: #TerniLapilli!
+TerniLapilliPlay class
+	instanceVariableNames: ''!
+
+!TerniLapilliPlay class methodsFor: 'instance creation' stamp: 'GR 11/9/2018 20:54:33'!
+with: aPlayer with: aPosition with: anAction
+
+	^self new initializeWith: aPlayer with: aPosition with: aPosition with: anAction! !
+
+!TerniLapilliPlay class methodsFor: 'instance creation' stamp: 'GR 11/9/2018 20:49:40'!
+with: aPlayer with: aPosition with: anotherPosition with: anAction
+
+	^self new initializeWith: aPlayer with: aPosition with: anotherPosition with: anAction! !
 
 
 !classDefinition: #TerniLapilliState category: #TerniLapilli!
@@ -1783,33 +1836,30 @@ Object subclass: #TerniLapilliViewer
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/9/2018 02:42:48'!
+!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/9/2018 21:39:24'!
 update: aState
-	
+
+	board at: ((aState lastPlay positionToClear x) + (3 * ( 2 - (aState lastPlay positionToClear y- 1)))) put: Character space.
+	board at: ((aState lastPlay positionToOccupy x) + (3 * ( 2 - (aState lastPlay positionToOccupy y- 1)))) put: aState lastPlay player.
+
 	aState accept: self.! !
 
 
-!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/9/2018 03:07:12'!
+!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/9/2018 21:29:46'!
 initialize
 
-	board := WriteStream on: String new.
-	board nextPutAll: ' | | 
------
- | | 
------
- | | 
-'! !
+	board := ((WriteStream on: String new) nextPutAll: '         ' )contents! !
 
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 01:41:33'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 21:42:29'!
 visitGameOverForO
 
-	currentState := 'O won'.! !
+	currentState := 'O Won!!'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 01:41:26'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 21:42:24'!
 visitGameOverForX
 
-	currentState := 'X Won'.! !
+	currentState := 'X Won!!'.! !
 
 !TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:22:33'!
 visitPlayingO
@@ -1822,7 +1872,17 @@ visitPlayingX
 	currentState := 'Playing X'.! !
 
 
-!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/9/2018 11:58:20'!
+!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/9/2018 21:26:36'!
 contents
 	
-	^board contents, currentState.! !
+	|fullBoard|
+	
+	fullBoard := WriteStream on: String new.
+	
+	fullBoard nextPut: (board at: 1); nextPut: $|; nextPut: (board at: 2); nextPut: $|; nextPut: (board at: 3); newLine;
+				nextPutAll: '-----'; newLine;
+				nextPut: (board at: 4); nextPut: $|; nextPut: (board at: 5); nextPut: $|; nextPut: (board at: 6); newLine;
+				nextPutAll: '-----'; newLine;
+				nextPut: (board at: 7); nextPut: $|; nextPut: (board at: 8); nextPut: $|; nextPut: (board at: 9); newLine.
+	
+	^fullBoard contents, currentState.! !
