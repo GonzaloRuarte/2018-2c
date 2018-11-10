@@ -5,8 +5,8 @@ TestCase subclass: #TerniLapilliConsoleTest
 	poolDictionaries: ''
 	category: 'TerniLapilli-ConsoleTest'!
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:26:48'!
-test01
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:15:13'!
+test01ConsoleShouldLogXPlacement
 
 	| lines |
 	game := TerniLapilli new.
@@ -22,8 +22,8 @@ test01
 	self assert: 'X marcó en 2@2' equals: lines nextLine.
 	self assert: 'Estado: Jugando O' equals: lines nextLine.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:42:25'!
-test02
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:15:30'!
+test02ConsoleShouldLogOPlacement
 
 	| lines |
 	game := TerniLapilli new.
@@ -44,8 +44,8 @@ test02
 	self assert: 'Estado: Jugando X' equals: lines nextLine.
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:42:53'!
-test03
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:16:17'!
+test03ConsoleShouldLogWhenXWins
 
 	| lines |
 	game := TerniLapilli new.
@@ -77,8 +77,8 @@ test03
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:43:15'!
-test04
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:16:34'!
+test04ConsoleShouldLogWhenOWins
 
 	| lines |
 	game := TerniLapilli new.
@@ -112,8 +112,8 @@ test04
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:43:40'!
-test05a
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:17:25'!
+test05ConsoleShouldLogXSlide
 
 	| lines |
 	game := TerniLapilli new.
@@ -154,8 +154,8 @@ test05a
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 00:44:11'!
-test05b
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:17:38'!
+test06ConsoleShouldLogOSlide
 
 	| lines |
 	game := TerniLapilli new.
@@ -201,8 +201,8 @@ test05b
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:23:09'!
-test07
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:24:41'!
+test07ViewerShouldDisplayXPlacement
 
 	game := TerniLapilli new.
 	
@@ -221,8 +221,8 @@ test07
  | | 
 Playing O' equals: viewer contents.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:33:41'!
-test08
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:01'!
+test08ViewerShouldDisplayOPlacement
 
 	game := TerniLapilli new.
 	
@@ -242,8 +242,8 @@ test08
  | |O
 Playing X' equals: viewer contents.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:42:15'!
-test09
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:23:59'!
+test09ViewerShouldDisplayProperStateWhenXWins
 
 	game := TerniLapilli new.
 	
@@ -266,8 +266,8 @@ O|X|
 X| |O
 X Won!!' equals: viewer contents.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:42:10'!
-test10
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:24:24'!
+test10ViewerShouldDisplayProperStateWhenOWins
 
 	game := TerniLapilli new.
 	
@@ -291,8 +291,8 @@ test10
 O|O|O
 O Won!!' equals: viewer contents.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:45:59'!
-test11
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:16'!
+test11ViewerShouldDisplayXSlide
 
 	game := TerniLapilli new.
 	
@@ -317,8 +317,8 @@ O| |X
  |O|O
 Playing O' equals: viewer contents.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:46:42'!
-test12
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:29'!
+test12ViewerShouldDisplayOSlide
 
 	game := TerniLapilli new.
 	
@@ -343,56 +343,3 @@ test12
 -----
  |O|O
 Playing X' equals: viewer contents.! !
-
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:49:35'!
-test13
-
-	game := TerniLapilli new.
-	
-
-	viewer:= TerniLapilliViewer new.
-	
-	game addObserver: viewer.
-	
-	game putXAt: 3@1;
-			putOAt: 3@3;
-			putXAt: 2@1;
-			putOAt: 3@2;
-			putXAt: 1@2;
-			putOAt: 2@2;
-			slideXFrom: 1@2 to: 1@1.
-
-	self assert:
-' | |O
------
- |O|O
------
-X|X|X
-X Won!!' equals: viewer contents.! !
-
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:49:58'!
-test14
-
-	game := TerniLapilli new.
-	
-
-	viewer:= TerniLapilliViewer new.
-	
-	game addObserver: viewer.
-	
-	game putXAt: 2@2;
-			putOAt: 3@1;
-			putXAt: 3@3;
-			putOAt: 2@1;
-			putXAt: 3@2;
-			putOAt: 1@2;
-			slideXFrom: 2@2 to: 2@3;
-			slideOFrom: 1@2 to: 1@1. 
-
-	self assert:
-' |X|X
------
- | |X
------
-O|O|O
-O Won!!' equals: viewer contents.! !
