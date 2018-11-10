@@ -1295,16 +1295,24 @@ Object subclass: #TerniLapilliConsole
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliConsole methodsFor: 'operations' stamp: 'GR 11/9/2018 00:25:48'!
-lines
-
-	^ReadStream on: log contents.! !
-
-
 !TerniLapilliConsole methodsFor: 'initialization' stamp: 'GR 11/9/2018 00:26:02'!
 initialize
 
 	log:=WriteStream on: String new.! !
+
+
+!TerniLapilliConsole methodsFor: 'observing' stamp: 'GR 11/9/2018 20:57:35'!
+update: aState
+
+	log nextPutAll: aState lastPlay action; newLine.
+	aState accept: self.
+	log newLine.! !
+
+
+!TerniLapilliConsole methodsFor: 'operations' stamp: 'GR 11/9/2018 00:25:48'!
+lines
+
+	^ReadStream on: log contents.! !
 
 
 !TerniLapilliConsole methodsFor: 'visiting' stamp: 'GR 11/9/2018 00:59:58'!
@@ -1327,18 +1335,10 @@ visitPlayingX
 
 	log nextPutAll: 'Estado: Jugando X'.! !
 
-
-!TerniLapilliConsole methodsFor: 'observing' stamp: 'GR 11/9/2018 20:57:35'!
-update: aState
-
-	log nextPutAll: aState lastPlay action; newLine.
-	aState accept: self.
-	log newLine.! !
-
 
 !classDefinition: #TerniLapilliPlay category: #TerniLapilli!
 Object subclass: #TerniLapilliPlay
-	instanceVariableNames: 'positionToClear positionToOccupy issuedPlayer action'
+	instanceVariableNames: 'positionToClear positionToOccupy action playerCharacter'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
@@ -1348,10 +1348,10 @@ action
 
 	^action ! !
 
-!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:51:11'!
-player
+!TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/10/2018 13:22:54'!
+playerCharacter
 
-	^issuedPlayer ! !
+	^playerCharacter ! !
 
 !TerniLapilliPlay methodsFor: 'value' stamp: 'GR 11/9/2018 20:50:48'!
 positionToClear
@@ -1364,10 +1364,10 @@ positionToOccupy
 	^positionToOccupy! !
 
 
-!TerniLapilliPlay methodsFor: 'initialization' stamp: 'GR 11/9/2018 20:48:30'!
+!TerniLapilliPlay methodsFor: 'initialization' stamp: 'GR 11/10/2018 13:22:24'!
 initializeWith: aPlayer with: aPosition with: anotherPosition with: anAction
 
-	issuedPlayer := aPlayer.
+	playerCharacter := aPlayer.
 	positionToClear := aPosition.
 	positionToOccupy := anotherPosition.
 	action := anAction.! !
@@ -1836,19 +1836,62 @@ Object subclass: #TerniLapilliViewer
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/9/2018 21:39:24'!
+!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:19:30'!
+draw: aCharacter at: aPosition
+
+	board at: ((aPosition x) + (3 * ( 2 - (aPosition y- 1)))) put: aCharacter.
+! !
+
+!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:43:14'!
+drawDivisorLinesOn: aWriteStream
+				
+	aWriteStream nextPutAll: '-----'; newLine.! !
+
+!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:37:00'!
+redrawRow: aRowNumber withDivisorLinesOn: aWriteStream
+	
+	|startingPoint|
+	
+	startingPoint := aRowNumber -1 *3 +1.
+		
+	aWriteStream nextPut: (board at: startingPoint); nextPut: $|; nextPut: (board at: startingPoint+1); nextPut: $|; nextPut: (board at: startingPoint+2); newLine.
+! !
+
+
+!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/10/2018 13:47:32'!
+initialize
+
+	board := ((WriteStream on: String new) nextPutAll: '         ' ) contents.
+	currentState := ''.! !
+
+
+!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/10/2018 13:22:54'!
 update: aState
 
-	board at: ((aState lastPlay positionToClear x) + (3 * ( 2 - (aState lastPlay positionToClear y- 1)))) put: Character space.
-	board at: ((aState lastPlay positionToOccupy x) + (3 * ( 2 - (aState lastPlay positionToOccupy y- 1)))) put: aState lastPlay player.
+	|lastPlay|
+	
+	lastPlay := aState lastPlay.
+
+	self draw: Character space at: lastPlay positionToClear.
+	self draw: lastPlay playerCharacter at: lastPlay positionToOccupy.
 
 	aState accept: self.! !
 
 
-!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/9/2018 21:29:46'!
-initialize
-
-	board := ((WriteStream on: String new) nextPutAll: '         ' )contents! !
+!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/10/2018 13:38:01'!
+contents
+	
+	|fullBoard|
+	
+	fullBoard := WriteStream on: String new.
+	
+	self redrawRow: 1 withDivisorLinesOn: fullBoard.
+	self drawDivisorLinesOn: fullBoard.
+	self redrawRow: 2 withDivisorLinesOn: fullBoard.
+	self drawDivisorLinesOn: fullBoard.
+	self redrawRow: 3 withDivisorLinesOn: fullBoard.
+	
+	^fullBoard contents, currentState.! !
 
 
 !TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 21:42:29'!
@@ -1870,19 +1913,3 @@ visitPlayingO
 visitPlayingX
 
 	currentState := 'Playing X'.! !
-
-
-!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/9/2018 21:26:36'!
-contents
-	
-	|fullBoard|
-	
-	fullBoard := WriteStream on: String new.
-	
-	fullBoard nextPut: (board at: 1); nextPut: $|; nextPut: (board at: 2); nextPut: $|; nextPut: (board at: 3); newLine;
-				nextPutAll: '-----'; newLine;
-				nextPut: (board at: 4); nextPut: $|; nextPut: (board at: 5); nextPut: $|; nextPut: (board at: 6); newLine;
-				nextPutAll: '-----'; newLine;
-				nextPut: (board at: 7); nextPut: $|; nextPut: (board at: 8); nextPut: $|; nextPut: (board at: 9); newLine.
-	
-	^fullBoard contents, currentState.! !
