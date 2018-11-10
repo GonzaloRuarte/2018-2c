@@ -201,7 +201,7 @@ test06ConsoleShouldLogOSlide
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:24:41'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:47'!
 test07ViewerShouldDisplayXPlacement
 
 	game := TerniLapilli new.
@@ -219,9 +219,9 @@ test07ViewerShouldDisplayXPlacement
  |X| 
 -----
  | | 
-Playing O' equals: viewer contents.! !
+Playing O' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:01'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:49'!
 test08ViewerShouldDisplayOPlacement
 
 	game := TerniLapilli new.
@@ -240,9 +240,9 @@ test08ViewerShouldDisplayOPlacement
  |X| 
 -----
  | |O
-Playing X' equals: viewer contents.! !
+Playing X' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:23:59'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:52'!
 test09ViewerShouldDisplayProperStateWhenXWins
 
 	game := TerniLapilli new.
@@ -264,9 +264,9 @@ test09ViewerShouldDisplayProperStateWhenXWins
 O|X| 
 -----
 X| |O
-X Won!!' equals: viewer contents.! !
+X Won!!' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:24:24'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:55'!
 test10ViewerShouldDisplayProperStateWhenOWins
 
 	game := TerniLapilli new.
@@ -289,9 +289,9 @@ test10ViewerShouldDisplayProperStateWhenOWins
  |X|X
 -----
 O|O|O
-O Won!!' equals: viewer contents.! !
+O Won!!' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:16'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:59'!
 test11ViewerShouldDisplayXSlide
 
 	game := TerniLapilli new.
@@ -315,9 +315,9 @@ test11ViewerShouldDisplayXSlide
 O| |X
 -----
  |O|O
-Playing O' equals: viewer contents.! !
+Playing O' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:25:29'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:28:02'!
 test12ViewerShouldDisplayOSlide
 
 	game := TerniLapilli new.
@@ -342,4 +342,4 @@ test12ViewerShouldDisplayOSlide
  |O|X
 -----
  |O|O
-Playing X' equals: viewer contents.! !
+Playing X' equals: viewer displayBoard.! !

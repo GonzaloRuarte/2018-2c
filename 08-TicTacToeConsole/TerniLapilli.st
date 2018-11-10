@@ -951,7 +951,7 @@ assertThereIsAnXPieceIn: aPosition
 	(self playerXPositions includes: aPosition) ifFalse: [ self error: self class playersCanOnlySlideTheirOwnPieces ]! !
 
 
-!TerniLapilli methodsFor: 'game over testing - private' stamp: 'HAW 10/25/2017 16:10:30'!
+!TerniLapilli methodsFor: 'game over testing - private' stamp: 'GR 11/10/2018 16:28:21'!
 has: positions threeOf: aPositionComponent
 
 	^positions size >= 3 and: [ (positions collect: aPositionComponent) asBag contents values includes: 3 ]
@@ -1309,7 +1309,7 @@ update: aState
 	log newLine.! !
 
 
-!TerniLapilliConsole methodsFor: 'operations' stamp: 'GR 11/9/2018 00:25:48'!
+!TerniLapilliConsole methodsFor: 'operations' stamp: 'GR 11/10/2018 16:28:11'!
 lines
 
 	^ReadStream on: log contents.! !
@@ -1858,7 +1858,7 @@ redrawRow: aRowNumber withDivisorLinesOn: aWriteStream
 ! !
 
 
-!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/10/2018 13:47:32'!
+!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/10/2018 16:28:30'!
 initialize
 
 	board := ((WriteStream on: String new) nextPutAll: '         ' ) contents.
@@ -1878,8 +1878,8 @@ update: aState
 	aState accept: self.! !
 
 
-!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/10/2018 13:38:01'!
-contents
+!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/10/2018 16:28:45'!
+displayBoard
 	
 	|fullBoard|
 	
