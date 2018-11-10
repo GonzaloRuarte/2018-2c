@@ -290,3 +290,109 @@ test10
 -----
 O|O|O
 O Won!!' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:45:59'!
+test11
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 2@1;
+			putXAt: 3@2;
+			putOAt: 1@2;
+			slideXFrom: 2@2 to: 2@3. 
+
+	self assert:
+' |X|X
+-----
+O| |X
+-----
+ |O|O
+Playing O' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:46:42'!
+test12
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 2@1;
+			putXAt: 3@2;
+			putOAt: 1@2;
+			slideXFrom: 2@2 to: 2@3;
+			slideOFrom: 1@2 to: 2@2. 
+
+	self assert:
+' |X|X
+-----
+ |O|X
+-----
+ |O|O
+Playing X' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:49:35'!
+test13
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 3@1;
+			putOAt: 3@3;
+			putXAt: 2@1;
+			putOAt: 3@2;
+			putXAt: 1@2;
+			putOAt: 2@2;
+			slideXFrom: 1@2 to: 1@1.
+
+	self assert:
+' | |O
+-----
+ |O|O
+-----
+X|X|X
+X Won!!' equals: viewer contents.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/9/2018 21:49:58'!
+test14
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game addObserver: viewer.
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 2@1;
+			putXAt: 3@2;
+			putOAt: 1@2;
+			slideXFrom: 2@2 to: 2@3;
+			slideOFrom: 1@2 to: 1@1. 
+
+	self assert:
+' |X|X
+-----
+ | |X
+-----
+O|O|O
+O Won!!' equals: viewer contents.! !
