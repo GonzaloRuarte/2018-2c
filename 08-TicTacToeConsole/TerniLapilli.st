@@ -1836,36 +1836,26 @@ Object subclass: #TerniLapilliViewer
 	poolDictionaries: ''
 	category: 'TerniLapilli'!
 
-!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:19:30'!
+!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/12/2018 10:56:49'!
 draw: aCharacter at: aPosition
 
-	board at: ((aPosition x) + (3 * ( 2 - (aPosition y- 1)))) put: aCharacter.
-! !
-
-!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:43:14'!
-drawDivisorLinesOn: aWriteStream
-				
-	aWriteStream nextPutAll: '-----'; newLine.! !
-
-!TerniLapilliViewer methodsFor: 'drawing - private' stamp: 'GR 11/10/2018 13:37:00'!
-redrawRow: aRowNumber withDivisorLinesOn: aWriteStream
-	
-	|startingPoint|
-	
-	startingPoint := aRowNumber -1 *3 +1.
-		
-	aWriteStream nextPut: (board at: startingPoint); nextPut: $|; nextPut: (board at: startingPoint+1); nextPut: $|; nextPut: (board at: startingPoint+2); newLine.
+	board at: ((aPosition x * 2 - 1) + (6 * ( 5 - (aPosition y*2 - 1)))) put: aCharacter.
 ! !
 
 
-!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/10/2018 16:28:30'!
+!TerniLapilliViewer methodsFor: 'initialization' stamp: 'GR 11/12/2018 11:04:13'!
 initialize
+	"el string inicializado de otra manera ponía cualquier cosa por alguna razón"
 
-	board := ((WriteStream on: String new) nextPutAll: '         ' ) contents.
-	currentState := ''.! !
+	board := ((WriteStream on: String new) nextPutAll: ' | | 
+-----
+ | | 
+-----
+ | | ' ) contents.
+	currentState := WriteStream on: String new.! !
 
 
-!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/10/2018 13:22:54'!
+!TerniLapilliViewer methodsFor: 'observing' stamp: 'GR 11/12/2018 11:07:34'!
 update: aState
 
 	|lastPlay|
@@ -1875,41 +1865,32 @@ update: aState
 	self draw: Character space at: lastPlay positionToClear.
 	self draw: lastPlay playerCharacter at: lastPlay positionToOccupy.
 
+	currentState reset; newLine.
 	aState accept: self.! !
 
 
-!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/10/2018 16:28:45'!
+!TerniLapilliViewer methodsFor: 'operations' stamp: 'GR 11/12/2018 11:02:09'!
 displayBoard
 	
-	|fullBoard|
-	
-	fullBoard := WriteStream on: String new.
-	
-	self redrawRow: 1 withDivisorLinesOn: fullBoard.
-	self drawDivisorLinesOn: fullBoard.
-	self redrawRow: 2 withDivisorLinesOn: fullBoard.
-	self drawDivisorLinesOn: fullBoard.
-	self redrawRow: 3 withDivisorLinesOn: fullBoard.
-	
-	^fullBoard contents, currentState.! !
+	^board, currentState contents.! !
 
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 21:42:29'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/12/2018 11:01:41'!
 visitGameOverForO
 
-	currentState := 'O Won!!'.! !
+	currentState nextPutAll: 'O Won!!'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 21:42:24'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/12/2018 11:02:42'!
 visitGameOverForX
 
-	currentState := 'X Won!!'.! !
+	currentState nextPutAll: 'X Won!!'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:22:33'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/12/2018 11:01:48'!
 visitPlayingO
 
-	currentState := 'Playing O'.! !
+	currentState nextPutAll: 'Playing O'.! !
 
-!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/9/2018 12:22:37'!
+!TerniLapilliViewer methodsFor: 'visiting' stamp: 'GR 11/12/2018 11:01:51'!
 visitPlayingX
 
-	currentState := 'Playing X'.! !
+	currentState nextPutAll: 'Playing X'.! !

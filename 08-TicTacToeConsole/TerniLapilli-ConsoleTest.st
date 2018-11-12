@@ -5,6 +5,13 @@ TestCase subclass: #TerniLapilliConsoleTest
 	poolDictionaries: ''
 	category: 'TerniLapilli-ConsoleTest'!
 
+!TerniLapilliConsoleTest methodsFor: 'assertions' stamp: 'GR 11/12/2018 11:44:35'!
+assertXSlideProperlyLoggedOn: aConsoleLog
+	self skip: 12 linesOn: aConsoleLog.
+	self assert:  'X deslizó hasta 2@3 desde 2@2' equals: aConsoleLog nextLine.
+	self assert:  'Estado: Jugando O' equals: aConsoleLog nextLine.! !
+
+
 !TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:15:13'!
 test01ConsoleShouldLogXPlacement
 
@@ -77,7 +84,7 @@ test03ConsoleShouldLogWhenXWins
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:16:34'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:41:44'!
 test04ConsoleShouldLogWhenOWins
 
 	| lines |
@@ -96,23 +103,13 @@ test04ConsoleShouldLogWhenOWins
 	
 	lines := console lines.
 	
-	
-	self assert:  'X marcó en 3@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 2@2' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 1@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 1@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 1@2' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
+	self skip: 10 linesOn: lines.
 	self assert:  'O marcó en 3@1' equals: lines nextLine.
 	self assert:  'Estado: Juego terminado - ¡Ganó O!!' equals: lines nextLine.
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:17:25'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:35:53'!
 test05ConsoleShouldLogXSlide
 
 	| lines |
@@ -123,38 +120,18 @@ test05ConsoleShouldLogXSlide
 	
 	game addObserver: console.
 	
-	game putXAt: 2@2.
-	game putOAt: 1@1.
-	game putXAt: 1@3.
-	game putOAt: 3@1.
-	game putXAt:  2@1.
-	game putOAt: 2@3.
-	game slideXFrom:  1@3  to: 1@2.
+	self allTokensPlacedAndFirstXSlide.
 
 
 	lines := console lines.
-	
-	
-	self assert:  'X marcó en 2@2' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 1@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 1@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 3@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 2@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 2@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
+
+	self assertXSlideProperlyLoggedOn: lines.
 
 	
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:17:38'!
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:34:46'!
 test06ConsoleShouldLogOSlide
 
 	| lines |
@@ -165,44 +142,39 @@ test06ConsoleShouldLogOSlide
 	
 	game addObserver: console.
 
-	
-	game putXAt: 2@2.
-	game putOAt: 1@1.
-	game putXAt: 1@3.
-	game putOAt: 3@1.
-	game putXAt:  2@1.
-	game putOAt: 2@3.
-	game slideXFrom:  1@3  to: 1@2.
-	game slideOFrom:  3@1  to: 3@2.
-	game slideXFrom:  2@2  to: 3@3.
+	self allTokensPlacedAndFirstXSlide.
+	game slideOFrom: 1@2 to: 2@2. 
 
 	lines := console lines.
 	
-	
-	self assert:  'X marcó en 2@2' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 1@1' equals: lines nextLine.
+	self assertXSlideProperlyLoggedOn: lines.
+	self assert:  'O deslizó hasta 2@2 desde 1@2' equals: lines nextLine.
 	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 1@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 3@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X marcó en 2@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O marcó en 2@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X deslizó hasta 1@2 desde 1@3' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
-	self assert:  'O deslizó hasta 3@2 desde 3@1' equals: lines nextLine.
-	self assert:  'Estado: Jugando X' equals: lines nextLine.
-	self assert:  'X deslizó hasta 3@3 desde 2@2' equals: lines nextLine.
-	self assert:  'Estado: Jugando O' equals: lines nextLine.
 	
 
 ! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:47'!
-test07ViewerShouldDisplayXPlacement
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:10:05'!
+test07InitialViewerShouldBeEmpty
+
+	game := TerniLapilli new.
+	
+
+	viewer:= TerniLapilliViewer new.
+	
+	game putXAt: 2@2.
+
+	
+	game addObserver: viewer.
+	self assert:
+' | | 
+-----
+ | | 
+-----
+ | | ' equals: viewer displayBoard.! !
+
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:11:32'!
+test08ViewerShouldDisplayXPlacement
 
 	game := TerniLapilli new.
 	
@@ -221,8 +193,8 @@ test07ViewerShouldDisplayXPlacement
  | | 
 Playing O' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:49'!
-test08ViewerShouldDisplayOPlacement
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:10:22'!
+test09ViewerShouldDisplayOPlacement
 
 	game := TerniLapilli new.
 	
@@ -242,8 +214,8 @@ test08ViewerShouldDisplayOPlacement
  | |O
 Playing X' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:52'!
-test09ViewerShouldDisplayProperStateWhenXWins
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:11:09'!
+test10ViewerShouldDisplayProperStateWhenXWins
 
 	game := TerniLapilli new.
 	
@@ -266,8 +238,8 @@ O|X|
 X| |O
 X Won!!' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:55'!
-test10ViewerShouldDisplayProperStateWhenOWins
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:11:00'!
+test11ViewerShouldDisplayProperStateWhenOWins
 
 	game := TerniLapilli new.
 	
@@ -291,8 +263,8 @@ test10ViewerShouldDisplayProperStateWhenOWins
 O|O|O
 O Won!!' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:27:59'!
-test11ViewerShouldDisplayXSlide
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:23:56'!
+test12ViewerShouldDisplayXSlide
 
 	game := TerniLapilli new.
 	
@@ -301,13 +273,7 @@ test11ViewerShouldDisplayXSlide
 	
 	game addObserver: viewer.
 	
-	game putXAt: 2@2;
-			putOAt: 3@1;
-			putXAt: 3@3;
-			putOAt: 2@1;
-			putXAt: 3@2;
-			putOAt: 1@2;
-			slideXFrom: 2@2 to: 2@3. 
+	self allTokensPlacedAndFirstXSlide.
 
 	self assert:
 ' |X|X
@@ -317,8 +283,8 @@ O| |X
  |O|O
 Playing O' equals: viewer displayBoard.! !
 
-!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/10/2018 16:28:02'!
-test12ViewerShouldDisplayOSlide
+!TerniLapilliConsoleTest methodsFor: 'testing' stamp: 'GR 11/12/2018 11:23:51'!
+test13ViewerShouldDisplayOSlide
 
 	game := TerniLapilli new.
 	
@@ -327,14 +293,8 @@ test12ViewerShouldDisplayOSlide
 	
 	game addObserver: viewer.
 	
-	game putXAt: 2@2;
-			putOAt: 3@1;
-			putXAt: 3@3;
-			putOAt: 2@1;
-			putXAt: 3@2;
-			putOAt: 1@2;
-			slideXFrom: 2@2 to: 2@3;
-			slideOFrom: 1@2 to: 2@2. 
+	self allTokensPlacedAndFirstXSlide.
+	game slideOFrom: 1@2 to: 2@2. 
 
 	self assert:
 ' |X|X
@@ -343,3 +303,20 @@ test12ViewerShouldDisplayOSlide
 -----
  |O|O
 Playing X' equals: viewer displayBoard.! !
+
+
+!TerniLapilliConsoleTest methodsFor: 'setup' stamp: 'GR 11/12/2018 11:24:41'!
+allTokensPlacedAndFirstXSlide
+	
+	game putXAt: 2@2;
+			putOAt: 3@1;
+			putXAt: 3@3;
+			putOAt: 2@1;
+			putXAt: 3@2;
+			putOAt: 1@2;			
+			slideXFrom: 2@2 to: 2@3.! !
+
+!TerniLapilliConsoleTest methodsFor: 'setup' stamp: 'GR 11/12/2018 11:48:20'!
+skip: anAmountToSkip linesOn: aConsoleLog
+	
+	1 to: anAmountToSkip do: [:anArgument | aConsoleLog nextLine].! !
