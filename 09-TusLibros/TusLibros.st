@@ -5,46 +5,46 @@ TestCase subclass: #CartTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:14:10'!
+!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:15:52'!
 test01CartIsEmptyWhenCreated
 
-	cart:=Cart withCatalogue: (OrderedCollection with: 1 ).
+	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
 	
 	self assert: cart isEmpty.	! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:14:10'!
+!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:01'!
 test02CartIsNotEmptyWhenBooksAreAdded
 
-	cart:=Cart withCatalogue: (OrderedCollection with: 1 ).
-	cart add: 1 amount: 2. 
+	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
+	cart add: '1' amount: 2. 
 	self deny: cart isEmpty.	! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:14:10'!
+!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:08'!
 test03CantAddBookFromOtherEditorial
 
 	cart:=Cart withCatalogue: OrderedCollection new.
 	
-	self should: [cart add: 5694 amount: 1.] raise: Error withExceptionDo:
+	self should: [cart add: '5694' amount: 1.] raise: Error withExceptionDo:
 	[:anError| 
 		self assert: cart isEmpty.
 		self assert: anError messageText equals: 'The book you are trying to add doesn t belong to this editorial' ].! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:14:10'!
+!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:13'!
 test04CantAddLessThan1BooksToCart
 
 	cart:=Cart withCatalogue: (OrderedCollection with: 1).
 	
-	self should: [cart add: 1 amount: 0.] raise: Error withExceptionDo:
+	self should: [cart add: '1' amount: 0.] raise: Error withExceptionDo:
 	[:anError| 
 		self assert: cart isEmpty.
 		self assert: anError messageText equals: 'The amount of books cannot be lesser than one'].! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:14:11'!
+!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:22'!
 test05BookAmountMustBeAnInteger
 
-	cart:=Cart withCatalogue: (OrderedCollection with: 1).
+	cart:=Cart withCatalogue: (OrderedCollection with: '1').
 	
-	self should: [cart add: 1 amount: 1.5.] raise: Error withExceptionDo:
+	self should: [cart add: '1' amount: 1.5.] raise: Error withExceptionDo:
 	[:anError| 
 		self assert: cart isEmpty.
 		self assert: anError messageText equals: 'The amount of books must be an integer'].! !
