@@ -5,21 +5,21 @@ TestCase subclass: #CartTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:15:52'!
+!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:15:52'!
 test01CartIsEmptyWhenCreated
 
 	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
 	
 	self assert: cart isEmpty.	! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:01'!
+!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:01'!
 test02CartIsNotEmptyWhenBooksAreAdded
 
 	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
 	cart add: '1' amount: 2. 
 	self deny: cart isEmpty.	! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:08'!
+!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:08'!
 test03CantAddBookFromOtherEditorial
 
 	cart:=Cart withCatalogue: OrderedCollection new.
@@ -29,7 +29,7 @@ test03CantAddBookFromOtherEditorial
 		self assert: cart isEmpty.
 		self assert: anError messageText equals: 'The book you are trying to add doesn t belong to this editorial' ].! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:13'!
+!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:13'!
 test04CantAddLessThan1BooksToCart
 
 	cart:=Cart withCatalogue: (OrderedCollection with: 1).
@@ -39,7 +39,7 @@ test04CantAddLessThan1BooksToCart
 		self assert: cart isEmpty.
 		self assert: anError messageText equals: 'The amount of books cannot be lesser than one'].! !
 
-!CartTest methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:16:22'!
+!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:22'!
 test05BookAmountMustBeAnInteger
 
 	cart:=Cart withCatalogue: (OrderedCollection with: '1').
@@ -57,16 +57,11 @@ Object subclass: #Cart
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cart methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:13:57'!
+!Cart methodsFor: 'initialization' stamp: 'APç 11/12/2018 21:13:57'!
 initializeWithCatalogue: aBookCatalogue
 
 	books:= Dictionary new.	
 	editorialBooks:= aBookCatalogue.! !
-
-!Cart methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 20:27:57'!
-isEmpty
-
-	^books keys isEmpty .! !
 
 
 !Cart methodsFor: 'adding' stamp: 'APç 11/12/2018 21:12:40'!
@@ -80,6 +75,12 @@ add: aISBN amount: aBookAmount
 	 
 	
 	! !
+
+
+!Cart methodsFor: 'testing' stamp: 'APç 11/12/2018 20:27:57'!
+isEmpty
+
+	^books keys isEmpty .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
