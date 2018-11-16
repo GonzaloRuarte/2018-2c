@@ -130,7 +130,7 @@ MarketTest subclass: #CashierTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test01ShouldNotCheckoutEmptyCart
 	
 	| cart cashier creditCard |
@@ -139,7 +139,7 @@ test01ShouldNotCheckoutEmptyCart
 	cart := self createCart .
 	
 	
-		creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+		creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
 	self should: [cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).]
 	raise: Error
@@ -148,7 +148,7 @@ test01ShouldNotCheckoutEmptyCart
 		self assert: cashier isSellBookEmpty.
 		]! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	
 	| cart cashier ticket creditCard |
@@ -158,7 +158,7 @@ test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	cart := self createCart .
 	cart add: 'validBook'.
 	
-			creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+			creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
 	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	
@@ -166,7 +166,7 @@ test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	self deny: cashier isSellBookEmpty.
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	
 	| cart cashier ticket creditCard |
@@ -177,7 +177,7 @@ test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	cart := self createCart .
 	cart add: 2 of: 'validBook' .
 	
-				creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+				creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
 	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 		
@@ -185,7 +185,7 @@ test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	self deny: cashier isSellBookEmpty.
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test04ShouldNotCheckoutWhenCardIsExpired
 	
 	| cart cashier creditCard |
@@ -193,7 +193,7 @@ test04ShouldNotCheckoutWhenCardIsExpired
 
 	cashier := Cashier new.
 	
-	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear februaryOf: GregorianYear current).
+	creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear februaryOf: GregorianYear current).
 	
 	cart := self createCart .
 	cart add: 'validBook'.
@@ -205,7 +205,7 @@ test04ShouldNotCheckoutWhenCardIsExpired
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:48:13'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -217,7 +217,7 @@ test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 		
 	cashier := Cashier with: merchantProcessor.
 
-	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 	
 	cart := self createCart.
 	cart add: 'validBook'.
@@ -229,7 +229,7 @@ test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:46:06'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -241,7 +241,7 @@ test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 		
 	cashier := Cashier with: merchantProcessor.
 
-	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 	
 	cart := self createCart.
 	cart add: 'validBook'.
@@ -253,7 +253,7 @@ test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
 test07ShouldNotCheckOutWhenTimeOut
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -265,7 +265,7 @@ test07ShouldNotCheckOutWhenTimeOut
 		
 	cashier := Cashier with: merchantProcessor.
 
-	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 	
 	cart := self createCart.
 	cart add: 'validBook'.
@@ -392,7 +392,7 @@ isSellBookEmpty
 	^sellBook isEmpty.! !
 
 
-!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 14:14:43'!
+!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 14:19:10'!
 checkOut: aCart using: aCreditCard at: aDate
 	
 	
@@ -401,7 +401,7 @@ checkOut: aCart using: aCreditCard at: aDate
 	self assertCartIsNotEmpty: aCart.
 		
 	amount := aCart sumItemPrices.
-	merchantProcessor charge:  amount from:aCreditCard .
+	merchantProcessor debit:  amount fromAccountIdentifiedBy:aCreditCard .
 	
 	sellBook add: aCreditCard. "esto hay que ver como es realmente"
 	
@@ -448,17 +448,17 @@ with: aMerchantProcessor
 
 !classDefinition: #CreditCard category: #TusLibros!
 Object subclass: #CreditCard
-	instanceVariableNames: 'identifier expirationDate'
+	instanceVariableNames: 'number expirationDate'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'initialization' stamp: 'GR 11/16/2018 13:40:50'!
-initializeFor: anIdentifier andExpirationDate: aMonthOfYear 
+!CreditCard methodsFor: 'initialization' stamp: 'GR 11/16/2018 14:21:59'!
+initializeWith: aNumber andExpirationDate: aMonthOfYear 
 	
 	
-	identifier:= anIdentifier .
-	expirationDate:=aMonthOfYear .! !
+	number:= aNumber.
+	expirationDate:= aMonthOfYear.! !
 
 
 !CreditCard methodsFor: 'testing' stamp: 'GR 11/16/2018 13:39:56'!
@@ -472,10 +472,10 @@ hasNotExpiredOn: aFixedGregorianDate
 CreditCard class
 	instanceVariableNames: ''!
 
-!CreditCard class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 19:25:12'!
-for: anIdentifier andExpirationDate: aMonthOfYear 
+!CreditCard class methodsFor: 'instance creation' stamp: 'GR 11/16/2018 14:21:16'!
+with: aNumber andExpirationDate: aMonthOfYear 
 
-	^self new initializeFor: anIdentifier andExpirationDate:aMonthOfYear.! !
+	^self new initializeWith: aNumber andExpirationDate:aMonthOfYear.! !
 
 
 !classDefinition: #MerchantProcessorDummy category: #TusLibros!
@@ -485,8 +485,8 @@ Object subclass: #MerchantProcessorDummy
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorDummy methodsFor: 'charging' stamp: 'GR 11/16/2018 14:11:28'!
-charge: amount from: aCreditCard
+!MerchantProcessorDummy methodsFor: 'charging' stamp: 'GR 11/16/2018 14:19:10'!
+debit: amount fromAccountIdentifiedBy: aCreditCard
 
 	^block value! !
 
