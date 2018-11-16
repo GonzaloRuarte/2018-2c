@@ -5,11 +5,10 @@ TestCase subclass: #MarketTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MarketTest methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 18:21:12'!
+!MarketTest methodsFor: 'support' stamp: 'GR 11/15/2018 18:21:12'!
 createCart
 	
 	^Cart acceptingItemsOf: self defaultCatalog! !
-
 
 !MarketTest methodsFor: 'support' stamp: 'GR 11/15/2018 21:00:31'!
 defaultCatalog
@@ -123,7 +122,6 @@ test08CartRemembersTheNumberOfAddedItems
 	cart add: 2 of: self itemSellByTheStore.
 	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
 
-
 
 !classDefinition: #CashierTest category: #TusLibros!
 MarketTest subclass: #CashierTest
@@ -132,7 +130,7 @@ MarketTest subclass: #CashierTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 20:58:42'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
 test01ShouldNotCheckoutEmptyCart
 	
 	| cart cashier creditCard |
@@ -143,14 +141,14 @@ test01ShouldNotCheckoutEmptyCart
 	
 		creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
-	self should: [cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).]
+	self should: [cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).]
 	raise: Error
 	withExceptionDo:[:anError| 
 		self assert: anError messageText equals: 'Cannot checkout an empty cart'.
 		self assert: cashier isSellBookEmpty.
 		]! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:04:31'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
 test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	
 	| cart cashier ticket creditCard |
@@ -162,13 +160,13 @@ test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	
 			creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
-	ticket := cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	
 	self assert: ticket equals: 23.
 	self deny: cashier isSellBookEmpty.
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:05:29'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
 test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	
 	| cart cashier ticket creditCard |
@@ -181,13 +179,13 @@ test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	
 				creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
 		
-	ticket := cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 		
 	self assert: ticket equals: 46.
 	self deny: cashier isSellBookEmpty.
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:05:47'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
 test04ShouldNotCheckoutWhenCardIsExpired
 	
 	| cart cashier creditCard |
@@ -200,22 +198,22 @@ test04ShouldNotCheckoutWhenCardIsExpired
 	cart := self createCart .
 	cart add: 'validBook'.
 	self should:[
-	cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'Cannot checkout with expired credit card'.
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:46:39'!
-test05ShouldNotCheckOutWhenCreidtCardNumberNotValidatedByMerhantProcessor
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:48:13'!
+test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 	
 	| cart cashier priceList creditCard merchantProcessor|
 	
 	priceList := Dictionary new.
 	priceList at: 'validBook' put: 23.
 	
-	merchantProcessor := MerchantProcessorDummy withBehaviour:[merchantProcessor error: merchantProcessor class CardNotFoundError.].
+	merchantProcessor := MerchantProcessorDummy withBehaviour:[merchantProcessor error: merchantProcessor class InvalidCreditCardError.].
 		
 	cashier := Cashier with: merchantProcessor.
 
@@ -224,15 +222,15 @@ test05ShouldNotCheckOutWhenCreidtCardNumberNotValidatedByMerhantProcessor
 	cart := self createCart.
 	cart add: 'validBook'.
 	self should:[
-	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	cashier checkOut: cart using: creditCard  at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
-		self assert: anError messageText equals: 'Card was not registered in the system'.
+		self assert: anError messageText equals: 'The credit card is not registered in the system'.
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:45:39'!
-test06ShouldNotCheckOutWhenInsufficientFunds
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:46:06'!
+test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 	
 	| cart cashier priceList creditCard merchantProcessor|
 	
@@ -248,14 +246,14 @@ test06ShouldNotCheckOutWhenInsufficientFunds
 	cart := self createCart.
 	cart add: 'validBook'.
 	self should:[
-	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	cashier checkOut: cart using: creditCard  at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'Insufficient funds for transaction'.
 		self assert: cashier isSellBookEmpty.] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:44:45'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 13:37:07'!
 test07ShouldNotCheckOutWhenTimeOut
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -272,7 +270,7 @@ test07ShouldNotCheckOutWhenTimeOut
 	cart := self createCart.
 	cart add: 'validBook'.
 	self should:[
-	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	cashier checkOut: cart using: creditCard  at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'Time Out'.
@@ -316,18 +314,18 @@ initializeAcceptingItemsOf: aCatalog
 	items := OrderedCollection new.! !
 
 
-!Cart methodsFor: 'queries' stamp: 'GR 11/15/2018 20:55:26'!
+!Cart methodsFor: 'queries' stamp: 'GR 11/16/2018 13:51:12'!
 lookUpPriceOf: aString 
 
-	^catalog at: aString ifAbsent:[self error: self class priceNotFound]! !
+	^catalog at: aString ifAbsent:[self error: self invalidItemErrorMessage]! !
 
 !Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
 occurrencesOf: anItem
 
 	^items occurrencesOf: anItem  ! !
 
-!Cart methodsFor: 'queries' stamp: 'GR 11/15/2018 20:54:12'!
-sumItemsPrices
+!Cart methodsFor: 'queries' stamp: 'GR 11/16/2018 13:42:07'!
+sumItemPrices
 
 
 	|total|
@@ -371,6 +369,7 @@ acceptingItemsOf: aCatalog
 
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
+
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
@@ -378,24 +377,6 @@ Object subclass: #Cashier
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
-
-!Cashier methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:20:25'!
-checkOut: aCart withCard: aCreditCard andDate: aDate
-	
-	
-	| amount |
-	(aCreditCard hasNotExpiredForDate: aDate) ifFalse:[self error: self class expiredCreditCardError].
-	
-		(aCart isEmpty) ifTrue: [self error: self class emptyCartException].
-		
-		
-		amount := aCart sumItemsPrices.
-	merchantProcessor debit:  amount from:aCreditCard .
-	
-	sellBook add:aCreditCard.
-	
-	^amount
-! !
 
 !Cashier methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:24:23'!
 initializeWIth:  aMerchantProcessor
@@ -405,10 +386,37 @@ initializeWIth:  aMerchantProcessor
 ! !
 
 
-!Cashier methodsFor: 'pricing' stamp: 'GR 11/15/2018 20:10:52'!
+!Cashier methodsFor: 'testing' stamp: 'GR 11/15/2018 20:10:52'!
 isSellBookEmpty
 
 	^sellBook isEmpty.! !
+
+
+!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 14:14:43'!
+checkOut: aCart using: aCreditCard at: aDate
+	
+	
+	| amount |
+	self assert: aCreditCard HasNotExpiredBy: aDate.
+	self assertCartIsNotEmpty: aCart.
+		
+	amount := aCart sumItemPrices.
+	merchantProcessor charge:  amount from:aCreditCard .
+	
+	sellBook add: aCreditCard. "esto hay que ver como es realmente"
+	
+	^amount! !
+
+
+!Cashier methodsFor: 'assertions' stamp: 'GR 11/16/2018 13:53:47'!
+assert: aCreditCard HasNotExpiredBy: aDate
+
+	(aCreditCard hasNotExpiredOn: aDate) ifFalse:[self error: self class expiredCreditCardError].! !
+
+!Cashier methodsFor: 'assertions' stamp: 'GR 11/16/2018 13:56:01'!
+assertCartIsNotEmpty: aCart
+		
+	(aCart isEmpty) ifTrue: [self error: self class emptyCartError].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -416,20 +424,15 @@ isSellBookEmpty
 Cashier class
 	instanceVariableNames: ''!
 
-!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 18:29:08'!
-emptyCartException
+!Cashier class methodsFor: 'error messages' stamp: 'GR 11/16/2018 13:48:33'!
+emptyCartError
 	
 	^'Cannot checkout an empty cart'! !
 
-!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 19:29:32'!
+!Cashier class methodsFor: 'error messages' stamp: 'GR 11/15/2018 19:29:32'!
 expiredCreditCardError
 	
 	^'Cannot checkout with expired credit card'! !
-
-!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 19:57:11'!
-priceNotFound
-	
-	^'Price not found'! !
 
 
 !Cashier class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:43:09'!
@@ -450,17 +453,18 @@ Object subclass: #CreditCard
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'initializing' stamp: 'GR 11/15/2018 20:45:01'!
-hasNotExpiredForDate: aGregorianDate
-
-	^(GregorianMonthOfYear year: (aGregorianDate year) month: (aGregorianDate month)) <= expirationDate.! !
-
-!CreditCard methodsFor: 'initializing' stamp: 'GR 11/15/2018 19:26:08'!
+!CreditCard methodsFor: 'initialization' stamp: 'GR 11/16/2018 13:40:50'!
 initializeFor: anIdentifier andExpirationDate: aMonthOfYear 
 	
 	
 	identifier:= anIdentifier .
 	expirationDate:=aMonthOfYear .! !
+
+
+!CreditCard methodsFor: 'testing' stamp: 'GR 11/16/2018 13:39:56'!
+hasNotExpiredOn: aFixedGregorianDate
+
+	^(GregorianMonthOfYear year: (aFixedGregorianDate year) month: (aFixedGregorianDate month)) <= expirationDate.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -468,7 +472,7 @@ initializeFor: anIdentifier andExpirationDate: aMonthOfYear
 CreditCard class
 	instanceVariableNames: ''!
 
-!CreditCard class methodsFor: 'initialization' stamp: 'GR 11/15/2018 19:25:12'!
+!CreditCard class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 19:25:12'!
 for: anIdentifier andExpirationDate: aMonthOfYear 
 
 	^self new initializeFor: anIdentifier andExpirationDate:aMonthOfYear.! !
@@ -481,12 +485,13 @@ Object subclass: #MerchantProcessorDummy
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:48:20'!
-debit: amount from: aCreditCard
+!MerchantProcessorDummy methodsFor: 'charging' stamp: 'GR 11/16/2018 14:11:28'!
+charge: amount from: aCreditCard
 
 	^block value! !
 
-!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:48:50'!
+
+!MerchantProcessorDummy methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:48:50'!
 initializeWithBehaviour: collaborationsToEval
 	block:= collaborationsToEval! !
 
@@ -496,21 +501,22 @@ initializeWithBehaviour: collaborationsToEval
 MerchantProcessorDummy class
 	instanceVariableNames: ''!
 
-!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:46:53'!
-CardNotFoundError
-
-	^'Card was not registered in the system'! !
-
-!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:47:00'!
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/15/2018 21:47:00'!
 InsufficientFundsError
 
 	^'Insufficient funds for transaction'! !
 
-!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:47:07'!
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/16/2018 13:48:13'!
+InvalidCreditCardError
+
+	^'The credit card is not registered in the system'! !
+
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/15/2018 21:47:07'!
 TimeOutError
 
 	^'Time Out'! !
 
-!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:49:22'!
+
+!MerchantProcessorDummy class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:49:22'!
 withBehaviour: collaborationsToEval
 	^self new initializeWithBehaviour: collaborationsToEval! !
