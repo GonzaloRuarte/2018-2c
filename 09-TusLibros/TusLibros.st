@@ -1,86 +1,364 @@
-!classDefinition: #CartTest category: #TusLibros!
-TestCase subclass: #CartTest
-	instanceVariableNames: 'cart'
+!classDefinition: #MarketTest category: #TusLibros!
+TestCase subclass: #MarketTest
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:15:52'!
-test01CartIsEmptyWhenCreated
-
-	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
+!MarketTest methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 18:21:12'!
+createCart
 	
-	self assert: cart isEmpty.	! !
+	^Cart acceptingItemsOf: self defaultCatalog! !
 
-!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:01'!
-test02CartIsNotEmptyWhenBooksAreAdded
 
-	cart:=Cart withCatalogue: (OrderedCollection with: '1' ).
-	cart add: '1' amount: 2. 
-	self deny: cart isEmpty.	! !
-
-!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:08'!
-test03CantAddBookFromOtherEditorial
-
-	cart:=Cart withCatalogue: OrderedCollection new.
+!MarketTest methodsFor: 'support' stamp: 'GR 11/15/2018 21:00:31'!
+defaultCatalog
 	
-	self should: [cart add: '5694' amount: 1.] raise: Error withExceptionDo:
-	[:anError| 
-		self assert: cart isEmpty.
-		self assert: anError messageText equals: 'The book you are trying to add doesn t belong to this editorial' ].! !
+	| catalogue |
+	catalogue := Dictionary new.
+	catalogue at: self itemSellByTheStore put: 23.
+	^catalogue! !
 
-!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:13'!
-test04CantAddLessThan1BooksToCart
-
-	cart:=Cart withCatalogue: (OrderedCollection with: 1).
+!MarketTest methodsFor: 'support' stamp: 'GR 11/15/2018 18:21:31'!
+itemNotSellByTheStore
 	
-	self should: [cart add: '1' amount: 0.] raise: Error withExceptionDo:
-	[:anError| 
-		self assert: cart isEmpty.
-		self assert: anError messageText equals: 'The amount of books cannot be lesser than one'].! !
+	^'invalidBook'! !
 
-!CartTest methodsFor: 'Test' stamp: 'APç 11/12/2018 21:16:22'!
-test05BookAmountMustBeAnInteger
-
-	cart:=Cart withCatalogue: (OrderedCollection with: '1').
+!MarketTest methodsFor: 'support' stamp: 'GR 11/15/2018 18:21:34'!
+itemSellByTheStore
 	
-	self should: [cart add: '1' amount: 1.5.] raise: Error withExceptionDo:
-	[:anError| 
-		self assert: cart isEmpty.
-		self assert: anError messageText equals: 'The amount of books must be an integer'].! !
+	^ 'validBook'! !
+
+
+!classDefinition: #CartTest category: #TusLibros!
+MarketTest subclass: #CartTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:08'!
+test01NewCartsAreCreatedEmpty
+
+	self assert: self createCart isEmpty! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+test02CanNotAddItemsThatDoNotBelongToStore
+
+	| cart |
+	
+	cart := self createCart.
+	
+	self 
+		should: [ cart add: self itemNotSellByTheStore ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:43'!
+test03AfterAddingAnItemTheCartIsNotEmptyAnymore
+
+	| cart |
+	
+	cart := self createCart.
+	
+	cart add: self itemSellByTheStore.
+	self deny: cart isEmpty ! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:43'!
+test04CanNotAddNonPositiveNumberOfItems
+
+	| cart |
+	
+	cart := self createCart.
+	
+	self 
+		should: [cart add: 0 of: self itemSellByTheStore ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidQuantityErrorMessage.
+			self assert: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+test05CanNotAddMoreThanOneItemNotSellByTheStore
+
+	| cart |
+	
+	cart := self createCart.
+	
+	self 
+		should: [cart add: 2 of: self itemNotSellByTheStore  ]
+		raise: Error - MessageNotUnderstood
+		withExceptionDo: [ :anError |
+			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: cart isEmpty ]! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:43'!
+test06CartRemembersAddedItems
+
+	| cart |
+	
+	cart := self createCart.
+	
+	cart add: self itemSellByTheStore.
+	self assert: (cart includes: self itemSellByTheStore)! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:43'!
+test07CartDoesNotHoldNotAddedItems
+
+	| cart |
+	
+	cart := self createCart.
+	
+	self deny: (cart includes: self itemSellByTheStore)! !
+
+!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+test08CartRemembersTheNumberOfAddedItems
+
+	| cart |
+	
+	cart := self createCart.
+	
+	cart add: 2 of: self itemSellByTheStore.
+	self assert: (cart occurrencesOf: self itemSellByTheStore) = 2! !
+
+
+
+!classDefinition: #CashierTest category: #TusLibros!
+MarketTest subclass: #CashierTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 20:58:42'!
+test01ShouldNotCheckoutEmptyCart
+	
+	| cart cashier creditCard |
+	cashier := Cashier new.
+	
+	cart := self createCart .
+	
+	
+		creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+		
+	self should: [cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).]
+	raise: Error
+	withExceptionDo:[:anError| 
+		self assert: anError messageText equals: 'Cannot checkout an empty cart'.
+		self assert: cashier isSellBookEmpty.
+		]! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:04:31'!
+test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
+	
+	| cart cashier ticket creditCard |
+	
+	cashier := Cashier new.
+	
+	cart := self createCart .
+	cart add: 'validBook'.
+	
+			creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+		
+	ticket := cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	
+	self assert: ticket equals: 23.
+	self deny: cashier isSellBookEmpty.
+		! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:05:29'!
+test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
+	
+	| cart cashier ticket creditCard |
+	
+
+	cashier := Cashier new.
+	
+	cart := self createCart .
+	cart add: 2 of: 'validBook' .
+	
+				creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+		
+	ticket := cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+		
+	self assert: ticket equals: 46.
+	self deny: cashier isSellBookEmpty.
+		! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:05:47'!
+test04ShouldNotCheckoutWhenCardIsExpired
+	
+	| cart cashier creditCard |
+	
+
+	cashier := Cashier new.
+	
+	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear februaryOf: GregorianYear current).
+	
+	cart := self createCart .
+	cart add: 'validBook'.
+	self should:[
+	cashier checkOut: cart withCard: creditCard andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	] raise: Error
+	withExceptionDo:[:anError|
+		self assert: anError messageText equals: 'Cannot checkout with expired credit card'.
+		self assert: cashier isSellBookEmpty.] .
+		! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:46:39'!
+test05ShouldNotCheckOutWhenCreidtCardNumberNotValidatedByMerhantProcessor
+	
+	| cart cashier priceList creditCard merchantProcessor|
+	
+	priceList := Dictionary new.
+	priceList at: 'validBook' put: 23.
+	
+	merchantProcessor := MerchantProcessorDummy withBehaviour:[merchantProcessor error: merchantProcessor class CardNotFoundError.].
+		
+	cashier := Cashier with: merchantProcessor.
+
+	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	
+	cart := self createCart.
+	cart add: 'validBook'.
+	self should:[
+	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	] raise: Error
+	withExceptionDo:[:anError|
+		self assert: anError messageText equals: 'Card was not registered in the system'.
+		self assert: cashier isSellBookEmpty.] .
+		! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:45:39'!
+test06ShouldNotCheckOutWhenInsufficientFunds
+	
+	| cart cashier priceList creditCard merchantProcessor|
+	
+	priceList := Dictionary new.
+	priceList at: 'validBook' put: 23.
+	
+	merchantProcessor := MerchantProcessorDummy withBehaviour: [merchantProcessor error: merchantProcessor class InsufficientFundsError].
+		
+	cashier := Cashier with: merchantProcessor.
+
+	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	
+	cart := self createCart.
+	cart add: 'validBook'.
+	self should:[
+	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	] raise: Error
+	withExceptionDo:[:anError|
+		self assert: anError messageText equals: 'Insufficient funds for transaction'.
+		self assert: cashier isSellBookEmpty.] .
+		! !
+
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/15/2018 21:44:45'!
+test07ShouldNotCheckOutWhenTimeOut
+	
+	| cart cashier priceList creditCard merchantProcessor|
+	
+	priceList := Dictionary new.
+	priceList at: 'validBook' put: 23.
+	
+	merchantProcessor := MerchantProcessorDummy withBehaviour: [merchantProcessor error: merchantProcessor class TimeOutError].
+		
+	cashier := Cashier with: merchantProcessor.
+
+	creditCard:= CreditCard for:1234 andExpirationDate: (GregorianMonthOfYear julyOf: GregorianYear current).
+	
+	cart := self createCart.
+	cart add: 'validBook'.
+	self should:[
+	cashier checkOut: cart withCard: creditCard  andDate: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
+	] raise: Error
+	withExceptionDo:[:anError|
+		self assert: anError messageText equals: 'Time Out'.
+		self assert: cashier isSellBookEmpty.] .
+		! !
 
 
 !classDefinition: #Cart category: #TusLibros!
 Object subclass: #Cart
-	instanceVariableNames: 'books editorialBooks'
+	instanceVariableNames: 'catalog items'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cart methodsFor: 'initialization' stamp: 'APç 11/12/2018 21:13:57'!
-initializeWithCatalogue: aBookCatalogue
-
-	books:= Dictionary new.	
-	editorialBooks:= aBookCatalogue.! !
-
-
-!Cart methodsFor: 'adding' stamp: 'APç 11/12/2018 21:12:40'!
-add: aISBN amount: aBookAmount
-
-	(aBookAmount < 1) ifTrue:[self error: self class bookAmountShouldNotBeLesserThanOne ].
-	(aBookAmount isInteger) ifFalse:[self error: self class bookAmountShouldBeAnInteger ].
-
-	(editorialBooks includes: aISBN) ifTrue: [
-	books at: aISBN put: aBookAmount] ifFalse: [self error: self class bookBelongsToOtherEditorialErrorMessage ].
-	 
+!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+invalidItemErrorMessage
 	
-	! !
+	^'Item is not in catalog'! !
+
+!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+invalidQuantityErrorMessage
+	
+	^'Invalid number of items'! !
 
 
-!Cart methodsFor: 'testing' stamp: 'APç 11/12/2018 20:27:57'!
+!Cart methodsFor: 'assertions' stamp: 'GR 11/15/2018 20:51:19'!
+assertIsValidItem: anItem
+
+	(catalog keys includes: anItem) ifFalse: [ self error: self invalidItemErrorMessage ]! !
+
+!Cart methodsFor: 'assertions' stamp: 'HernanWilkinson 6/17/2013 17:51'!
+assertIsValidQuantity: aQuantity
+
+	aQuantity strictlyPositive ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
+
+
+!Cart methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 17:48'!
+initializeAcceptingItemsOf: aCatalog
+
+	catalog := aCatalog.
+	items := OrderedCollection new.! !
+
+
+!Cart methodsFor: 'queries' stamp: 'GR 11/15/2018 20:55:26'!
+lookUpPriceOf: aString 
+
+	^catalog at: aString ifAbsent:[self error: self class priceNotFound]! !
+
+!Cart methodsFor: 'queries' stamp: 'HernanWilkinson 6/17/2013 17:45'!
+occurrencesOf: anItem
+
+	^items occurrencesOf: anItem  ! !
+
+!Cart methodsFor: 'queries' stamp: 'GR 11/15/2018 20:54:12'!
+sumItemsPrices
+
+
+	|total|
+	total := 0.
+	items do: [:aBook| total :=  total + (self lookUpPriceOf: aBook) .total].
+	^total! !
+
+
+!Cart methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 17:44'!
+includes: anItem
+
+	^items includes: anItem ! !
+
+!Cart methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 17:44'!
 isEmpty
+	
+	^items isEmpty ! !
 
-	^books keys isEmpty .! !
+
+!Cart methodsFor: 'adding' stamp: 'HernanWilkinson 6/17/2013 17:44'!
+add: anItem
+
+	^ self add: 1 of: anItem ! !
+
+!Cart methodsFor: 'adding' stamp: 'HernanWilkinson 6/17/2013 17:51'!
+add: aQuantity of: anItem
+
+	self assertIsValidQuantity: aQuantity.
+	self assertIsValidItem: anItem.
+
+	1 to: aQuantity do: [ :aNumber | items add: anItem ]! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -88,23 +366,151 @@ isEmpty
 Cart class
 	instanceVariableNames: ''!
 
-!Cart class methodsFor: 'as yet unclassified' stamp: 'APç 11/12/2018 21:13:57'!
-withCatalogue: aBookCollection
+!Cart class methodsFor: 'instance creation' stamp: 'HernanWilkinson 6/17/2013 17:48'!
+acceptingItemsOf: aCatalog
 
-	^self new initializeWithCatalogue: aBookCollection ! !
+	^self new initializeAcceptingItemsOf: aCatalog ! !
+
+
+!classDefinition: #Cashier category: #TusLibros!
+Object subclass: #Cashier
+	instanceVariableNames: 'merchantProcessor sellBook'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Cashier methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:20:25'!
+checkOut: aCart withCard: aCreditCard andDate: aDate
+	
+	
+	| amount |
+	(aCreditCard hasNotExpiredForDate: aDate) ifFalse:[self error: self class expiredCreditCardError].
+	
+		(aCart isEmpty) ifTrue: [self error: self class emptyCartException].
+		
+		
+		amount := aCart sumItemsPrices.
+	merchantProcessor debit:  amount from:aCreditCard .
+	
+	sellBook add:aCreditCard.
+	
+	^amount
+! !
+
+!Cashier methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:24:23'!
+initializeWIth:  aMerchantProcessor
+	
+	merchantProcessor:= aMerchantProcessor.
+	sellBook := OrderedCollection new.
+! !
 
 
-!Cart class methodsFor: 'exceptions' stamp: 'APç 11/12/2018 21:12:12'!
-bookAmountShouldBeAnInteger
+!Cashier methodsFor: 'pricing' stamp: 'GR 11/15/2018 20:10:52'!
+isSellBookEmpty
 
-	^'The amount of books must be an integer'! !
+	^sellBook isEmpty.! !
 
-!Cart class methodsFor: 'exceptions' stamp: 'APç 11/12/2018 21:07:46'!
-bookAmountShouldNotBeLesserThanOne
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-	^'The amount of books cannot be lesser than one'! !
+!classDefinition: 'Cashier class' category: #TusLibros!
+Cashier class
+	instanceVariableNames: ''!
 
-!Cart class methodsFor: 'exceptions' stamp: 'APç 11/12/2018 20:18:39'!
-bookBelongsToOtherEditorialErrorMessage
+!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 18:29:08'!
+emptyCartException
+	
+	^'Cannot checkout an empty cart'! !
 
-	^'The book you are trying to add doesn t belong to this editorial'! !
+!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 19:29:32'!
+expiredCreditCardError
+	
+	^'Cannot checkout with expired credit card'! !
+
+!Cashier class methodsFor: 'exceptions' stamp: 'GR 11/15/2018 19:57:11'!
+priceNotFound
+	
+	^'Price not found'! !
+
+
+!Cashier class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:43:09'!
+new
+
+	^self basicNew initializeWIth: MerchantProcessorDummy new.! !
+
+!Cashier class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:24:47'!
+with: aMerchantProcessor
+
+	^self basicNew initializeWIth: aMerchantProcessor! !
+
+
+!classDefinition: #CreditCard category: #TusLibros!
+Object subclass: #CreditCard
+	instanceVariableNames: 'identifier expirationDate'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CreditCard methodsFor: 'initializing' stamp: 'GR 11/15/2018 20:45:01'!
+hasNotExpiredForDate: aGregorianDate
+
+	^(GregorianMonthOfYear year: (aGregorianDate year) month: (aGregorianDate month)) <= expirationDate.! !
+
+!CreditCard methodsFor: 'initializing' stamp: 'GR 11/15/2018 19:26:08'!
+initializeFor: anIdentifier andExpirationDate: aMonthOfYear 
+	
+	
+	identifier:= anIdentifier .
+	expirationDate:=aMonthOfYear .! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CreditCard class' category: #TusLibros!
+CreditCard class
+	instanceVariableNames: ''!
+
+!CreditCard class methodsFor: 'initialization' stamp: 'GR 11/15/2018 19:25:12'!
+for: anIdentifier andExpirationDate: aMonthOfYear 
+
+	^self new initializeFor: anIdentifier andExpirationDate:aMonthOfYear.! !
+
+
+!classDefinition: #MerchantProcessorDummy category: #TusLibros!
+Object subclass: #MerchantProcessorDummy
+	instanceVariableNames: 'block'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:48:20'!
+debit: amount from: aCreditCard
+
+	^block value! !
+
+!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:48:50'!
+initializeWithBehaviour: collaborationsToEval
+	block:= collaborationsToEval! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MerchantProcessorDummy class' category: #TusLibros!
+MerchantProcessorDummy class
+	instanceVariableNames: ''!
+
+!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:46:53'!
+CardNotFoundError
+
+	^'Card was not registered in the system'! !
+
+!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:47:00'!
+InsufficientFundsError
+
+	^'Insufficient funds for transaction'! !
+
+!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:47:07'!
+TimeOutError
+
+	^'Time Out'! !
+
+!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'GR 11/15/2018 21:49:22'!
+withBehaviour: collaborationsToEval
+	^self new initializeWithBehaviour: collaborationsToEval! !
