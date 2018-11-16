@@ -392,7 +392,7 @@ isSellBookEmpty
 	^salesBook isEmpty.! !
 
 
-!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 15:07:08'!
+!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 15:10:48'!
 checkOut: aCart using: aCreditCard at: aDate
 	
 	
@@ -403,7 +403,7 @@ checkOut: aCart using: aCreditCard at: aDate
 	amount := aCart sumItemPrices.
 	merchantProcessor debit:  amount fromAccountIdentifiedBy:aCreditCard .
 	
-	salesBook add: (MarketSale of: aCart byCustomerIdentifiedWith: aCreditCard at: FixedGregorianDate today).
+	salesBook add: aCreditCard.
 	
 	^amount! !
 
@@ -476,31 +476,6 @@ CreditCard class
 with: aNumber andExpirationDate: aMonthOfYear 
 
 	^self new initializeWith: aNumber andExpirationDate:aMonthOfYear.! !
-
-
-!classDefinition: #MarketSale category: #TusLibros!
-Object subclass: #MarketSale
-	instanceVariableNames: 'cart buyerCreditCard date'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros'!
-
-!MarketSale methodsFor: 'initialization' stamp: 'GR 11/16/2018 14:56:43'!
-initializeOf: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate
-	cart := aCart.
-	buyerCreditCard := aCreditCard.
-	date := aFixedGregorianDate.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'MarketSale class' category: #TusLibros!
-MarketSale class
-	instanceVariableNames: ''!
-
-!MarketSale class methodsFor: 'instance creation' stamp: 'GR 11/16/2018 14:56:43'!
-of: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate
-
-	^self new initializeOf: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate! !
 
 
 !classDefinition: #MerchantProcessorDummy category: #TusLibros!
