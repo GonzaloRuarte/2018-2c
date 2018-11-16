@@ -373,26 +373,26 @@ acceptingItemsOf: aCatalog
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
-	instanceVariableNames: 'merchantProcessor sellBook'
+	instanceVariableNames: 'merchantProcessor salesBook'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cashier methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:24:23'!
+!Cashier methodsFor: 'initialization' stamp: 'GR 11/16/2018 15:07:29'!
 initializeWIth:  aMerchantProcessor
 	
 	merchantProcessor:= aMerchantProcessor.
-	sellBook := OrderedCollection new.
+	salesBook := OrderedCollection new.
 ! !
 
 
-!Cashier methodsFor: 'testing' stamp: 'GR 11/15/2018 20:10:52'!
+!Cashier methodsFor: 'testing' stamp: 'GR 11/16/2018 15:07:19'!
 isSellBookEmpty
 
-	^sellBook isEmpty.! !
+	^salesBook isEmpty.! !
 
 
-!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 14:19:10'!
+!Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 15:07:08'!
 checkOut: aCart using: aCreditCard at: aDate
 	
 	
@@ -403,7 +403,7 @@ checkOut: aCart using: aCreditCard at: aDate
 	amount := aCart sumItemPrices.
 	merchantProcessor debit:  amount fromAccountIdentifiedBy:aCreditCard .
 	
-	sellBook add: aCreditCard. "esto hay que ver como es realmente"
+	salesBook add: (MarketSale of: aCart byCustomerIdentifiedWith: aCreditCard at: FixedGregorianDate today).
 	
 	^amount! !
 
@@ -476,6 +476,31 @@ CreditCard class
 with: aNumber andExpirationDate: aMonthOfYear 
 
 	^self new initializeWith: aNumber andExpirationDate:aMonthOfYear.! !
+
+
+!classDefinition: #MarketSale category: #TusLibros!
+Object subclass: #MarketSale
+	instanceVariableNames: 'cart buyerCreditCard date'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!MarketSale methodsFor: 'initialization' stamp: 'GR 11/16/2018 14:56:43'!
+initializeOf: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate
+	cart := aCart.
+	buyerCreditCard := aCreditCard.
+	date := aFixedGregorianDate.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'MarketSale class' category: #TusLibros!
+MarketSale class
+	instanceVariableNames: ''!
+
+!MarketSale class methodsFor: 'instance creation' stamp: 'GR 11/16/2018 14:56:43'!
+of: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate
+
+	^self new initializeOf: aCart byCustomerIdentifiedWith: aCreditCard at: aFixedGregorianDate! !
 
 
 !classDefinition: #MerchantProcessorDummy category: #TusLibros!
