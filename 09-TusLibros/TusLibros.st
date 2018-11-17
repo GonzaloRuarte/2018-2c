@@ -130,11 +130,14 @@ MarketTest subclass: #CashierTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:55:28'!
 test01ShouldNotCheckoutEmptyCart
 	
-	| cart cashier creditCard |
-	cashier := Cashier new.
+	| cart cashier creditCard merchantProcessor|
+
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [] andWhenConsulting: [false].
+		
+	cashier := Cashier with: merchantProcessor.
 	
 	cart := self createCart .
 	
@@ -145,15 +148,18 @@ test01ShouldNotCheckoutEmptyCart
 	raise: Error
 	withExceptionDo:[:anError| 
 		self assert: anError messageText equals: 'Cannot checkout an empty cart'.
-		self assert: cashier isSellBookEmpty.
+		self assert: cashier isSalesBookEmpty.
+		self deny: (cashier wasMerchantProcessorAccessedUsing: creditCard).
 		]! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
-test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:59:40'!
+test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSingleItem
 	
-	| cart cashier ticket creditCard |
-	
-	cashier := Cashier new.
+	| cart cashier creditCard merchantProcessor ticket |
+
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [] andWhenConsulting: [true].
+		
+	cashier := Cashier with: merchantProcessor.
 	
 	cart := self createCart .
 	cart add: 'validBook'.
@@ -163,16 +169,18 @@ test02TicketShouldHaveCartItemPriceAfterCheckoutOfCartWIthSIngleItem
 	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	
 	self assert: ticket equals: 23.
-	self deny: cashier isSellBookEmpty.
+	self deny: cashier isSalesBookEmpty.
+	self assert: (cashier wasMerchantProcessorAccessedUsing: creditCard).
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:56:04'!
 test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	
-	| cart cashier ticket creditCard |
-	
+	| cart cashier creditCard merchantProcessor ticket |
 
-	cashier := Cashier new.
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [] andWhenConsulting: [true].
+		
+	cashier := Cashier with: merchantProcessor.
 	
 	cart := self createCart .
 	cart add: 2 of: 'validBook' .
@@ -182,16 +190,18 @@ test03TicketShouldSumCartItemsPricesAfterCheckoutOfCartWithMultipleItems
 	ticket := cashier checkOut: cart using: creditCard at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 		
 	self assert: ticket equals: 46.
-	self deny: cashier isSellBookEmpty.
+	self deny: cashier isSalesBookEmpty.
+	self assert: (cashier wasMerchantProcessorAccessedUsing: creditCard).
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:55:49'!
 test04ShouldNotCheckoutWhenCardIsExpired
 	
-	| cart cashier creditCard |
-	
+	| cart cashier creditCard merchantProcessor |
 
-	cashier := Cashier new.
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [] andWhenConsulting: [false].
+		
+	cashier := Cashier with: merchantProcessor.
 	
 	creditCard:= CreditCard with:1234 andExpirationDate: (GregorianMonthOfYear februaryOf: GregorianYear current).
 	
@@ -202,10 +212,11 @@ test04ShouldNotCheckoutWhenCardIsExpired
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'Cannot checkout with expired credit card'.
-		self assert: cashier isSellBookEmpty.] .
+		self assert: cashier isSalesBookEmpty.
+		self deny: (cashier wasMerchantProcessorAccessedUsing: creditCard)] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:51:53'!
 test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -213,7 +224,7 @@ test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 	priceList := Dictionary new.
 	priceList at: 'validBook' put: 23.
 	
-	merchantProcessor := MerchantProcessorDummy withBehaviour:[merchantProcessor error: merchantProcessor class InvalidCreditCardError.].
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [merchantProcessor error: merchantProcessor class invalidCreditCardError.] andWhenConsulting: [true].
 		
 	cashier := Cashier with: merchantProcessor.
 
@@ -226,10 +237,11 @@ test05ShouldNotCheckOutWhenCreditCardNotValidatedByMerchantProcessor
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'The credit card is not registered in the system'.
-		self assert: cashier isSellBookEmpty.] .
+		self assert: cashier isSalesBookEmpty.
+		self assert: (cashier wasMerchantProcessorAccessedUsing: creditCard).] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:52:16'!
 test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -237,7 +249,7 @@ test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 	priceList := Dictionary new.
 	priceList at: 'validBook' put: 23.
 	
-	merchantProcessor := MerchantProcessorDummy withBehaviour: [merchantProcessor error: merchantProcessor class InsufficientFundsError].
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting: [merchantProcessor error: merchantProcessor class insufficientFundsError] andWhenConsulting: [true].
 		
 	cashier := Cashier with: merchantProcessor.
 
@@ -249,11 +261,12 @@ test06ShouldNotCheckOutWhenAccountHasInsufficientFunds
 	cashier checkOut: cart using: creditCard  at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
-		self assert: anError messageText equals: 'Insufficient funds for transaction'.
-		self assert: cashier isSellBookEmpty.] .
+		self assert: anError messageText equals: 'The credit card does not have enough funds'.
+		self assert: cashier isSalesBookEmpty.
+		self assert: (cashier wasMerchantProcessorAccessedUsing: creditCard).] .
 		! !
 
-!CashierTest methodsFor: 'tests' stamp: 'GR 11/16/2018 14:21:16'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/17/2018 13:53:02'!
 test07ShouldNotCheckOutWhenTimeOut
 	
 	| cart cashier priceList creditCard merchantProcessor|
@@ -261,7 +274,7 @@ test07ShouldNotCheckOutWhenTimeOut
 	priceList := Dictionary new.
 	priceList at: 'validBook' put: 23.
 	
-	merchantProcessor := MerchantProcessorDummy withBehaviour: [merchantProcessor error: merchantProcessor class TimeOutError].
+	merchantProcessor := MerchantProcessorDummy withBehaviourWhenDebitting:  [merchantProcessor error: merchantProcessor class timeOutError] andWhenConsulting: [false].
 		
 	cashier := Cashier with: merchantProcessor.
 
@@ -273,8 +286,9 @@ test07ShouldNotCheckOutWhenTimeOut
 	cashier checkOut: cart using: creditCard  at: (FixedGregorianDate yearNumber: 2018 monthNumber: 7 dayNumber: 22).
 	] raise: Error
 	withExceptionDo:[:anError|
-		self assert: anError messageText equals: 'Time Out'.
-		self assert: cashier isSellBookEmpty.] .
+		self assert: anError messageText equals: 'The transaction could not be completed because the connection timed out'.
+		self assert: cashier isSalesBookEmpty.
+		self deny: (cashier wasMerchantProcessorAccessedUsing: creditCard).] .
 		! !
 
 
@@ -369,7 +383,6 @@ acceptingItemsOf: aCatalog
 
 	^self new initializeAcceptingItemsOf: aCatalog ! !
 
-
 
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
@@ -386,10 +399,14 @@ initializeWIth:  aMerchantProcessor
 ! !
 
 
-!Cashier methodsFor: 'testing' stamp: 'GR 11/16/2018 15:07:19'!
-isSellBookEmpty
+!Cashier methodsFor: 'testing' stamp: 'GR 11/17/2018 13:26:01'!
+isSalesBookEmpty
 
 	^salesBook isEmpty.! !
+
+!Cashier methodsFor: 'testing' stamp: 'GR 11/17/2018 13:46:45'!
+wasMerchantProcessorAccessedUsing: aCreditCard
+	^merchantProcessor wasAccessedBy: self using: aCreditCard.! !
 
 
 !Cashier methodsFor: 'checking out' stamp: 'GR 11/16/2018 15:10:48'!
@@ -435,15 +452,10 @@ expiredCreditCardError
 	^'Cannot checkout with expired credit card'! !
 
 
-!Cashier class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:43:09'!
-new
-
-	^self basicNew initializeWIth: MerchantProcessorDummy new.! !
-
-!Cashier class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:24:47'!
+!Cashier class methodsFor: 'instance creation' stamp: 'GR 11/17/2018 13:56:36'!
 with: aMerchantProcessor
 
-	^self basicNew initializeWIth: aMerchantProcessor! !
+	^self new initializeWIth: aMerchantProcessor! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
@@ -480,20 +492,26 @@ with: aNumber andExpirationDate: aMonthOfYear
 
 !classDefinition: #MerchantProcessorDummy category: #TusLibros!
 Object subclass: #MerchantProcessorDummy
-	instanceVariableNames: 'block'
+	instanceVariableNames: 'behaviourWhenDebitting behaviourWhenConsulting'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorDummy methodsFor: 'charging' stamp: 'GR 11/16/2018 14:19:10'!
+!MerchantProcessorDummy methodsFor: 'debitting' stamp: 'GR 11/17/2018 13:38:52'!
 debit: amount fromAccountIdentifiedBy: aCreditCard
 
-	^block value! !
+	^behaviourWhenDebitting value! !
 
 
-!MerchantProcessorDummy methodsFor: 'initialization' stamp: 'GR 11/15/2018 21:48:50'!
-initializeWithBehaviour: collaborationsToEval
-	block:= collaborationsToEval! !
+!MerchantProcessorDummy methodsFor: 'initialization' stamp: 'GR 11/17/2018 13:50:17'!
+initializeWithBehaviourWhenDebitting: collaborationsToEval andWhenConsulting: otherCollaborationsToEval
+	behaviourWhenDebitting := collaborationsToEval.
+	behaviourWhenConsulting := otherCollaborationsToEval.! !
+
+
+!MerchantProcessorDummy methodsFor: 'operations' stamp: 'GR 11/17/2018 13:44:12'!
+wasAccessedBy: aCashier using: aCreditCard
+	^behaviourWhenConsulting value! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -501,22 +519,22 @@ initializeWithBehaviour: collaborationsToEval
 MerchantProcessorDummy class
 	instanceVariableNames: ''!
 
-!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/15/2018 21:47:00'!
-InsufficientFundsError
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/17/2018 13:33:13'!
+insufficientFundsError
 
-	^'Insufficient funds for transaction'! !
+	^'The credit card does not have enough funds'! !
 
-!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/16/2018 13:48:13'!
-InvalidCreditCardError
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/17/2018 13:33:41'!
+invalidCreditCardError
 
 	^'The credit card is not registered in the system'! !
 
-!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/15/2018 21:47:07'!
-TimeOutError
+!MerchantProcessorDummy class methodsFor: 'error messages' stamp: 'GR 11/17/2018 13:34:37'!
+timeOutError
 
-	^'Time Out'! !
+	^'The transaction could not be completed because the connection timed out'! !
 
 
-!MerchantProcessorDummy class methodsFor: 'instance creation' stamp: 'GR 11/15/2018 21:49:22'!
-withBehaviour: collaborationsToEval
-	^self new initializeWithBehaviour: collaborationsToEval! !
+!MerchantProcessorDummy class methodsFor: 'instance creation' stamp: 'GR 11/17/2018 13:50:50'!
+withBehaviourWhenDebitting: collaborationsToEval andWhenConsulting: otherCollaborationsToEval
+	^self new initializeWithBehaviourWhenDebitting: collaborationsToEval andWhenConsulting: otherCollaborationsToEval! !
