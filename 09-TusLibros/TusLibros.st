@@ -10,7 +10,7 @@ test01NewCartsAreCreatedEmpty
 
 	self assert: testObjectsFactory createCart isEmpty! !
 
-!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:10'!
+!CartTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:59:32'!
 test02CanNotAddItemsThatDoNotBelongToStore
 
 	| cart |
@@ -21,7 +21,7 @@ test02CanNotAddItemsThatDoNotBelongToStore
 		should: [ cart add: testObjectsFactory itemNotSellByTheStore ]
 		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: anError messageText = Cart invalidItemErrorMessage.
 			self assert: cart isEmpty ]! !
 
 !CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:10'!
@@ -34,7 +34,7 @@ test03AfterAddingAnItemTheCartIsNotEmptyAnymore
 	cart add: testObjectsFactory itemSellByTheStore.
 	self deny: cart isEmpty ! !
 
-!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:10'!
+!CartTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:59:36'!
 test04CanNotAddNonPositiveNumberOfItems
 
 	| cart |
@@ -45,10 +45,10 @@ test04CanNotAddNonPositiveNumberOfItems
 		should: [cart add: 0 of: testObjectsFactory itemSellByTheStore ]
 		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidQuantityErrorMessage.
+			self assert: anError messageText = Cart invalidQuantityErrorMessage.
 			self assert: cart isEmpty ]! !
 
-!CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:10'!
+!CartTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:59:41'!
 test05CanNotAddMoreThanOneItemNotSellByTheStore
 
 	| cart |
@@ -59,7 +59,7 @@ test05CanNotAddMoreThanOneItemNotSellByTheStore
 		should: [cart add: 2 of: testObjectsFactory itemNotSellByTheStore  ]
 		raise: Error - MessageNotUnderstood
 		withExceptionDo: [ :anError |
-			self assert: anError messageText = cart invalidItemErrorMessage.
+			self assert: anError messageText = Cart invalidItemErrorMessage.
 			self assert: cart isEmpty ]! !
 
 !CartTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:11'!
@@ -105,7 +105,7 @@ TestCase subclass: #CashierTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CashierTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:50'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:00:31'!
 test01CanNotCheckoutAnEmptyCart
 
 	| salesBook |
@@ -114,7 +114,7 @@ test01CanNotCheckoutAnEmptyCart
 	self 
 		should: [ Cashier 
 			toCheckout: testObjectsFactory createCart 
-			charging: testObjectsFactory notExpiredCreditCard 
+			charging: testObjectsFactory validCreditCard 
 			throught: self
 			on: testObjectsFactory today
 			registeringOn:  salesBook ]
@@ -123,7 +123,7 @@ test01CanNotCheckoutAnEmptyCart
 			self assert: anError messageText = Cashier cartCanNotBeEmptyErrorMessage.
 			self assert: salesBook isEmpty ]! !
 
-!CashierTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:51'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:00:37'!
 test02CalculatedTotalIsCorrect
 
 	| cart cashier |
@@ -133,7 +133,7 @@ test02CalculatedTotalIsCorrect
 	
 	cashier :=  Cashier
 		toCheckout: cart 
-		charging: testObjectsFactory notExpiredCreditCard 
+		charging: testObjectsFactory validCreditCard 
 		throught: self
 		on: testObjectsFactory today 
 		registeringOn: OrderedCollection new.
@@ -161,7 +161,7 @@ test03CanNotCheckoutWithAnExpiredCreditCart
 			self assert: anError messageText = Cashier canNotChargeAnExpiredCreditCardErrorMessage.
 			self assert: salesBook isEmpty ]! !
 
-!CashierTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 19:04'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:00:43'!
 test04CheckoutRegistersASale
 
 	| cart cashier salesBook total |
@@ -172,7 +172,7 @@ test04CheckoutRegistersASale
  
 	cashier:= Cashier 
 		toCheckout: cart 
-		charging: testObjectsFactory notExpiredCreditCard
+		charging: testObjectsFactory validCreditCard 
 		throught: self
 		on: testObjectsFactory today
 		registeringOn: salesBook.
@@ -182,14 +182,14 @@ test04CheckoutRegistersASale
 	self assert: salesBook size = 1.
 	self assert: salesBook first total = total.! !
 
-!CashierTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 19:00'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:00:50'!
 test05CashierChargesCreditCardUsingMerchantProcessor
 
 	| cart cashier salesBook total creditCard debitedAmout debitedCreditCard  |
 
 	cart := testObjectsFactory createCart.
 	cart add: testObjectsFactory itemSellByTheStore.
-	creditCard := testObjectsFactory notExpiredCreditCard.
+	creditCard := testObjectsFactory validCreditCard .
 	salesBook := OrderedCollection new.
  
 	cashier:= Cashier 
@@ -207,14 +207,14 @@ test05CashierChargesCreditCardUsingMerchantProcessor
 	self assert: debitedCreditCard = creditCard.
 	self assert: debitedAmout = total.! !
 
-!CashierTest methodsFor: 'tests' stamp: 'HernanWilkinson 6/17/2013 18:59'!
+!CashierTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:00:58'!
 test06CashierDoesNotSaleWhenTheCreditCardHasNoCredit
 
 	| cart cashier salesBook creditCard |
 
 	cart := testObjectsFactory createCart.
 	cart add: testObjectsFactory itemSellByTheStore.
-	creditCard := testObjectsFactory notExpiredCreditCard.
+	creditCard := testObjectsFactory validCreditCard .
 	salesBook := OrderedCollection new.
  	debitBehavior := [ :anAmount :aCreditCard | self error: Cashier creditCardHasNoCreditErrorMessage].
 	
@@ -253,7 +253,7 @@ TestCase subclass: #TusLibrosTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:26'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:51:25'!
 test01ShouldNotCreateCartWhenUserIsInvalid
 
 	|tusLibros|
@@ -261,41 +261,41 @@ test01ShouldNotCreateCartWhenUserIsInvalid
 	tusLibros:= testObjectsFactory createTusLibros .
 	
 	self should:
-	[tusLibros createCartforUser: testObjectsFactory nonRegisteredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
+	[tusLibros createCartforUser: testObjectsFactory nonRegisteredUserName usingPassword: testObjectsFactory incorrectUserPassword .]
 	raise: Error
 	withExceptionDo:
-	[:exception| self assert: exception messageText equals: 'Usuario invalido'].
+	[:exception| self assert: exception messageText equals: TusLibros invalidUserErrorMessage ].
 	
 	! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:35'!
-test02ShouldNotCreateCartWhenPasswordDoesNotMatch
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:51:25'!
+test02ShouldNotCreateCartWhenPasswordDoesNotMatchUser
 
 	|tusLibros|
 	
 	tusLibros:= testObjectsFactory createTusLibros .
 	
 	self should:
-	[tusLibros createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
+	[tusLibros createCartforUser: testObjectsFactory registeredUserName usingPassword: testObjectsFactory incorrectUserPassword .]
 	raise: Error
 	withExceptionDo:
-	[:exception| self assert: exception messageText equals: 'Password invalida'].
+	[:exception| self assert: exception messageText equals: TusLibros invalidPasswordErrorMessage ].
 	
 	! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:58'!
-test03ListOfCreatedCartShouldBeEmpty
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:28'!
+test03CreatedCartShouldBeEmpty
 	|tusLibros cartID|
 	
 	tusLibros:= testObjectsFactory createTusLibros .
 	
 	
-	cartID:=tusLibros createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
 
 	self assert: (tusLibros listCart: cartID) isEmpty.
 	! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:06'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:28'!
 test04TwoCreatedCartsShouldHaveDifferentIDs
 
 	|tusLibros cartID|
@@ -303,13 +303,13 @@ test04TwoCreatedCartsShouldHaveDifferentIDs
 	tusLibros:= testObjectsFactory createTusLibros .
 	
 	
-	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
 	
-	self deny: cartID = (tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword) .
+	self deny: cartID = (tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword) .
 	
 	! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:14'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:45:32'!
 test05ShouldNotAddItemWhenCartIDIsInvalid
 
 	|tusLibros|
@@ -320,38 +320,52 @@ test05ShouldNotAddItemWhenCartIDIsInvalid
 	self should:[tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: 3]
 	raise: Error
 	withExceptionDo:[:anException|
-		self assert: anException messageText equals: 'Invalid cart id']! !
+		self assert: anException messageText equals: TusLibros invalidCartIDErrorMessage ]! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:22'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:27'!
 test06ShouldNotAddInvalidItemForCart
 
 	|tusLibros cartID|
 	
 	tusLibros:= testObjectsFactory createTusLibros .
 	
-	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
 		
 	self should:[tusLibros add: 2 of: testObjectsFactory itemNotSellByTheStore toCart: cartID]
 	raise: Error
 	withExceptionDo:[:anException|
-		self assert: anException messageText equals: 'Item is not in catalog']! !
+		self assert: anException messageText equals: Cart invalidItemErrorMessage ]! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:34'!
-test07ShouldListCartItemsAddedBeforehand
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:28'!
+test07CartShouldNotBeEmptyAfterAddingAnItem
 
 	|tusLibros cartID|
 	
 	tusLibros:= testObjectsFactory createTusLibros .
 	
-	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+	
+	
+	self deny: (tusLibros listCart: cartID) isEmpty.! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:28'!
+test08ShouldListCartItemsAddedBeforehand
+
+	|tusLibros cartID|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+	
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
 	
 	tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
 	
 	
 	self assert: ((tusLibros listCart: cartID) includes: testObjectsFactory itemSellByTheStore).! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:04:56'!
-test08ShouldNotCheckoutWhenCreditCardIsInvalid
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:47:28'!
+test09ShouldNotCheckoutWhenCreditCardIsInvalid
 
 	|tusLibros cartID creditCard|
 	
@@ -359,7 +373,7 @@ test08ShouldNotCheckoutWhenCreditCardIsInvalid
 	
 	creditCard:= testObjectsFactory expiredCreditCard.
 	
-	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
 	
 	tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
 	
@@ -367,8 +381,92 @@ test08ShouldNotCheckoutWhenCreditCardIsInvalid
 	tusLibros checkOutCart: cartID withCreditCard: creditCard .
 	] raise: Error
 	withExceptionDo:[:anError|
-		self assert: anError messageText equals: 'Can not charge an expired credit card'].
+		self assert: anError messageText equals: Cashier canNotChargeAnExpiredCreditCardErrorMessage ].
 	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:50:11'!
+test10ShouldNotListPurchasesOfInvalidUser
+
+	|tusLibros|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+
+	self should:
+	[tusLibros listPurchasesFor: testObjectsFactory nonRegisteredUserName usingPassword: testObjectsFactory registeredUserPassword.]
+	raise: Error
+	withExceptionDo:
+	[:exception| self assert: exception messageText equals: TusLibros invalidUserErrorMessage ].
+	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:51:25'!
+test11ShouldNotListPurchasesWhenPasswordDoesNotMatchUser
+
+	|tusLibros|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+
+	
+	self should:
+	[tusLibros listPurchasesFor: testObjectsFactory registeredUserName usingPassword: testObjectsFactory incorrectUserPassword.]
+	raise: Error
+	withExceptionDo:
+	[:exception| self assert: exception messageText equals: TusLibros invalidPasswordErrorMessage ].
+	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:57:16'!
+test12PurchasesListShouldBeEmptyBeforeCheckingOut
+
+	|tusLibros|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+	
+	self assert: (tusLibros listPurchasesFor: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword) isEmpty.
+	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:56:10'!
+test13PurchasesListShouldNotBeEmptyAfterSuccessfullyCheckingOut
+
+	|tusLibros cartID creditCard|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+	
+	creditCard:= testObjectsFactory validCreditCard.
+	
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+	
+	tusLibros checkOutCart: cartID withCreditCard: creditCard.
+	
+	self deny: (tusLibros listPurchasesFor: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword) isEmpty.
+	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:57:39'!
+test14ShouldListPurchasesMadeBeforehand
+
+	|tusLibros cartID creditCard|
+	
+	tusLibros:= testObjectsFactory createTusLibros .
+	
+	creditCard:= testObjectsFactory validCreditCard.
+	
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	tusLibros add: 1 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+	
+	tusLibros checkOutCart: cartID withCreditCard: creditCard.
+	
+	self assert: ((tusLibros listPurchasesFor: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword) includes: testObjectsFactory successfulSale).
+	
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 14:05:34'!
+test15ManipularTiempo
 ! !
 
 
@@ -386,26 +484,15 @@ Object subclass: #Cart
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/17/2013 17:45'!
-invalidItemErrorMessage
-	
-	^'Item is not in catalog'! !
-
-!Cart methodsFor: 'error messages' stamp: 'HernanWilkinson 6/17/2013 17:45'!
-invalidQuantityErrorMessage
-	
-	^'Invalid number of items'! !
-
-
-!Cart methodsFor: 'assertions' stamp: 'HernanWilkinson 6/17/2013 18:06'!
+!Cart methodsFor: 'assertions' stamp: 'GR 11/24/2018 14:00:05'!
 assertIsValidItem: anItem
 
-	(catalog includesKey: anItem) ifFalse: [ self error: self invalidItemErrorMessage ]! !
+	(catalog includesKey: anItem) ifFalse: [ self error: self class invalidItemErrorMessage ]! !
 
-!Cart methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:02:04'!
+!Cart methodsFor: 'assertions' stamp: 'GR 11/24/2018 14:00:09'!
 assertIsValidQuantity: aQuantity
 
-	(aQuantity strictlyPositive and: [aQuantity isInteger]) ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
+	(aQuantity strictlyPositive and: [aQuantity isInteger]) ifFalse: [ self error: self class invalidQuantityErrorMessage ]! !
 
 
 !Cart methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 17:48'!
@@ -466,6 +553,17 @@ Cart class
 acceptingItemsOf: aCatalog
 
 	^self new initializeAcceptingItemsOf: aCatalog ! !
+
+
+!Cart class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:59:18'!
+invalidItemErrorMessage
+	
+	^'Item is not in catalog'! !
+
+!Cart class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:59:01'!
+invalidQuantityErrorMessage
+	
+	^'Invalid number of items'! !
 
 
 !classDefinition: #Cashier category: #TusLibros!
@@ -674,36 +772,11 @@ itemSellByTheStorePrice
 	
 	^10! !
 
-!StoreTestObjectsFactory methodsFor: 'items' stamp: 'ap 11/22/2018 19:59:49'!
-nonRegisteredUserName
-	
-	^'invalidUser'! !
-
-!StoreTestObjectsFactory methodsFor: 'items' stamp: 'ap 11/22/2018 19:59:36'!
-nonRegisteredUserPassword
-	
-	^'invalidPassword'! !
-
-!StoreTestObjectsFactory methodsFor: 'items' stamp: 'ap 11/22/2018 19:56:50'!
-registeredUserName
-	
-	^'validUser'! !
-
-!StoreTestObjectsFactory methodsFor: 'items' stamp: 'ap 11/22/2018 19:57:01'!
-registeredUserPassword
-	
-	^'validPassword'! !
-
 
 !StoreTestObjectsFactory methodsFor: 'cart' stamp: 'HernanWilkinson 6/17/2013 18:08'!
 createCart
 	
 	^Cart acceptingItemsOf: self defaultCatalog! !
-
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'ap 11/22/2018 21:37:11'!
-createTusLibros
-	
-	^TusLibros with: self userDatabase andCatalog: self defaultCatalog andMerchantProcessor: self merchantProcessor andSalesBook: self salesBook! !
 
 !StoreTestObjectsFactory methodsFor: 'cart' stamp: 'HernanWilkinson 6/17/2013 18:08'!
 defaultCatalog
@@ -712,40 +785,23 @@ defaultCatalog
 		at: self itemSellByTheStore put: self itemSellByTheStorePrice;
 		yourself ! !
 
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'ap 11/22/2018 21:40:43'!
-merchantProcessor
 
-	^MerchantProcessorDummy withBehaviour: [ :anAmount :aCreditCard | ].! !
-
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'ap 11/22/2018 21:37:56'!
-salesBook
-
-	^OrderedCollection  new.! !
-
-!StoreTestObjectsFactory methodsFor: 'cart' stamp: 'ap 11/22/2018 19:56:31'!
-userDatabase
-	
-	^ Dictionary new
-		at: self registeredUserName put: self registeredUserPassword;
-		yourself ! !
-
-
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'ap 11/22/2018 21:17:24'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 11/24/2018 13:53:13'!
 expiredCreditCard
 	
-	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber - 1) forOwner: self validNameForCC withNumber: self validaNumberForCC.! !
+	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber - 1) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'ap 11/22/2018 21:17:34'!
-notExpiredCreditCard
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 11/24/2018 13:53:13'!
+validCreditCard
 	
-	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber + 1) forOwner: self validNameForCC withNumber: self validaNumberForCC.! !
+	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber + 1) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
 
 !StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'ap 11/22/2018 21:17:51'!
 validNameForCC
 	^'Hernan Wilkinson'! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'ap 11/22/2018 21:18:20'!
-validaNumberForCC.
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 11/24/2018 13:53:13'!
+validNumberForCC.
 
 	^'validCardNumber'! !
 
@@ -760,6 +816,52 @@ initialize
 today
 	
 	^ today! !
+
+
+!StoreTestObjectsFactory methodsFor: 'user password' stamp: 'GR 11/24/2018 13:51:25'!
+incorrectUserPassword
+	
+	^'invalidPassword'! !
+
+!StoreTestObjectsFactory methodsFor: 'user password' stamp: 'ap 11/22/2018 19:57:01'!
+registeredUserPassword
+	
+	^'validPassword'! !
+
+
+!StoreTestObjectsFactory methodsFor: 'username' stamp: 'ap 11/22/2018 19:59:49'!
+nonRegisteredUserName
+	
+	^'invalidUser'! !
+
+!StoreTestObjectsFactory methodsFor: 'username' stamp: 'ap 11/22/2018 19:56:50'!
+registeredUserName
+	
+	^'validUser'! !
+
+
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/22/2018 21:37:11'!
+createTusLibros
+	
+	^TusLibros with: self userDatabase andCatalog: self defaultCatalog andMerchantProcessor: self merchantProcessor andSalesBook: self salesBook! !
+
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/22/2018 21:37:56'!
+salesBook
+
+	^OrderedCollection  new.! !
+
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/22/2018 19:56:31'!
+userDatabase
+	
+	^ Dictionary new
+		at: self registeredUserName put: self registeredUserPassword;
+		yourself ! !
+
+
+!StoreTestObjectsFactory methodsFor: 'merchant processor' stamp: 'ap 11/22/2018 21:40:43'!
+merchantProcessor
+
+	^MerchantProcessorDummy withBehaviour: [ :anAmount :aCreditCard | ].! !
 
 
 !classDefinition: #TusLibros category: #TusLibros!
@@ -780,18 +882,18 @@ initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMercha
 	salesBook := aSalesBook .! !
 
 
-!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:11:19'!
-assertPassword: password forUser: user.
+!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 14:04:54'!
+assertPassword: aPassword matchesUser: aUsername.
 	
-	(userDatabase at: user) = password ifFalse:[
-	self error: self class invalidPasswordErrorDescription].! !
+	(userDatabase at: aUsername) = aPassword ifFalse:[
+	self error: self class invalidPasswordErrorMessage].! !
 
-!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:10:47'!
-assertUserInDatabase: user.
+!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 14:04:11'!
+assertUserInDatabase: aUsername.
 	
 	
-	userDatabase at:user  ifAbsent:[
-	self error: self class invalidUserErrorDescription].! !
+	userDatabase at:aUsername  ifAbsent:[
+	self error: self class invalidUserErrorMessage].! !
 
 
 !TusLibros methodsFor: 'queries' stamp: 'ap 11/22/2018 21:02:18'!
@@ -806,24 +908,24 @@ listCart: aCartID
 	^list.! !
 
 
-!TusLibros methodsFor: 'adding' stamp: 'GR 11/24/2018 13:10:18'!
+!TusLibros methodsFor: 'adding' stamp: 'GR 11/24/2018 13:39:15'!
 add: anAmount of: anItem toCart: aCartID
 
 	|cart|
 	cart:=carts at: aCartID ifAbsent:[
-	self error: self class invalidCartID].
+	self error: self class invalidCartIDErrorMessage].
 
 	cart add: anAmount of: anItem.! !
 
 
-!TusLibros methodsFor: 'checkout' stamp: 'ap 11/22/2018 21:31:58'!
-checkOutCart: cartID withCreditCard: creditCard
+!TusLibros methodsFor: 'checkout' stamp: 'GR 11/24/2018 14:03:57'!
+checkOutCart: aCartID withCreditCard: aCreditCard
 
 	|cart |
 	
-	cart:=carts at: cartID .
+	cart:=carts at: aCartID .
 	
-	Cashier toCheckout: cart charging: creditCard throught: merchantProcessor on: DateAndTime now registeringOn: salesBook.! !
+	Cashier toCheckout: cart charging: aCreditCard throught: merchantProcessor on: DateAndTime now registeringOn: salesBook.! !
 
 
 !TusLibros methodsFor: 'ID generation - private' stamp: 'ap 11/22/2018 20:26:27'!
@@ -837,12 +939,21 @@ nextID
 ! !
 
 
-!TusLibros methodsFor: 'cart creation' stamp: 'ap 11/22/2018 20:45:29'!
-createCartforUser: user withPassword: password
+!TusLibros methodsFor: 'purchases' stamp: 'GR 11/24/2018 14:06:20'!
+listPurchasesFor: aUsername usingPassword: aPassword
 
-|cartID|
-	self assertUserInDatabase: user.
-	self assertPassword: password forUser: user.
+	self assertUserInDatabase: aUsername.
+	self assertPassword: aPassword matchesUser: aUsername.
+
+	^OrderedCollection new! !
+
+
+!TusLibros methodsFor: 'cart creation' stamp: 'GR 11/24/2018 14:04:54'!
+createCartforUser: aUsername usingPassword: aPassword
+
+	|cartID|
+	self assertUserInDatabase: aUsername.
+	self assertPassword: aPassword matchesUser: aUsername.
 
 	cartID:=self nextID.
 	carts at:cartID put: (Cart acceptingItemsOf: catalog).
@@ -855,20 +966,20 @@ createCartforUser: user withPassword: password
 TusLibros class
 	instanceVariableNames: ''!
 
-!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:10:17'!
-invalidCartID
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:44:56'!
+invalidCartIDErrorMessage
 
-	^'Invalid cart id'! !
+	^'The requested cart is not active in the system'! !
 
-!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:11:02'!
-invalidPasswordErrorDescription
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:41:06'!
+invalidPasswordErrorMessage
 
-	^'Password invalida'! !
+	^'The password does not match the username'! !
 
-!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:10:31'!
-invalidUserErrorDescription
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:41:26'!
+invalidUserErrorMessage
 
-	^'Usuario invalido'! !
+	^'The user is not registered in the system'! !
 
 !TusLibros class methodsFor: 'error messages' stamp: 'ap 11/22/2018 21:36:23'!
 with: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesBook: aSalesBook
