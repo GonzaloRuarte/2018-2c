@@ -253,125 +253,105 @@ TestCase subclass: #TusLibrosTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 19:36:18'!
-setUp 
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:26'!
+test01ShouldNotCreateCartWhenUserIsInvalid
 
-	testObjectsFactory := StoreTestObjectsFactory new.
-! !
-
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test01usuarioInvalido
-
-	|interfaz|
+	|tusLibros|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
 	self should:
-	[interfaz createCartforUser: testObjectsFactory nonRegisteredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
+	[tusLibros createCartforUser: testObjectsFactory nonRegisteredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
 	raise: Error
 	withExceptionDo:
 	[:exception| self assert: exception messageText equals: 'Usuario invalido'].
 	
 	! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test02PasswordInvalida
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:35'!
+test02ShouldNotCreateCartWhenPasswordDoesNotMatch
 
-	|interfaz|
+	|tusLibros|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
 	self should:
-	[interfaz createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
+	[tusLibros createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory nonRegisteredUserPassword .]
 	raise: Error
 	withExceptionDo:
 	[:exception| self assert: exception messageText equals: 'Password invalida'].
 	
 	! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test03ListOFCreatedCartIsEmpty
-	|interfaz cartID|
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:14:58'!
+test03ListOfCreatedCartShouldBeEmpty
+	|tusLibros cartID|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
 	
-	cartID:=interfaz createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser: testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
 
-	self assert: (interfaz listCart: cartID) isEmpty.
+	self assert: (tusLibros listCart: cartID) isEmpty.
 	! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test04TwoCreatedCartsHaveDifferentCartIDs
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:06'!
+test04TwoCreatedCartsShouldHaveDifferentIDs
 
-	|interfaz cartID|
+	|tusLibros cartID|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
 	
-	cartID:=interfaz createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
 	
-	self deny: cartID = (interfaz createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword) .
+	self deny: cartID = (tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword) .
 	
 	! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:14'!
 test05ShouldNotAddItemWhenCartIDIsInvalid
 
-	|interfaz|
+	|tusLibros|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
 		
-	self should:[interfaz add: 2 of: testObjectsFactory itemSellByTheStore toCart: 3]
+	self should:[tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: 3]
 	raise: Error
 	withExceptionDo:[:anException|
 		self assert: anException messageText equals: 'Invalid cart id']! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test06ShouldNotAddItemWhenCartCantAddItem
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:22'!
+test06ShouldNotAddInvalidItemForCart
 
-	|interfaz cartID|
+	|tusLibros cartID|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
-	cartID:=interfaz createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
 		
-	self should:[interfaz add: 2 of: testObjectsFactory itemNotSellByTheStore toCart: cartID]
+	self should:[tusLibros add: 2 of: testObjectsFactory itemNotSellByTheStore toCart: cartID]
 	raise: Error
 	withExceptionDo:[:anException|
 		self assert: anException messageText equals: 'Item is not in catalog']! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test06ShouldNotAddItemWhenCartDoesNotSellItem
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:15:34'!
+test07ShouldListCartItemsAddedBeforehand
 
-	|interfaz cartID|
+	|tusLibros cartID|
 	
-	interfaz:= testObjectsFactory createTusLibros .
+	tusLibros:= testObjectsFactory createTusLibros .
 	
-	cartID:=interfaz createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
-		
-	self should:[interfaz add: 2 of: testObjectsFactory itemNotSellByTheStore toCart: cartID]
-	raise: Error
-	withExceptionDo:[:anException|
-		self assert: anException messageText equals: 'Item is not in catalog']! !
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
+	
+	tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+	
+	
+	self assert: ((tusLibros listCart: cartID) includes: testObjectsFactory itemSellByTheStore).! !
 
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:25:20'!
-test07ListOfCartShouldContainItemsAddedBeforehand
-
-	|interfaz cartID|
-	
-	interfaz:= testObjectsFactory createTusLibros .
-	
-	cartID:=interfaz createCartforUser:  testObjectsFactory registeredUserName withPassword: testObjectsFactory registeredUserPassword .
-	
-	interfaz add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.
-	
-	
-	self assert: ((interfaz listCart: cartID) includes: testObjectsFactory itemSellByTheStore).! !
-
-!TusLibrosTest methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:42:26'!
-test08ChechoutFailsWithInvalidCreditCard
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:04:56'!
+test08ShouldNotCheckoutWhenCreditCardIsInvalid
 
 	|tusLibros cartID creditCard|
 	
@@ -389,6 +369,13 @@ test08ChechoutFailsWithInvalidCreditCard
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: 'Can not charge an expired credit card'].
 	
+! !
+
+
+!TusLibrosTest methodsFor: 'setup' stamp: 'ap 11/22/2018 19:36:18'!
+setUp 
+
+	testObjectsFactory := StoreTestObjectsFactory new.
 ! !
 
 
@@ -415,10 +402,10 @@ assertIsValidItem: anItem
 
 	(catalog includesKey: anItem) ifFalse: [ self error: self invalidItemErrorMessage ]! !
 
-!Cart methodsFor: 'assertions' stamp: 'HernanWilkinson 6/17/2013 17:51'!
+!Cart methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:02:04'!
 assertIsValidQuantity: aQuantity
 
-	aQuantity strictlyPositive ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
+	(aQuantity strictlyPositive and: [aQuantity isInteger]) ifFalse: [ self error: self invalidQuantityErrorMessage ]! !
 
 
 !Cart methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 17:48'!
@@ -611,15 +598,16 @@ Object subclass: #MerchantProcessorDummy
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:38:42'!
-debit: anAmount from: aCreditCard 
-
-	^debitBehavior value: anAmount value: aCreditCard ! !
-
-!MerchantProcessorDummy methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:39:21'!
+!MerchantProcessorDummy methodsFor: 'initialization' stamp: 'ap 11/22/2018 21:39:21'!
 initializeWithBehaviour: aBehaviour
 
 	debitBehavior:= aBehaviour.! !
+
+
+!MerchantProcessorDummy methodsFor: 'merchant processor protocol' stamp: 'ap 11/22/2018 21:38:42'!
+debit: anAmount from: aCreditCard 
+
+	^debitBehavior value: anAmount value: aCreditCard ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -627,7 +615,7 @@ initializeWithBehaviour: aBehaviour
 MerchantProcessorDummy class
 	instanceVariableNames: ''!
 
-!MerchantProcessorDummy class methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:39:53'!
+!MerchantProcessorDummy class methodsFor: 'instance creation' stamp: 'ap 11/22/2018 21:39:53'!
 withBehaviour: aDebitBehaviour
 
 	^self new initializeWithBehaviour: aDebitBehaviour.! !
@@ -781,7 +769,54 @@ Object subclass: #TusLibros
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibros methodsFor: 'initialization' stamp: 'ap 11/22/2018 21:31:58'!
+!TusLibros methodsFor: 'initialization' stamp: 'ap 11/22/2018 21:30:43'!
+initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesBook: aSalesBook
+
+	userDatabase := aUserDatabase .
+	catalog:= aCatalog .
+	carts:= Dictionary new.
+	counter:=0.
+	merchantProcessor := aMerchantProcessor .
+	salesBook := aSalesBook .! !
+
+
+!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:11:19'!
+assertPassword: password forUser: user.
+	
+	(userDatabase at: user) = password ifFalse:[
+	self error: self class invalidPasswordErrorDescription].! !
+
+!TusLibros methodsFor: 'assertions' stamp: 'GR 11/24/2018 13:10:47'!
+assertUserInDatabase: user.
+	
+	
+	userDatabase at:user  ifAbsent:[
+	self error: self class invalidUserErrorDescription].! !
+
+
+!TusLibros methodsFor: 'queries' stamp: 'ap 11/22/2018 21:02:18'!
+listCart: aCartID 
+
+	|cart list|
+	
+	cart:=carts at: aCartID .
+	list:=Bag new.
+	cart do: [:anItem| list add: anItem].
+	
+	^list.! !
+
+
+!TusLibros methodsFor: 'adding' stamp: 'GR 11/24/2018 13:10:18'!
+add: anAmount of: anItem toCart: aCartID
+
+	|cart|
+	cart:=carts at: aCartID ifAbsent:[
+	self error: self class invalidCartID].
+
+	cart add: anAmount of: anItem.! !
+
+
+!TusLibros methodsFor: 'checkout' stamp: 'ap 11/22/2018 21:31:58'!
 checkOutCart: cartID withCreditCard: creditCard
 
 	|cart |
@@ -790,7 +825,19 @@ checkOutCart: cartID withCreditCard: creditCard
 	
 	Cashier toCheckout: cart charging: creditCard throught: merchantProcessor on: DateAndTime now registeringOn: salesBook.! !
 
-!TusLibros methodsFor: 'initialization' stamp: 'ap 11/22/2018 20:45:29'!
+
+!TusLibros methodsFor: 'ID generation - private' stamp: 'ap 11/22/2018 20:26:27'!
+nextID
+
+	|nextID|
+	nextID:=counter.
+	counter:=counter+1.
+	^nextID.
+
+! !
+
+
+!TusLibros methodsFor: 'cart creation' stamp: 'ap 11/22/2018 20:45:29'!
 createCartforUser: user withPassword: password
 
 |cartID|
@@ -802,83 +849,28 @@ createCartforUser: user withPassword: password
 	
 	^ cartID.! !
 
-!TusLibros methodsFor: 'initialization' stamp: 'ap 11/22/2018 21:30:43'!
-initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesBook: aSalesBook
-
-	userDatabase := aUserDatabase .
-	catalog:= aCatalog .
-	carts:= Dictionary new.
-	counter:=0.
-	merchantProcessor := aMerchantProcessor .
-	salesBook := aSalesBook .! !
-
-!TusLibros methodsFor: 'initialization' stamp: 'ap 11/22/2018 20:26:27'!
-nextID
-
-	|nextID|
-	nextID:=counter.
-	counter:=counter+1.
-	^nextID.
-
-! !
-
-
-!TusLibros methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 19:54:35'!
-assertPassword: password forUser: user.
-	
-	(userDatabase at: user) = password ifFalse:[
-	self error: self class InvalidPasswordErrorDescription].! !
-
-!TusLibros methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 19:53:08'!
-assertUserInDatabase: user.
-	
-	
-	userDatabase at:user  ifAbsent:[
-	self error: self class InvalidUserErrorDescription].! !
-
-
-!TusLibros methodsFor: 'query' stamp: 'ap 11/22/2018 20:47:30'!
-add: anAmount of: anItem toCart: aCartID
-
-	|cart|
-	cart:=carts at: aCartID ifAbsent:[
-	self error: self class InvalidCartID].
-
-	cart add: anAmount of: anItem.! !
-
-!TusLibros methodsFor: 'query' stamp: 'ap 11/22/2018 21:02:18'!
-listCart: aCartID 
-
-	|cart list|
-	
-	cart:=carts at: aCartID .
-	list:=Bag new.
-	cart do: [:anItem| list add: anItem].
-	
-	^list.! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TusLibros class' category: #TusLibros!
 TusLibros class
 	instanceVariableNames: ''!
 
-!TusLibros class methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 20:36:54'!
-InvalidCartID
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:10:17'!
+invalidCartID
 
 	^'Invalid cart id'! !
 
-!TusLibros class methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 19:47:21'!
-InvalidPasswordErrorDescription
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:11:02'!
+invalidPasswordErrorDescription
 
 	^'Password invalida'! !
 
-!TusLibros class methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 19:43:21'!
-InvalidUserErrorDescription
+!TusLibros class methodsFor: 'error messages' stamp: 'GR 11/24/2018 13:10:31'!
+invalidUserErrorDescription
 
 	^'Usuario invalido'! !
 
-!TusLibros class methodsFor: 'as yet unclassified' stamp: 'ap 11/22/2018 21:36:23'!
+!TusLibros class methodsFor: 'error messages' stamp: 'ap 11/22/2018 21:36:23'!
 with: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesBook: aSalesBook
 
 	^self new initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesBook: aSalesBook .! !
