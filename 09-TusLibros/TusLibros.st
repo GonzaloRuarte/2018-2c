@@ -446,7 +446,7 @@ test13PurchasesListShouldNotBeEmptyAfterSuccessfullyCheckingOut
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/24/2018 13:57:39'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'AP 11/25/2018 16:37:48'!
 test14ShouldListPurchasesMadeBeforehand
 
 	|tusLibros cartID creditCard|
@@ -461,7 +461,7 @@ test14ShouldListPurchasesMadeBeforehand
 	
 	tusLibros checkOutCart: cartID withCreditCard: creditCard.
 	
-	self assert: ((tusLibros listPurchasesFor: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword) includes: testObjectsFactory successfulSale).
+	self assert: (tusLibros IncludesSale:  testObjectsFactory successfulSale).
 	
 ! !
 
@@ -726,6 +726,11 @@ Object subclass: #Sale
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
+!Sale methodsFor: 'total' stamp: 'AP 11/25/2018 16:34:29'!
+hasSameTotalAs: otherSale
+	
+	^ total = otherSale total.! !
+
 !Sale methodsFor: 'total' stamp: 'HernanWilkinson 6/17/2013 18:48'!
 total
 	
@@ -863,6 +868,12 @@ merchantProcessor
 
 	^MerchantProcessorDummy withBehaviour: [ :anAmount :aCreditCard | ].! !
 
+
+!StoreTestObjectsFactory methodsFor: 'sale' stamp: 'AP 11/25/2018 16:20:31'!
+successfulSale
+
+	^Sale of: 10.! !
+
 
 !classDefinition: #TusLibros category: #TusLibros!
 Object subclass: #TusLibros
@@ -918,14 +929,14 @@ add: anAmount of: anItem toCart: aCartID
 	cart add: anAmount of: anItem.! !
 
 
-!TusLibros methodsFor: 'checkout' stamp: 'GR 11/24/2018 14:03:57'!
+!TusLibros methodsFor: 'checkout' stamp: 'AP 11/25/2018 16:17:28'!
 checkOutCart: aCartID withCreditCard: aCreditCard
 
 	|cart |
 	
 	cart:=carts at: aCartID .
 	
-	Cashier toCheckout: cart charging: aCreditCard throught: merchantProcessor on: DateAndTime now registeringOn: salesBook.! !
+	(Cashier toCheckout: cart charging: aCreditCard throught: merchantProcessor on: DateAndTime now registeringOn: salesBook) checkOut.! !
 
 
 !TusLibros methodsFor: 'ID generation - private' stamp: 'ap 11/22/2018 20:26:27'!
@@ -939,13 +950,13 @@ nextID
 ! !
 
 
-!TusLibros methodsFor: 'purchases' stamp: 'GR 11/24/2018 14:06:20'!
+!TusLibros methodsFor: 'purchases' stamp: 'AP 11/25/2018 16:15:21'!
 listPurchasesFor: aUsername usingPassword: aPassword
 
 	self assertUserInDatabase: aUsername.
 	self assertPassword: aPassword matchesUser: aUsername.
 
-	^OrderedCollection new! !
+	^salesBook ! !
 
 
 !TusLibros methodsFor: 'cart creation' stamp: 'GR 11/24/2018 14:04:54'!
@@ -959,6 +970,12 @@ createCartforUser: aUsername usingPassword: aPassword
 	carts at:cartID put: (Cart acceptingItemsOf: catalog).
 	
 	^ cartID.! !
+
+
+!TusLibros methodsFor: 'testing' stamp: 'AP 11/25/2018 16:36:59'!
+IncludesSale: aSale
+
+	^salesBook anySatisfy: [:sale | sale hasSameTotalAs: aSale].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
