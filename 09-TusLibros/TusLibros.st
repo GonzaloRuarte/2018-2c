@@ -435,6 +435,32 @@ test11ShouldNotAddItemWhenCartIDIsInvalid
 	withExceptionDo:[:anException|
 		self assert: anException messageText equals: TusLibros invalidCartIDErrorMessage.]! !
 
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 19:11:54'!
+test11_2ShouldListCartWhenCartIDIsInvalid
+
+	|tusLibros|
+	
+	tusLibros:= testObjectsFactory createDefaultTusLibros .
+	
+		
+	self should:[tusLibros listCart: 2 ]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: anException messageText equals: TusLibros invalidCartIDErrorMessage.]! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 19:12:24'!
+test11_3ShouldCheckoutWhenCartIDIsInvalid
+
+	|tusLibros|
+	
+	tusLibros:= testObjectsFactory createDefaultTusLibros .
+	
+		
+	self should:[tusLibros checkOutCart: 3 andCreditCardMonth: testObjectsFactory validCreditCardMonth andCreditCardYear: testObjectsFactory validCreditCardYear andCCOwner: testObjectsFactory validNameForCC andCCNumber: testObjectsFactory validNumberForCC.]
+	raise: Error
+	withExceptionDo:[:anException|
+		self assert: anException messageText equals: TusLibros invalidCartIDErrorMessage.]! !
+
 !TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/25/2018 20:33:09'!
 test12TwoCreatedCartsShouldHaveDifferentIDs
 
@@ -625,8 +651,115 @@ test22BoughtItemShouldAppearAtPurchasesList
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/25/2018 17:07:19'!
-testXXManipularTiempo
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:22:41'!
+test23ShouldNotCheckoutAfter30MinutesOfInactivity
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	tusLibros add: 1 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+	
+	alterableClock offset: 1800.
+	
+	self should:
+	[tusLibros checkOutCart: cartID andCreditCardMonth: testObjectsFactory validCreditCardMonth andCreditCardYear: testObjectsFactory validCreditCardYear andCCOwner: testObjectsFactory validNameForCC andCCNumber: testObjectsFactory validNumberForCC.]
+	raise: Error
+	withExceptionDo:[
+		:anError | self assert: anError messageText equals: TusLibros cartInactiveForTooLongErrorMessage]
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:22:31'!
+test24ShouldNotAddToCartAfter30MinutesOfInactivity
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	alterableClock offset: 1800.
+	
+	self should:
+	[tusLibros add: 2 of: testObjectsFactory itemSellByTheStore toCart: cartID.]
+	raise: Error
+	withExceptionDo:[
+		:anError | self assert: anError messageText equals: TusLibros cartInactiveForTooLongErrorMessage]
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:24:43'!
+test25ShouldNotListCartAfter30MinutesOfInactivity
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	alterableClock offset: 1800.
+	
+	self should:
+	[tusLibros listCart: cartID  ]
+	raise: Error
+	withExceptionDo:[
+		:anError | self assert: anError messageText equals: TusLibros cartInactiveForTooLongErrorMessage]
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:37:43'!
+test26CheckoutShouldExtendCartAvailabilityTimeframe
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	tusLibros add: 1 of: testObjectsFactory itemSellByTheStore toCart: cartID.	
+	alterableClock offset: 900.
+
+	
+	tusLibros checkOutCart: cartID andCreditCardMonth: testObjectsFactory validCreditCardMonth andCreditCardYear: testObjectsFactory validCreditCardYear andCCOwner: testObjectsFactory validNameForCC andCCNumber: testObjectsFactory validNumberForCC.
+
+	alterableClock offset: 1800.
+
+	tusLibros listCart: cartID.
+		
+	self assert: (tusLibros isItemIncludedInSales: testObjectsFactory itemSellByTheStore forUser: testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword)
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:39:55'!
+test27AddingAnItemShouldExtendCartAvailabilityTimeframe
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	alterableClock offset: 900.
+tusLibros add: 1 of: testObjectsFactory itemSellByTheStore toCart: cartID.
+
+	alterableClock offset: 1800.
+
+	self assert: (tusLibros cartOfID: cartID includes: testObjectsFactory itemSellByTheStore).
+! !
+
+!TusLibrosTest methodsFor: 'tests' stamp: 'ap 11/26/2018 18:42:06'!
+test28ListingACartShouldExtendAvailabilityTimeframe
+
+	|tusLibros cartID alterableClock|
+	alterableClock := AlterableClock  new.
+	tusLibros:= testObjectsFactory createTusLibrosWithClock: alterableClock .
+
+	cartID:=tusLibros createCartforUser:  testObjectsFactory registeredUserName usingPassword: testObjectsFactory registeredUserPassword .
+	
+	alterableClock offset: 900.
+	tusLibros listCart: cartID.
+
+	alterableClock offset: 1800.
+
+	self assert: (tusLibros isEmpty: cartID).
 ! !
 
 
@@ -726,6 +859,86 @@ invalidQuantityErrorMessage
 	^'Invalid number of items'! !
 
 
+!classDefinition: #CartSession category: #TusLibros!
+Object subclass: #CartSession
+	instanceVariableNames: 'owner cart timestamp systemFacade'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 21:18:55'!
+assertNot30MinutesHavePassed
+
+	| timeElapsed|
+	
+	timeElapsed := self now - timestamp .
+	
+	timeElapsed <(Duration seconds: 1800) ifFalse: [self error: self cartInactiveForTooLongErrorMessage]! !
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 20:51:16'!
+initializeForCart: aCart ownedBy: anOwner forFacade: aSystemFacade
+
+cart:=aCart.
+owner :=anOwner.
+systemFacade:=aSystemFacade .
+timestamp := self now.! !
+
+!CartSession methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 20:51:30'!
+now
+
+	^systemFacade now.! !
+
+
+!CartSession methodsFor: 'listing' stamp: 'ap 11/26/2018 21:18:39'!
+cartInactiveForTooLongErrorMessage
+
+	^ systemFacade class cartInactiveForTooLongErrorMessage.! !
+
+!CartSession methodsFor: 'listing' stamp: 'ap 11/26/2018 21:17:32'!
+checkoutCharging: creditCard throught: merchantProcessor on: aDate registeringOn: salesBook
+
+	self assertNot30MinutesHavePassed.
+	(Cashier toCheckout: cart charging: creditCard throught: merchantProcessor on: aDate registeringOn: salesBook) checkOut.
+	timestamp := self now.! !
+
+!CartSession methodsFor: 'listing' stamp: 'ap 11/26/2018 21:17:28'!
+listItems
+	
+	|list|
+	
+	self assertNot30MinutesHavePassed.
+	list:=Bag new.
+	
+	cart do:[:anItem| list add: anItem].
+	timestamp := self now.
+	^list.! !
+
+
+!CartSession methodsFor: 'adding' stamp: 'ap 11/26/2018 21:17:38'!
+add: aSmallInteger of: anItem 
+
+	self assertNot30MinutesHavePassed.
+	cart add: aSmallInteger  of: anItem.
+	
+	timestamp := self now.! !
+
+
+!CartSession methodsFor: 'accesing' stamp: 'ap 11/26/2018 21:16:06'!
+owner
+	^owner! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CartSession class' category: #TusLibros!
+CartSession class
+	instanceVariableNames: ''!
+
+!CartSession class methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 20:50:00'!
+forCart: aCart ownedBy: anOwner forFacade: aFacade
+
+	^self new initializeForCart: aCart ownedBy: anOwner forFacade: aFacade.! !
+
+
 !classDefinition: #Cashier category: #TusLibros!
 Object subclass: #Cashier
 	instanceVariableNames: 'cart salesBook merchantProcessor creditCard total'
@@ -819,6 +1032,56 @@ cartCanNotBeEmptyErrorMessage
 creditCardHasNoCreditErrorMessage
 	
 	^'Credit card has no credit'! !
+
+
+!classDefinition: #Clock category: #TusLibros!
+Object subclass: #Clock
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!Clock methodsFor: 'nil' stamp: 'ap 11/26/2018 17:52:16'!
+now
+
+	self subclassResponsibility ! !
+
+
+!classDefinition: #AlterableClock category: #TusLibros!
+Clock subclass: #AlterableClock
+	instanceVariableNames: 'offset'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!AlterableClock methodsFor: 'nil' stamp: 'ap 11/26/2018 17:51:03'!
+now
+
+	^DateAndTime now + offset.! !
+
+
+!AlterableClock methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 18:00:49'!
+initialize
+
+	offset := Duration seconds: 0.! !
+
+!AlterableClock methodsFor: 'as yet unclassified' stamp: 'ap 11/26/2018 17:51:29'!
+offset: seconds
+
+	offset := Duration seconds: seconds.! !
+
+
+!classDefinition: #RealClock category: #TusLibros!
+Clock subclass: #RealClock
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'TusLibros'!
+
+!RealClock methodsFor: 'nil' stamp: 'ap 11/26/2018 17:51:59'!
+now
+
+	^DateAndTime now.! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
@@ -1039,15 +1302,25 @@ registeredUserName
 	^'validUser'! !
 
 
-!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'GR 11/25/2018 20:34:14'!
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/26/2018 17:31:10'!
 createDefaultTusLibros
 	
-	^TusLibros with: self defaultUserDatabase andCatalog: self defaultCatalog andMerchantProcessor: self defaultMerchantProcessor andSalesLedger: self defaultSalesLedger! !
+	^TusLibros with: self defaultUserDatabase andCatalog: self defaultCatalog andMerchantProcessor: self defaultMerchantProcessor andSalesLedger: self defaultSalesLedger andClock: self defaultClock.! !
 
-!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'GR 11/25/2018 20:28:54'!
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/26/2018 18:12:58'!
+createTusLibrosWithClock: aClock
+	
+	^TusLibros with: self defaultUserDatabase andCatalog: self defaultCatalog andMerchantProcessor: self defaultMerchantProcessor andSalesLedger: self defaultSalesLedger andClock: aClock.! !
+
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/26/2018 17:33:27'!
 createTusLibrosWithMerchantProcessorBehaviour: aBehaviour
 	
-	^TusLibros with: self defaultUserDatabase andCatalog: self defaultCatalog andMerchantProcessor: (self merchantProcessorWithBehaviour: aBehaviour) andSalesLedger: self defaultSalesLedger! !
+	^TusLibros with: self defaultUserDatabase andCatalog: self defaultCatalog andMerchantProcessor: (self merchantProcessorWithBehaviour: aBehaviour) andSalesLedger: self defaultSalesLedger andClock: self defaultClock ! !
+
+!StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'ap 11/26/2018 18:13:08'!
+defaultClock
+
+	^RealClock new.! !
 
 !StoreTestObjectsFactory methodsFor: 'tuslibros' stamp: 'GR 11/25/2018 20:28:42'!
 defaultSalesLedger
@@ -1085,28 +1358,50 @@ defaultSale
 
 !classDefinition: #TusLibros category: #TusLibros!
 Object subclass: #TusLibros
-	instanceVariableNames: 'userDatabase catalog carts merchantProcessor salesLedger cartIDGenerator usersByCartID'
+	instanceVariableNames: 'userDatabase catalog cartsSessions merchantProcessor salesLedger cartIDGenerator clock transactionIDGenerator'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TusLibros methodsFor: 'initialization' stamp: 'GR 11/25/2018 17:46:42'!
-initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger
+!TusLibros methodsFor: 'initialization' stamp: 'ap 11/26/2018 21:08:36'!
+initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger andClock: aClock
 
 	userDatabase := aUserDatabase .
 	catalog:= aCatalog .
-	carts:= Dictionary new.
+	cartsSessions := Dictionary new.
 	cartIDGenerator:=0.
+	transactionIDGenerator:=0.
 	merchantProcessor := aMerchantProcessor .
 	salesLedger := aSalesLedger .
-	usersByCartID := Dictionary new.! !
+	clock:= aClock.
+! !
 
+
+!TusLibros methodsFor: 'assertions' stamp: 'ap 11/26/2018 20:53:44'!
+assertCartIDIsValid: aCartID.
+
+	cartsSessions at: aCartID ifAbsent:[
+	self error: self class invalidCartIDErrorMessage].! !
+
+!TusLibros methodsFor: 'assertions' stamp: 'ap 11/26/2018 20:59:00'!
+assertCartValidity:aCartID thenDo:aBlock
+
+	self assertCartIDIsValid: aCartID.
+	aBlock value.
+	! !
 
 !TusLibros methodsFor: 'assertions' stamp: 'GR 11/25/2018 19:49:14'!
 assertPassword: aPassword matchesUser: aUsername.
 	
 	(userDatabase at: aUsername) = aPassword ifFalse:[
 	self error: self class incorrectPasswordErrorMessage ].! !
+
+!TusLibros methodsFor: 'assertions' stamp: 'ap 11/26/2018 18:56:50'!
+assertRegisteredUser: aUsername withPassword: aPassword
+
+	self assertUserInDatabase: aUsername.
+	self assertPassword: aPassword matchesUser: aUsername.
+! !
 
 !TusLibros methodsFor: 'assertions' stamp: 'GR 11/25/2018 19:50:06'!
 assertUserInDatabase: aUsername.
@@ -1116,47 +1411,58 @@ assertUserInDatabase: aUsername.
 	self error: self class nonRegisteredUserErrorMessage ].! !
 
 
-!TusLibros methodsFor: 'queries' stamp: 'GR 11/25/2018 19:19:15'!
+!TusLibros methodsFor: 'queries' stamp: 'ap 11/26/2018 21:06:31'!
 listCart: aCartID 
 
-	|cart list|
-	
-	cart:=carts at: aCartID .
-	list:=Bag new.
-	cart do: [:anItem| list add: anItem].
+	|cartSession list|
+	self assertCartValidity:aCartID thenDo:
+	[
+	cartSession:=cartsSessions at: aCartID .
+	list:=cartSession listItems.
+	].
 	
 	^list.! !
 
 
-!TusLibros methodsFor: 'adding' stamp: 'GR 11/24/2018 13:39:15'!
+!TusLibros methodsFor: 'adding' stamp: 'ap 11/26/2018 20:53:14'!
 add: anAmount of: anItem toCart: aCartID
 
-	|cart|
-	cart:=carts at: aCartID ifAbsent:[
-	self error: self class invalidCartIDErrorMessage].
+	self assertCartValidity:aCartID thenDo:
+	[(cartsSessions at: aCartID) add: anAmount of: anItem.].
+! !
 
-	cart add: anAmount of: anItem.! !
-
-
-!TusLibros methodsFor: 'checkout - private' stamp: 'GR 11/25/2018 17:50:33'!
-salesBookFor: aCartID
-
-	^salesLedger at: (usersByCartID at: aCartID)! !
+!TusLibros methodsFor: 'adding' stamp: 'ap 11/26/2018 19:04:22'!
+do: aBlock thenUpdateTimestampFor: aCartID.
 
 
-!TusLibros methodsFor: 'checkout' stamp: 'GR 11/25/2018 21:03:13'!
+	aBlock value.
+	self updateTimeStampFor: aCartID.
+	! !
+
+
+!TusLibros methodsFor: 'checkout - private' stamp: 'ap 11/26/2018 21:14:43'!
+salesBookForOwnerOf: aCartID
+
+	^salesLedger at: (cartsSessions at: aCartID) owner! !
+
+
+!TusLibros methodsFor: 'checkout' stamp: 'ap 11/26/2018 21:02:21'!
 checkOutCart: aCartID andCreditCardMonth: aCreditCardMonth andCreditCardYear: aCreditCardYear andCCOwner: aCCOwnerName andCCNumber: aCCNumber
 
-	|cart creditCard|
+	|cartSession creditCard|
+
+	self assertCartValidity:aCartID thenDo:
+	[
+	cartSession:=cartsSessions at: aCartID .
 	
-	cart:=carts at: aCartID .
 	creditCard:=CreditCard expiringOn: (Month month: aCreditCardMonth year: aCreditCardYear) forOwner: aCCOwnerName withNumber: aCCNumber.
-	(Cashier toCheckout: cart charging: creditCard throught: merchantProcessor on: DateAndTime now registeringOn: ( self salesBookFor: aCartID)) checkOut.
-	^aCartID! !
+	cartSession checkoutCharging: creditCard throught: merchantProcessor on: self now registeringOn: ( self salesBookForOwnerOf: aCartID)
+	].
+	^self nextTransactionID! !
 
 
-!TusLibros methodsFor: 'ID generation - private' stamp: 'GR 11/25/2018 17:33:36'!
-nextID
+!TusLibros methodsFor: 'ID generation - private' stamp: 'ap 11/26/2018 18:49:45'!
+nextCartID
 
 	|nextID|
 	nextID:=cartIDGenerator .
@@ -1165,41 +1471,49 @@ nextID
 
 ! !
 
+!TusLibros methodsFor: 'ID generation - private' stamp: 'ap 11/26/2018 18:50:04'!
+nextTransactionID
 
-!TusLibros methodsFor: 'purchases' stamp: 'GR 11/25/2018 17:34:46'!
+	|nextID|
+	nextID:=transactionIDGenerator .
+	transactionIDGenerator:=transactionIDGenerator+1.
+	^nextID.
+
+! !
+
+
+!TusLibros methodsFor: 'purchases' stamp: 'ap 11/26/2018 18:57:45'!
 listPurchasesFor: aUsername usingPassword: aPassword
 
-	self assertUserInDatabase: aUsername.
-	self assertPassword: aPassword matchesUser: aUsername.
+	self assertRegisteredUser: aUsername withPassword: aPassword.
 
 	^(salesLedger at: aUsername)! !
 
 
-!TusLibros methodsFor: 'cart creation' stamp: 'GR 11/25/2018 17:47:58'!
+!TusLibros methodsFor: 'cart creation' stamp: 'ap 11/26/2018 21:05:13'!
 createCartforUser: aUsername usingPassword: aPassword
 
 	|cartID|
-	self assertUserInDatabase: aUsername.
-	self assertPassword: aPassword matchesUser: aUsername.
-
-	cartID:=self nextID.
-	carts at:cartID put: (Cart acceptingItemsOf: catalog).
-	usersByCartID at: cartID put: aUsername.
+	self assertRegisteredUser: aUsername withPassword: aPassword.
+	cartID:=self nextCartID.
 	
+	
+	cartsSessions at:cartID put: (CartSession forCart: (Cart acceptingItemsOf: catalog) ownedBy: aUsername forFacade: self).
+		
 	^ cartID.! !
 
 
-!TusLibros methodsFor: 'testing' stamp: 'GR 11/25/2018 16:56:10'!
+!TusLibros methodsFor: 'testing' stamp: 'ap 11/26/2018 18:23:59'!
 cartOfID: aCartID includes: anItem
-	^(carts at: aCartID) includes: anItem! !
+	^(self listCart: aCartID ) includes: anItem! !
 
-!TusLibros methodsFor: 'testing' stamp: 'GR 11/25/2018 19:44:16'!
+!TusLibros methodsFor: 'testing' stamp: 'ap 11/26/2018 18:24:04'!
 cartOfID: aCartID occurrencesOf: anItem
-	^(carts at: aCartID) occurrencesOf: anItem! !
+	^(self listCart: aCartID )  occurrencesOf: anItem! !
 
-!TusLibros methodsFor: 'testing' stamp: 'GR 11/25/2018 16:54:58'!
+!TusLibros methodsFor: 'testing' stamp: 'ap 11/26/2018 18:25:52'!
 isEmpty: aCartID
-	^(carts at: aCartID) isEmpty! !
+	^(self listCart: aCartID) isEmpty! !
 
 !TusLibros methodsFor: 'testing' stamp: 'GR 11/25/2018 18:02:16'!
 isItemIncludedInSales: anItem forUser: aUsername usingPassword: aPassword
@@ -1218,11 +1532,27 @@ isSaleRegistered: aSale forUser: aUsername usingPassword: aPassword
 	list := (self listPurchasesFor: aUsername usingPassword: aPassword).
 	^(list size = 1 )and: [list anySatisfy: [:anotherSale | anotherSale hasSameTotalAs: aSale]].! !
 
+
+!TusLibros methodsFor: 'update clock - private' stamp: 'ap 11/26/2018 17:59:16'!
+updateTimeStampFor: aCartID.
+	
+	cartTimestamps at: aCartID put: clock now! !
+
+
+!TusLibros methodsFor: 'Clock' stamp: 'ap 11/26/2018 21:07:10'!
+now
+	^clock now.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TusLibros class' category: #TusLibros!
 TusLibros class
 	instanceVariableNames: ''!
+
+!TusLibros class methodsFor: 'error messages' stamp: 'ap 11/26/2018 17:56:29'!
+cartInactiveForTooLongErrorMessage
+
+	^'The cart was inactive for more than 30 minutes'! !
 
 !TusLibros class methodsFor: 'error messages' stamp: 'GR 11/25/2018 19:48:52'!
 incorrectPasswordErrorMessage
@@ -1240,7 +1570,7 @@ nonRegisteredUserErrorMessage
 	^'The user is not registered in the system'! !
 
 
-!TusLibros class methodsFor: 'instance creation' stamp: 'GR 11/25/2018 17:38:19'!
-with: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger
+!TusLibros class methodsFor: 'instance creation' stamp: 'ap 11/26/2018 17:33:00'!
+with: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger andClock: aClock
 
-	^self new initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger .! !
+	^self new initializeWith: aUserDatabase andCatalog: aCatalog andMerchantProcessor: aMerchantProcessor andSalesLedger: aSalesLedger andClock: aClock .! !
