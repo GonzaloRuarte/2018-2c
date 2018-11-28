@@ -805,11 +805,11 @@ Object subclass: #CartSession
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CartSession methodsFor: 'assertions' stamp: 'GR 11/27/2018 01:18:43'!
-assertCartActivityThenDo: aBlock
+!CartSession methodsFor: 'assertions' stamp: 'GR 11/28/2018 11:37:02'!
+assertCartIsNotInactiveThenDo: aBlock
 
 	self assertWasCartActiveRecently.
-	aBlock value.
+	aBlock value: self.
 	lastTimeUsed := self now.! !
 
 !CartSession methodsFor: 'assertions' stamp: 'GR 11/27/2018 01:16:15'!
@@ -822,28 +822,26 @@ assertWasCartActiveRecently
 	timeElapsed <(Duration seconds: 1800) ifFalse: [self error: self cartInactiveForTooLongErrorMessage]! !
 
 
-!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:19:08'!
+!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:26:39'!
 addToCart: anAmount of: anItem 
 
-	self assertCartActivityThenDo:[
-	cart addToCart: anAmount  of: anItem.]! !
 
-!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:19:16'!
+	cart addToCart: anAmount  of: anItem.! !
+
+!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:26:46'!
 checkoutCharging: creditCard through: merchantProcessor on: aDate registeringOn: salesBook
 
-	self assertCartActivityThenDo:[
-	(Cashier toCheckout: cart charging: creditCard through: merchantProcessor on: aDate registeringOn: salesBook) checkOut.]! !
 
-!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:19:32'!
+	(Cashier toCheckout: cart charging: creditCard through: merchantProcessor on: aDate registeringOn: salesBook) checkOut.! !
+
+!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:27:43'!
 listCartItems
 	
 	|list|
 	
-	self assertCartActivityThenDo:[
 	list:=Bag new.
 	
 	cart do:[:anItem| list add: anItem].
-	lastTimeUsed := self now.].
 	^list.! !
 
 
@@ -1365,18 +1363,18 @@ assertIsRegistered: aUsername authenticatedBy: aPassword
 	self error: self class nonRegisteredUserErrorMessage ] )= aPassword ifFalse:[
 	self error: self class incorrectPasswordErrorMessage ].! !
 
-!TusLibrosSystemFacade methodsFor: 'assertions' stamp: 'GR 11/27/2018 01:10:01'!
+!TusLibrosSystemFacade methodsFor: 'assertions' stamp: 'GR 11/28/2018 11:31:11'!
 assertValidityOfCartIdentifiedBy:aCartID thenDo:aBlock
 
 	self assertCartIDIsValid: aCartID.
-	aBlock value.
+	(cartsSessions at: aCartID) assertCartIsNotInactiveThenDo: aBlock
 	! !
 
 
-!TusLibrosSystemFacade methodsFor: 'checkout - private' stamp: 'GR 11/26/2018 22:28:41'!
-salesBookForOwnerOf: aCartID
+!TusLibrosSystemFacade methodsFor: 'checkout - private' stamp: 'GR 11/28/2018 11:33:00'!
+salesBookForOwnerOf: aCartSession
 
-	^(cartsSessions at: aCartID) salesToOwnerFrom: salesLedger! !
+	^aCartSession salesToOwnerFrom: salesLedger! !
 
 
 !TusLibrosSystemFacade methodsFor: 'ID generation - private' stamp: 'ap 11/26/2018 18:49:45'!
@@ -1409,23 +1407,23 @@ today
 	^clock today.! !
 
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:10:01'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:35:04'!
 add: anAmount of: anItem toCartIdentifiedBy: aCartID
 
 	self assertValidityOfCartIdentifiedBy:aCartID thenDo:
-	[(cartsSessions at: aCartID) addToCart: anAmount of: anItem.].
+	[:cartSession| cartSession addToCart: anAmount of: anItem.].
 ! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:10:01'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:36:11'!
 checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiringOnMonth: aCreditCardMonth andYear: aCreditCardYear 
-	|cartSession creditCard|
+	|creditCard|
 
 	self assertValidityOfCartIdentifiedBy:aCartID thenDo:
-	[
-	cartSession:=cartsSessions at: aCartID .
+	[:cartSession|
+	
 	
 	creditCard:=CreditCard expiringOn: (Month month: aCreditCardMonth year: aCreditCardYear) forOwner: aCCOwnerName withNumber: aCCNumber.
-	cartSession checkoutCharging: creditCard through: merchantProcessor on: self today registeringOn: ( self salesBookForOwnerOf: aCartID)
+	cartSession checkoutCharging: creditCard through: merchantProcessor on: self today registeringOn: ( self salesBookForOwnerOf: cartSession)
 	].
 	^self nextTransactionID! !
 
@@ -1441,13 +1439,13 @@ createCartFor: aUsername authenticatedWith: aPassword
 		
 	^ cartID.! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:10:01'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:35:19'!
 listCartIdentifiedBy: aCartID 
 
 	|list|
 	self assertValidityOfCartIdentifiedBy:aCartID thenDo:
-	[
-	list:=(cartsSessions at: aCartID) listCartItems.
+	[:cartSession|
+	list:=cartSession  listCartItems.
 	].
 	
 	^list.! !
