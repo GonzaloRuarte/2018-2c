@@ -1022,15 +1022,15 @@ initialize
 	offset := Duration seconds: 0.! !
 
 
-!ManualClock methodsFor: 'time manipulation' stamp: 'GR 11/26/2018 22:22:59'!
+!ManualClock methodsFor: 'time manipulation' stamp: 'AP 11/29/2018 20:31:09'!
 advanceTime: seconds
 
-	offset := Duration seconds: seconds.! !
+	offset := offset + Duration seconds: seconds.! !
 
-!ManualClock methodsFor: 'time manipulation' stamp: 'GR 11/26/2018 23:49:46'!
+!ManualClock methodsFor: 'time manipulation' stamp: 'AP 11/29/2018 20:31:17'!
 turnBackTime: seconds
 
-	offset := (Duration seconds: seconds) negated.! !
+	offset := offset - (Duration seconds: seconds).! !
 
 
 !classDefinition: #RealClock category: #TusLibros!
