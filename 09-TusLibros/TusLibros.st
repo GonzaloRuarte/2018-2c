@@ -567,7 +567,7 @@ test21ShouldNotListPurchasesOfSomeoneElse
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:28:02'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:12:07'!
 test22ShouldNotAddToCartAfter30MinutesOfInactivity
 
 
@@ -575,19 +575,19 @@ test22ShouldNotAddToCartAfter30MinutesOfInactivity
 	| cartID list |
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	
-	self advanceTime: 1800.
+	self advanceTime: 1800*second.
 	
 	self should:
 	[systemfacade add: 2 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.]
 	raise: Error
 	withExceptionDo:[
 		:anError | self assert: anError messageText equals: TusLibrosSystemFacade cartInactiveForTooLongErrorMessage.
-		self turnBackTime: 1800.
+		self turnBackTime: 1800*second.
 		list := systemfacade listCartIdentifiedBy: cartID.
 		self assert: list isEmpty]
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:28:11'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:12:04'!
 test23ShouldNotListCartAfter30MinutesOfInactivity
 
 
@@ -595,7 +595,7 @@ test23ShouldNotListCartAfter30MinutesOfInactivity
 	| cartID |
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	
-	self advanceTime: 1800.
+	self advanceTime: 1800*second.
 	
 	self should:
 	[systemfacade listCartIdentifiedBy: cartID  ]
@@ -604,7 +604,7 @@ test23ShouldNotListCartAfter30MinutesOfInactivity
 		:anError | self assert: anError messageText equals: TusLibrosSystemFacade cartInactiveForTooLongErrorMessage.]
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:28:21'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:11:57'!
 test24ShouldNotCheckoutAfter30MinutesOfInactivity
 
 	| cartID purchases |
@@ -612,60 +612,60 @@ test24ShouldNotCheckoutAfter30MinutesOfInactivity
 	
 	systemfacade add: 1 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 	
-	self advanceTime: 1800.
+	self advanceTime: 1800*second.
 	
 	self should:
 	[systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.]
 	raise: Error
 	withExceptionDo:[
 		:anError | self assert: anError messageText equals: TusLibrosSystemFacade cartInactiveForTooLongErrorMessage.
-		self turnBackTime: 1800.
+		self turnBackTime: 1800*second.
 		purchases := systemfacade listPurchasesOf: testObjectsFactory registeredUserName authenticatingWith: testObjectsFactory registeredUserPassword.
 		self assert: purchases isEmpty]
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:28:42'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:12:00'!
 test25AddingAnItemShouldExtendCartAvailabilityTimeframe
 
 
 	| cartID list |
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	
-	self advanceTime: 900.
+	self advanceTime: 900*second.
 systemfacade add: 1 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 
-	self advanceTime: 1800.
+	self advanceTime: 1799*second.
 	list := systemfacade listCartIdentifiedBy: cartID.
 	self assert: (list includes: testObjectsFactory itemSellByTheStore).
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:29:02'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:11:53'!
 test26ListingACartShouldExtendAvailabilityTimeframe
 
 	| cartID list |
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	
-	self advanceTime: 900.
+	self advanceTime: 900*second.
 	systemfacade listCartIdentifiedBy: cartID.
 
-	self advanceTime: 1800.
+	self advanceTime: 1799*second.
 	list := systemfacade listCartIdentifiedBy: cartID.
 	self assert: list isEmpty.
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 01:07:22'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:11:49'!
 test27CheckoutShouldExtendCartAvailabilityTimeframe
 
 
 	| cartID purchases |
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	systemfacade add: 3 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.	
-	self advanceTime: 900.
+	self advanceTime: 900*second.
 
 	
 	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
 
-	self advanceTime: 1800.
+	self advanceTime: 1799*second.
 
 	systemfacade listCartIdentifiedBy: cartID.
 	
@@ -812,14 +812,14 @@ assertCartIsNotInactiveThenDo: aBlock
 	aBlock value: self.
 	lastTimeUsed := self now.! !
 
-!CartSession methodsFor: 'assertions' stamp: 'GR 11/27/2018 01:16:15'!
+!CartSession methodsFor: 'assertions' stamp: 'GR 12/1/2018 23:21:24'!
 assertWasCartActiveRecently
 
 	| timeElapsed|
 	
-	timeElapsed := self now - lastTimeUsed .
+	timeElapsed := lastTimeUsed distanceTo: self now .
 	
-	timeElapsed <(Duration seconds: 1800) ifFalse: [self error: self cartInactiveForTooLongErrorMessage]! !
+	timeElapsed <(1800*second) ifFalse: [self error: self cartInactiveForTooLongErrorMessage]! !
 
 
 !CartSession methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:26:39'!
@@ -1005,32 +1005,32 @@ Clock subclass: #ManualClock
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!ManualClock methodsFor: 'protocol' stamp: 'ap 11/26/2018 17:51:03'!
+!ManualClock methodsFor: 'protocol' stamp: 'GR 12/1/2018 22:55:31'!
 now
 
-	^DateAndTime now + offset.! !
+	^GregorianDateTime now next: offset.! !
 
-!ManualClock methodsFor: 'protocol' stamp: 'GR 11/26/2018 23:35:31'!
+!ManualClock methodsFor: 'protocol' stamp: 'GR 12/1/2018 23:19:32'!
 today
 
-	^DateAndTime today.! !
+	^self now date.! !
 
 
-!ManualClock methodsFor: 'initialization' stamp: 'ap 11/26/2018 18:00:49'!
+!ManualClock methodsFor: 'initialization' stamp: 'GR 12/1/2018 22:56:41'!
 initialize
 
-	offset := Duration seconds: 0.! !
+	offset := 0*second.! !
 
 
-!ManualClock methodsFor: 'time manipulation' stamp: 'AP 11/29/2018 20:31:09'!
+!ManualClock methodsFor: 'time manipulation' stamp: 'GR 12/1/2018 22:57:17'!
 advanceTime: seconds
 
-	offset := offset + Duration seconds: seconds.! !
+	offset := offset + seconds.! !
 
-!ManualClock methodsFor: 'time manipulation' stamp: 'AP 11/29/2018 20:31:17'!
+!ManualClock methodsFor: 'time manipulation' stamp: 'GR 12/1/2018 22:57:22'!
 turnBackTime: seconds
 
-	offset := offset - (Duration seconds: seconds).! !
+	offset := offset - seconds.! !
 
 
 !classDefinition: #RealClock category: #TusLibros!
@@ -1040,15 +1040,15 @@ Clock subclass: #RealClock
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!RealClock methodsFor: 'protocol' stamp: 'ap 11/26/2018 17:51:59'!
+!RealClock methodsFor: 'protocol' stamp: 'GR 12/1/2018 23:00:27'!
 now
 
-	^DateAndTime now.! !
+	^GregorianDateTime now.! !
 
-!RealClock methodsFor: 'protocol' stamp: 'GR 11/26/2018 23:35:36'!
+!RealClock methodsFor: 'protocol' stamp: 'GR 12/1/2018 23:00:20'!
 today
 
-	^DateAndTime today.! !
+	^FixedGregorianDate today.! !
 
 
 !classDefinition: #CreditCard category: #TusLibros!
@@ -1058,16 +1058,16 @@ Object subclass: #CreditCard
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CreditCard methodsFor: 'testing' stamp: 'HernanWilkinson 6/17/2013 18:39'!
+!CreditCard methodsFor: 'testing' stamp: 'GR 12/1/2018 23:10:30'!
 isExpiredOn: aDate 
 	
-	^expiration start < (Month month: aDate monthIndex year: aDate yearNumber) start ! !
+	^expiration< (GregorianMonthOfYear year: aDate year month: aDate month)! !
 
 
-!CreditCard methodsFor: 'initialization' stamp: 'ap 11/22/2018 21:15:19'!
-initializeExpiringOn: aMonth forOwner: anOwner withNumber: aCCN
+!CreditCard methodsFor: 'initialization' stamp: 'GR 12/1/2018 23:07:28'!
+initializeExpiringOn: aMonthOfYear forOwner: anOwner withNumber: aCCN
 	
-	expiration := aMonth.
+	expiration := aMonthOfYear.
 	owner:= anOwner .
 	ccn:=aCCN .! !
 
@@ -1186,30 +1186,30 @@ defaultCatalog
 		yourself ! !
 
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 11/24/2018 13:53:13'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 12/1/2018 23:08:55'!
 expiredCreditCard
 	
-	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber - 1) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
+	^CreditCard expiringOn: (GregorianMonthOfYear year: self expiredCreditCardYear month: self validCreditCardMonth) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'AP 11/25/2018 19:04:37'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 12/1/2018 23:06:33'!
 expiredCreditCardYear
 	
-	^ today yearNumber - 1! !
+	^ today year previous: 1*year! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 11/24/2018 13:53:13'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 12/1/2018 23:22:14'!
 validCreditCard
 	
-	^CreditCard expiringOn: (Month month: today monthIndex year: today yearNumber + 1) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
+	^CreditCard expiringOn: (GregorianMonthOfYear year: self validCreditCardYear month: self validCreditCardMonth) forOwner: self validNameForCC withNumber: self validNumberForCC.! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'AP 11/25/2018 19:04:11'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 12/1/2018 23:04:12'!
 validCreditCardMonth
 	
-	^ today monthIndex! !
+	^ today monthOfYear month! !
 
-!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'AP 11/25/2018 19:04:30'!
+!StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'GR 12/1/2018 23:06:03'!
 validCreditCardYear
 	
-	^ today yearNumber + 1! !
+	^ today year next: 1*year! !
 
 !StoreTestObjectsFactory methodsFor: 'credit card' stamp: 'ap 11/22/2018 21:17:51'!
 validNameForCC
@@ -1221,10 +1221,10 @@ validNumberForCC.
 	^'validCardNumber'! !
 
 
-!StoreTestObjectsFactory methodsFor: 'initialization' stamp: 'HernanWilkinson 6/17/2013 18:37'!
+!StoreTestObjectsFactory methodsFor: 'initialization' stamp: 'GR 12/1/2018 23:23:54'!
 initialize
 
-	today := DateAndTime now! !
+	today := GregorianDateTime now date! !
 
 
 !StoreTestObjectsFactory methodsFor: 'date' stamp: 'HernanWilkinson 6/17/2013 18:37'!
@@ -1414,7 +1414,7 @@ add: anAmount of: anItem toCartIdentifiedBy: aCartID
 	[:cartSession| cartSession addToCart: anAmount of: anItem.].
 ! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:36:11'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/1/2018 23:09:50'!
 checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiringOnMonth: aCreditCardMonth andYear: aCreditCardYear 
 	|creditCard|
 
@@ -1422,7 +1422,7 @@ checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiring
 	[:cartSession|
 	
 	
-	creditCard:=CreditCard expiringOn: (Month month: aCreditCardMonth year: aCreditCardYear) forOwner: aCCOwnerName withNumber: aCCNumber.
+	creditCard:=CreditCard expiringOn: (GregorianMonthOfYear year: aCreditCardYear month: aCreditCardMonth) forOwner: aCCOwnerName withNumber: aCCNumber.
 	cartSession checkoutCharging: creditCard through: merchantProcessor on: self today registeringOn: ( self salesBookForOwnerOf: cartSession)
 	].
 	^self nextTransactionID! !
