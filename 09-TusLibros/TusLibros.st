@@ -446,7 +446,7 @@ test13ShouldListCartWhenCartIDIsInvalid
 	withExceptionDo:[:anException|
 		self assert: anException messageText equals: TusLibrosSystemFacade invalidCartIDErrorMessage.]! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:19:13'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test14ShouldNotCheckoutEmptyCart
 
 	| cartID purchases |
@@ -455,7 +455,7 @@ test14ShouldNotCheckoutEmptyCart
 	cartID:=systemfacade createCartFor:  testObjectsFactory registeredUserName authenticatedWith: testObjectsFactory registeredUserPassword .
 	
 	self should:[
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: TusLibrosSystemFacade cartCanNotBeEmptyErrorMessage .
@@ -464,17 +464,17 @@ test14ShouldNotCheckoutEmptyCart
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:23:01'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test15ShouldCheckoutWhenCartIDIsInvalid
 
 		
 
-	self should:[systemfacade checkOutCart: self invalidCartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.]
+	self should:[systemfacade checkOutCartIdentifiedBy: self invalidCartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.]
 	raise: Error
 	withExceptionDo:[:anException|
 		self assert: anException messageText equals: TusLibrosSystemFacade invalidCartIDErrorMessage.]! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:21:24'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test16ShouldNotCheckoutWhenCreditCardIsExpired
 
 		
@@ -484,7 +484,7 @@ test16ShouldNotCheckoutWhenCreditCardIsExpired
 	systemfacade add: 2 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 	
 	self should:[
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory expiredCreditCardYear.
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory expiredCreditCardYear.
 	] raise: Error
 	withExceptionDo:[:anError|
 		self assert: anError messageText equals: TusLibrosSystemFacade canNotChargeAnExpiredCreditCardErrorMessage .
@@ -493,7 +493,7 @@ test16ShouldNotCheckoutWhenCreditCardIsExpired
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 00:18:45'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test17PurchasesListShouldNotBeEmptyAfterSuccessfullyCheckingOut
 
 
@@ -503,14 +503,14 @@ test17PurchasesListShouldNotBeEmptyAfterSuccessfullyCheckingOut
 	
 	systemfacade add: 2 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 	
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
 	
 	purchases := systemfacade listPurchasesOf: testObjectsFactory registeredUserName authenticatingWith: testObjectsFactory registeredUserPassword.
 	self deny: purchases isEmpty.
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 01:06:58'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test18CheckoutShouldRegisterASale	
 	
 	| cartID purchases |
@@ -518,7 +518,7 @@ test18CheckoutShouldRegisterASale
 	
 	systemfacade add: 2 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 	
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.	
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.	
 	
 	purchases := systemfacade listPurchasesOf: testObjectsFactory registeredUserName authenticatingWith: testObjectsFactory registeredUserPassword.
 	self assert: (purchases includes: testObjectsFactory itemSellByTheStore).
@@ -551,7 +551,7 @@ test20ShouldNotListPurchasesWhenPasswordDoesNotMatchUser
 	
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 11/27/2018 01:07:14'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test21ShouldNotListPurchasesOfSomeoneElse
 
 		
@@ -560,7 +560,7 @@ test21ShouldNotListPurchasesOfSomeoneElse
 	
 	systemfacade add: 1 of: testObjectsFactory itemSellByTheStore toCartIdentifiedBy: cartID.
 	
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
 		
 	purchases := systemfacade listPurchasesOf: testObjectsFactory anotherRegisteredUserName authenticatingWith: testObjectsFactory registeredUserPassword.
 	self assert: purchases isEmpty.
@@ -604,7 +604,7 @@ test23ShouldNotListCartAfter30MinutesOfInactivity
 		:anError | self assert: anError messageText equals: TusLibrosSystemFacade cartInactiveForTooLongErrorMessage.]
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:11:57'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test24ShouldNotCheckoutAfter30MinutesOfInactivity
 
 	| cartID purchases |
@@ -615,7 +615,7 @@ test24ShouldNotCheckoutAfter30MinutesOfInactivity
 	self advanceTime: 1800*second.
 	
 	self should:
-	[systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.]
+	[systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.]
 	raise: Error
 	withExceptionDo:[
 		:anError | self assert: anError messageText equals: TusLibrosSystemFacade cartInactiveForTooLongErrorMessage.
@@ -653,7 +653,7 @@ test26ListingACartShouldExtendAvailabilityTimeframe
 	self assert: list isEmpty.
 ! !
 
-!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/1/2018 23:11:49'!
+!TusLibrosTest methodsFor: 'tests' stamp: 'GR 12/3/2018 12:37:45'!
 test27CheckoutShouldExtendCartAvailabilityTimeframe
 
 
@@ -663,7 +663,7 @@ test27CheckoutShouldExtendCartAvailabilityTimeframe
 	self advanceTime: 900*second.
 
 	
-	systemfacade checkOutCart: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
+	systemfacade checkOutCartIdentifiedBy: cartID withCCnumberedBy: testObjectsFactory validNumberForCC ownedBy: testObjectsFactory validNameForCC expiringOnMonth: testObjectsFactory validCreditCardMonth andYear: testObjectsFactory validCreditCardYear.
 
 	self advanceTime: 1799*second.
 
@@ -1404,8 +1404,8 @@ add: anAmount of: anItem toCartIdentifiedBy: aCartID
 	[:cartSession| cartSession addToCart: anAmount of: anItem.].
 ! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/3/2018 12:23:45'!
-checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiringOnMonth: aCreditCardMonth andYear: aCreditCardYear 
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/3/2018 12:37:45'!
+checkOutCartIdentifiedBy: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiringOnMonth: aCreditCardMonth andYear: aCreditCardYear 
 	|creditCard|
 
 	self assertValidityOfCartIdentifiedBy:aCartID thenDo:
