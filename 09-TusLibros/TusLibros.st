@@ -800,7 +800,7 @@ invalidQuantityErrorMessage
 
 !classDefinition: #CartSession category: #TusLibros!
 Object subclass: #CartSession
-	instanceVariableNames: 'owner cart systemFacade lastTimeUsed'
+	instanceVariableNames: 'owner cart systemFacade lastTimeUsed salesBook'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
@@ -828,8 +828,8 @@ addToCart: anAmount of: anItem
 
 	cart addToCart: anAmount  of: anItem.! !
 
-!CartSession methodsFor: 'facade protocol' stamp: 'GR 11/28/2018 11:26:46'!
-checkoutCharging: creditCard through: merchantProcessor on: aDate registeringOn: salesBook
+!CartSession methodsFor: 'facade protocol' stamp: 'GR 12/3/2018 12:24:06'!
+checkoutCharging: creditCard through: merchantProcessor on: aDate
 
 
 	(Cashier toCheckout: cart charging: creditCard through: merchantProcessor on: aDate registeringOn: salesBook) checkOut.! !
@@ -845,18 +845,14 @@ listCartItems
 	^list.! !
 
 
-!CartSession methodsFor: 'salesbook' stamp: 'GR 11/26/2018 22:29:52'!
-salesToOwnerFrom: aSalesLedger 
-	^aSalesLedger at: owner! !
+!CartSession methodsFor: 'initialization' stamp: 'GR 12/3/2018 12:26:43'!
+initializeForCart: aCart ownedBy: anOwner registeringOn: aSalesBook forFacade: aSystemFacade
 
-
-!CartSession methodsFor: 'initialization' stamp: 'GR 11/26/2018 23:59:04'!
-initializeForCart: aCart ownedBy: anOwner forFacade: aSystemFacade
-
-cart:=aCart.
-owner :=anOwner.
-systemFacade:=aSystemFacade .
-lastTimeUsed := self now.! !
+	cart:=aCart.
+	owner :=anOwner.
+	systemFacade:=aSystemFacade .
+	lastTimeUsed := self now.
+	salesBook := aSalesBook.! !
 
 
 !CartSession methodsFor: 'date' stamp: 'ap 11/26/2018 20:51:30'!
@@ -876,13 +872,13 @@ cartInactiveForTooLongErrorMessage
 CartSession class
 	instanceVariableNames: ''!
 
-!CartSession class methodsFor: 'as yet unclassified' stamp: 'GR 11/27/2018 00:25:26'!
-acceptingItemsOf: aCatalog ownedBy: anOwner forFacade: aFacade
+!CartSession class methodsFor: 'instance creation' stamp: 'GR 12/3/2018 12:26:06'!
+acceptingItemsOf: aCatalog ownedBy: anOwner registeringOn: aSalesBook forFacade: aFacade
 
 	|cart|
 	cart := Cart acceptingItemsOf: aCatalog.
 
-	^self new initializeForCart: cart ownedBy: anOwner forFacade: aFacade.! !
+	^self new initializeForCart: cart ownedBy: anOwner registeringOn: aSalesBook forFacade: aFacade.! !
 
 
 !classDefinition: #Cashier category: #TusLibros!
@@ -1371,12 +1367,6 @@ assertValidityOfCartIdentifiedBy:aCartID thenDo:aBlock
 	! !
 
 
-!TusLibrosSystemFacade methodsFor: 'checkout - private' stamp: 'GR 11/28/2018 11:33:00'!
-salesBookForOwnerOf: aCartSession
-
-	^aCartSession salesToOwnerFrom: salesLedger! !
-
-
 !TusLibrosSystemFacade methodsFor: 'ID generation - private' stamp: 'ap 11/26/2018 18:49:45'!
 nextCartID
 
@@ -1398,11 +1388,11 @@ nextTransactionID
 ! !
 
 
-!TusLibrosSystemFacade methodsFor: 'date - private' stamp: 'ap 11/26/2018 21:07:10'!
+!TusLibrosSystemFacade methodsFor: 'date' stamp: 'ap 11/26/2018 21:07:10'!
 now
 	^clock now.! !
 
-!TusLibrosSystemFacade methodsFor: 'date - private' stamp: 'GR 11/26/2018 23:19:24'!
+!TusLibrosSystemFacade methodsFor: 'date' stamp: 'GR 11/26/2018 23:19:24'!
 today
 	^clock today.! !
 
@@ -1414,7 +1404,7 @@ add: anAmount of: anItem toCartIdentifiedBy: aCartID
 	[:cartSession| cartSession addToCart: anAmount of: anItem.].
 ! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/1/2018 23:09:50'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/3/2018 12:23:45'!
 checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiringOnMonth: aCreditCardMonth andYear: aCreditCardYear 
 	|creditCard|
 
@@ -1423,11 +1413,11 @@ checkOutCart: aCartID withCCnumberedBy: aCCNumber ownedBy: aCCOwnerName expiring
 	
 	
 	creditCard:=CreditCard expiringOn: (GregorianMonthOfYear year: aCreditCardYear month: aCreditCardMonth) forOwner: aCCOwnerName withNumber: aCCNumber.
-	cartSession checkoutCharging: creditCard through: merchantProcessor on: self today registeringOn: ( self salesBookForOwnerOf: cartSession)
+	cartSession checkoutCharging: creditCard through: merchantProcessor on: self today
 	].
 	^self nextTransactionID! !
 
-!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 11/27/2018 01:11:27'!
+!TusLibrosSystemFacade methodsFor: 'facade protocol' stamp: 'GR 12/3/2018 12:25:32'!
 createCartFor: aUsername authenticatedWith: aPassword
 
 	|cartID|
@@ -1435,7 +1425,7 @@ createCartFor: aUsername authenticatedWith: aPassword
 	cartID:=self nextCartID.
 	
 	
-	cartsSessions at:cartID put: (CartSession  acceptingItemsOf: catalog ownedBy: aUsername forFacade: self).
+	cartsSessions at:cartID put: (CartSession  acceptingItemsOf: catalog ownedBy: aUsername registeringOn: (salesLedger at: aUsername) forFacade: self).
 		
 	^ cartID.! !
 
